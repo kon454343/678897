@@ -1,0 +1,49 @@
+$pln = jQuery.noConflict();
+$pln(document).ready(function () {
+    $pln("div.button input").hover(
+        function () {
+            $pln(this).addClass("active");
+        }
+        ,
+        function () {
+            $pln(this).removeClass("active");
+        }
+    );
+    $pln(".button_submit").hover(
+        function () {
+            $pln(this).addClass("active");
+        }
+        ,
+        function () {
+            $pln(this).removeClass("active");
+        }
+    );
+
+    $pln(".required").append(" <sup>*</sup>");
+    $pln("input[type=text], input[type=password], select, textarea").focus(
+        function () {
+            $pln(this).addClass("focused");
+        }
+    );
+    $pln("input[type=text], input[type=password], select, textarea").blur(
+        function () {
+            $pln(this).removeClass("focused");
+        }
+    );
+    $pln(".showhelp").click(
+        function () {
+            $pln("#helpcontent").toggle();
+        }
+    );
+    $pln("form[name=paygwform]")
+        .one("submit",
+            function (event) {
+                $pln(this).unbind(event.type);
+                $pln(this).bind(event.type, function () {
+                    return false;
+                });
+            }
+        );
+
+    $pln('.popover-hint').popover({trigger: 'hover'});
+});

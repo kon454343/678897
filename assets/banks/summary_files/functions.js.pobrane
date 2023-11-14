@@ -1,0 +1,130 @@
+jQuery(document).ready(function ($) {
+    //validate #pamentForm
+    if ($("form#paymentForm").length) {
+        $("form#paymentForm").validate();
+    }
+    //validate #form.valid
+    if ($("#form.valid").length) {
+        $("#form.valid").validate(
+            {
+                rules: {
+                    repeatedPassword: {
+                        equalTo: "#password"
+                    }
+                }
+            }
+        );
+    }
+});
+
+$(function () {
+    if ($('input.postCode').length) {
+        $("input.postCode").mask("99-999");
+    }
+
+    if ($("#allegroAuth #acceptRules").is(':checked')) {
+        $("#allegroAuth #submitBtn").removeAttr('disabled').removeClass('disabledObject');
+    } else {
+        if ($("#allegroAuth #acceptRules").length) {
+            $("#register_form #submitBtn, #allegroAuth #submitBtn").attr('disabled', 'disabled').addClass('disabledObject');
+        }
+    }
+    ;
+
+    $("#password").change(function () {
+        if ($("#repeatedPassword").val() !== null && $("#repeatedPassword").val() !== '') {
+            $("#repeatedPassword").valid();
+        }
+    });
+});
+
+function submitFinishLater() {
+    $('#actionButton').attr('name', '_eventId_finishLater');
+    $("#form")[0].submit();
+}
+
+function addAddressFv() {
+    $('#actionButton').attr('name', '_eventId_wantFVAddress');
+    $("#form")[0].submit();
+}
+
+function deleteAddress(number, title, text) {
+    jConfirm(title, text, function (r) {
+        if (r) {
+            $('#actionButton').attr('name', '_eventId_delAddress');
+            $('#deleteAddress').val(number);
+            $("#form")[0].submit();
+        }
+    });
+}
+
+function submitRegisteredForm() {
+    $('#actionButton').attr('name', '');
+}
+
+function addNextAddress() {
+    $('#actionButton').attr('name', '_eventId_addAddress');
+    $("#form")[0].submit();
+}
+
+function sendOnceAgain() {
+    $('#actionButton').attr('name', '_eventId_sendOnceAgain');
+    $('#form').submit();
+}
+
+function cancel() {
+    $('#actionButton').attr('name', "_eventId_cancelRegistration");
+    $('#action_form').submit();
+}
+function closeAlertBox(sender) {
+    $("#" + sender).fadeOut('fast');
+}
+
+$(document).ready(function () {
+    $('#countryCode, #lang, .countryCode.required, #preferredAddressId, .selectBox').selectBox();
+});
+
+
+function closeAlertBox(sender) {
+    $("#" + sender).fadeOut('fast');
+}
+
+function closeNotificationBox() {
+    $("#user_demo_notification").fadeOut('fast');
+}
+
+function showNotificationInfo(message) {
+    $("#user_demo_notification").removeClass('error');
+    $("#user_demo_notification span").html(message);
+    $("#user_demo_notification").fadeIn('fast');
+}
+
+function showNotificationError(message) {
+    $("#user_demo_notification span").html(message);
+    $("#user_demo_notification").fadeIn('fast');
+}
+
+preventMultiClick = function (event) {
+    $(this).unbind(event.type);
+    $(this).bind(event.type, function () {
+        return false;
+    });
+};
+
+preventMultiClickAfterValidation = function (event) {
+    if ($(this).closest("form").valid()) {
+        $(this).unbind(event.type);
+        $(this).bind(event.type, function () {
+            return false;
+        });
+    }
+};
+
+function forgetFingerprint() {
+    var csrfName = $("input[name^='csrf']").attr('name');
+    var csrfValue = $("input[name^='csrf']").val();
+    $.ajax({
+        url: '/user/fingerprint/' + csrfName + '/' + csrfValue,
+        type: 'DELETE'
+    });
+}

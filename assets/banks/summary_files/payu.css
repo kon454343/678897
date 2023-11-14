@@ -1,0 +1,1017 @@
+/*! normalize.css v2.1.1 | MIT License | git.io/normalize */
+article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, section, summary {
+    display: block
+}
+
+audio, canvas, video {
+    display: inline-block
+}
+
+audio:not ([controls] ) {
+    display: none;
+    height: 0
+}
+
+[hidden] {
+    display: none
+}
+
+html {
+    background: #fff;
+    color: #000;
+    font-family: sans-serif;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%
+}
+
+body {
+    margin: 0
+}
+
+a:focus {
+    outline: thin dotted
+}
+
+a:active, a:hover {
+    outline: 0
+}
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0
+}
+
+abbr[title] {
+    border-bottom: 1px dotted
+}
+
+b, strong {
+    font-weight: bold
+}
+
+dfn {
+    font-style: italic
+}
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0
+}
+
+mark {
+    background: #ff0;
+    color: #000
+}
+
+code, kbd, pre, samp {
+    font-family: monospace, serif;
+    font-size: 1em
+}
+
+pre {
+    white-space: pre-wrap
+}
+
+q {
+    quotes: "\201C" "\201D" "\2018" "\2019"
+}
+
+small {
+    font-size: 80%
+}
+
+sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline
+}
+
+sup {
+    top: -0.5em
+}
+
+sub {
+    bottom: -0.25em
+}
+
+img {
+    border: 0
+}
+
+svg:not (:root ) {
+    overflow: hidden
+}
+
+figure {
+    margin: 0
+}
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em
+}
+
+legend {
+    border: 0;
+    padding: 0
+}
+
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    margin: 0
+}
+
+button, input {
+    line-height: normal
+}
+
+button, select {
+    text-transform: none
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer
+}
+
+button[disabled], html input[disabled] {
+    cursor: default
+}
+
+input[type="checkbox"], input[type="radio"] {
+    box-sizing: border-box;
+    padding: 0
+}
+
+input[type="search"] {
+    -webkit-appearance: textfield;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box
+}
+
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none
+}
+
+button::-moz-focus-inner, input::-moz-focus-inner {
+    border: 0;
+    padding: 0
+}
+
+textarea {
+    overflow: auto;
+    vertical-align: top
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+body {
+    font-family: Arial, Tahoma, sans-serif;
+    background: #fff;
+    height: 100%;
+    color: #666;
+    font-size: 12px;
+    margin: 0;
+    padding: 0
+}
+
+label {
+    display: block;
+    margin-bottom: 5px
+}
+
+label, input, button, select, textarea {
+    font-size: 12px;
+    font-weight: normal
+}
+
+h1, h2, h3 {
+    line-height: normal
+}
+
+.radio, .checkbox {
+    padding-left: 20px
+}
+
+.radio input[type="radio"], .checkbox input[type="checkbox"] {
+    float: left;
+    margin-left: -20px
+}
+
+.text-right {
+    text-align: right
+}
+
+.text-left {
+    text-align: left
+}
+
+.text-center {
+    text-align: center
+}
+
+a {
+    color: #333;
+}
+
+a:hover {
+    text-decoration: underline
+}
+
+.clr {
+    clear: both
+}
+
+#wrapper {
+    max-width: 980px;
+    min-width: 300px;
+    height: auto;
+    margin: 0 auto;
+    padding: 10px
+}
+
+.top {
+    padding-bottom: 20px;
+}
+
+.top .topAbove {
+    width: 200px;
+    float: left
+}
+
+.top .topMenu {
+    width: 780px;
+    float: left
+}
+
+.top .topMenu ul li .righted .shorter .langSelect {
+    padding-top: 9px;
+    float: right;
+}
+
+/* Dropdown control */
+.selectBox-dropdown {
+    height: 28px;
+    padding-right: 40px;
+    position: relative;
+    line-height: 1.5;
+    text-decoration: none;
+    color: #000;
+    outline: none;
+    vertical-align: middle;
+    background: #fff;
+    display: inline-block;
+    cursor: default;
+    margin-left: 10px;
+    color: #949BA3 !important;
+}
+
+#sandboxtop {
+    height: 133px;
+    overflow: hidden
+}
+
+#top .logo {
+    margin-top: 25px;
+    display: inline-block;
+    float: left
+}
+
+#sandboxtop .sandboxlogo {
+    margin-top: 25px;
+    display: inline-block;
+    float: left
+}
+
+#sandboxtitle {
+    text-align: center;
+    font-weight: 700;
+    font-size: 20px;
+    color: #a6c307;
+    padding-bottom: 40px
+}
+
+#statusBuying {
+    margin-top: 40px;
+    font-weight: 700
+}
+
+#top .logo {
+    margin-top: 25px;
+    display: inline-block;
+    float: left
+}
+
+#top .bank_logo {
+    margin-top: 20px;
+    float: right
+}
+
+#content {
+    border: 2px #a6c307 solid;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 15px 30px;
+    min-height: 300px
+}
+
+@media ( max-width: 490px) {
+    #content {
+        padding: 15px;
+    }
+}
+
+#content h1 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px
+}
+
+#content h1 span.cufon {
+    line-height: 12px
+}
+
+#content h2 {
+    font-size: 16px;
+    line-height: 20px;
+    color: #666;
+    font-weight: 400
+}
+
+.blue {
+    color: #85b213
+}
+
+.muted {
+    color: #ccc
+}
+
+.btn-link:hover, .btn-link:focus {
+    color: #333;
+}
+
+.btn {
+    background-image: none;
+}
+
+.btn-action, .btn-action.active, .btn-action:active {
+    text-decoration: none;
+    position: relative;
+    display: inline-block;
+    padding: 10px 25px;
+    font-weight: 400;
+    color: #fff !important;
+    cursor: pointer;
+    border-radius: 50px;
+    background-color: #a6c307;
+    border: 1px solid #85b213;
+    font-size: 11pt;
+}
+
+.btn-action:hover, .btn-action:focus {
+    background-color: #85b213;
+    text-decoration: none;
+    color: white;
+}
+
+.btn-link {
+    color: #85b213
+}
+
+.btn-link.active, .btn-link:active {
+    box-shadow: none
+}
+
+input[type="submit"].btn-link {
+    text-decoration: underline
+}
+
+.buttons {
+    padding: 20px 20px 0 0
+}
+
+.buttons .btn-resign {
+    margin-left: 10px
+}
+
+div.popover {
+    font-weight: 400;
+    font-size: 12px;
+    text-align: justify;
+    color: #666;
+    border-color: #85b213
+}
+
+.popover.right .arrow {
+    border-right-color: #85b213
+}
+
+.popover-hint {
+    cursor: pointer
+}
+
+.sandboxcenter {
+    font-weight: 700;
+    padding-bottom: 40px;
+    font-size: 16px;
+}
+
+.sandboxppadding {
+    padding: 10px;
+    text-align: center;
+}
+
+.sandboxmarginleft {
+    margin-left: 10px
+}
+
+h1 img.popover-hint {
+    vertical-align: top
+}
+
+#footer {
+    margin-top: 20px
+}
+
+#footer a {
+    color: #939fa6
+}
+
+#footer .longcopyright {
+    margin-top: 15px;
+    font-size: 11px
+}
+
+#footer .longcopyright a:hover {
+    text-decoration: none;
+}
+
+#footer .copyright {
+    padding-bottom: 10px
+}
+
+#footer .copyright .checkbox.inline {
+    margin-right: 15px
+}
+
+#footer h2 {
+    font-size: 12px;
+    font-weight: 400
+}
+
+#footer ul.psd {
+    display: inline;
+    margin: 0
+}
+
+#footer ul.psd li {
+    display: inline;
+    margin-right: 6px
+}
+
+div.message, div#message {
+    width: 100%;
+    margin: 5px 0;
+    padding: 0;
+    clear: both
+
+}
+
+#message_top, #message_bottom {
+    display: none
+}
+
+div.message_content, div.info-box, div.grey-box {
+    text-align: justify;
+    z-index: 0;
+    border: 1px solid #CF3838;
+    position: relative;
+    border-radius: 10px;
+    margin: 0 auto 20px;
+    padding: 15px 10px;
+}
+
+div.info-box, div.grey-box {
+    border-color: #ccc
+}
+
+div.grey-box {
+    text-align: center;
+}
+
+div.grey-box .title {
+    padding: 0 0 10px;
+}
+
+div.message_text {
+    margin: 0 0 0 50px;
+    text-align: justify;
+    z-index: 0;
+    padding: 2px 0
+}
+
+div.message_text p {
+    margin-bottom: 0
+}
+
+div.info-box-success {
+    font-size: 15px;
+    font-weight: 600
+}
+
+img.message_ico {
+    padding: 0 0 0 10px;
+    width: 20px;
+    height: 20px;
+    float: left
+}
+
+i[class^="icon-"], i[class*=" icon-"] {
+    display: inline-block;
+    margin-right: 8px;
+    height: 25px;
+    width: 26px;
+    background: url('../images_layout/transaction_page/icon-file-pdf.png') no-repeat 0 0;
+    vertical-align: middle
+}
+
+.text-small {
+    font-size: 11px
+}
+
+.bigger h4 {
+    margin: 0
+}
+
+.form-horizontal .control-label {
+    width: 130px;
+    cursor: default
+}
+
+.form-horizontal .controls {
+    margin-left: 150px
+}
+
+.form-horizontal .controls.strong {
+    font-weight: 600
+}
+
+.form-horizontal .control-group {
+    margin-bottom: 10px
+}
+
+.form-horizontal .control-group.inline {
+    margin-bottom: 0
+}
+
+.form-horizontal .inline .controls {
+    padding: 5px 0 0
+}
+
+.form-horizontal .api-data-label {
+    width: 180px;
+    cursor: default
+}
+
+.form-horizontal .api-data-controls {
+    margin-left: 200px
+}
+span.more-information, div.more-information {
+    display: inline-block;
+    margin-left: 10px
+}
+
+span.more-information {
+    display: inline
+}
+
+table.test-payment-summary {
+    width: 100%
+}
+
+table.test-payment-summary td {
+    width: 50%;
+    vertical-align: top
+}
+
+table.test-payment-summary td h4 {
+    margin-top: 0
+}
+
+.test-payment-summary div.controls {
+    font-weight: 600
+}
+
+div.buttons.test-payment-summary {
+    text-align: center
+}
+
+div.buttons.test-payment-summary table {
+    margin: 0 auto
+}
+
+div.bank-item {
+    width: 102px;
+    height: 85px;
+    text-align: center;
+    padding: 3px 12px 8px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+}
+
+@media ( max-width: 330px) {
+    div.bank-item {
+        padding: 3px 5px;
+    }
+}
+
+div.bank-item div.bank-item-button, div.bank-item div.bank-item-button_disabled {
+    margin: 0 auto 5px;
+    width: 102px;
+    height: 57px;
+    line-height: 0;
+    font-size: 0
+}
+
+div.bank-item-button {
+    cursor: pointer
+}
+
+div.bank-item-button.disabled {
+    cursor: auto !important;
+}
+
+div.buttons-row {
+    margin-bottom: 15px
+}
+
+div.bank-item p {
+    font-size: 10px;
+    text-align: center;
+    line-height: 14px;
+}
+
+div.bank-item input, div.bank-item div.bank-button {
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    width: 102px;
+    height: 57px;
+    color: white;
+    border: none;
+    background: transparent;
+}
+
+div.bank-item div.bank-button {
+    cursor: default;
+}
+
+div.bank-item-button input[id^="button_"]:hover, div.bank-item-button input[id^="button_"].active {
+    background-position: 0px -57px !important
+}
+
+#button_ma {
+    background: url("../images_logos/buttons/button_karty_masterpass.png") 0 0 no-repeat
+}
+
+#button_ca {
+    background: url("../images_logos/buttons/button_karty_allekarta.gif") 0 0 no-repeat
+}
+
+#button_cd {
+    background: url("../images_logos/buttons/button_karty_dinners.gif") 0 0 no-repeat
+}
+
+#button_cm {
+    background: url("../images_logos/buttons/button_karty_master.gif") 0 0 no-repeat
+}
+
+#button_cv {
+    background: url("../images_logos/buttons/button_karty_visa.gif") 0 0 no-repeat
+}
+
+#button_m {
+    background: url("../images_logos/buttons/button_bank_mbank.gif") 0 0 no-repeat
+}
+
+#button_mp {
+    background: url("../images_logos/buttons/button_bank_mpenize.gif") 0 0 no-repeat
+}
+
+#button_wg {
+    background: url("../images_logos/buttons/button_bank_bgz.gif") 0 0 no-repeat
+}
+
+#button_wc {
+    background: url("../images_logos/buttons/button_bank_citi.gif") 0 0 no-repeat
+}
+
+#button_wd {
+    background: url("../images_logos/buttons/button_bank_db.gif") 0 0 no-repeat
+}
+
+#button_wi {
+    background: url("../images_logos/buttons/button_bank_getin.gif") 0 0 no-repeat
+}
+
+#button_wn {
+    background: url("../images_logos/buttons/button_bank_invest.gif") 0 0 no-repeat
+}
+
+#button_wy {
+    background: url("../images_logos/buttons/button_bank_pocztowy.gif") 0 0 no-repeat
+}
+
+#button_fnb {
+    background: url("../images_logos/buttons/button_bank_fnb.gif") 0 0 no-repeat
+}
+
+#button_uc {
+    background: url("../images_logos/buttons/button_bank_unicredit.gif") 0 0 no-repeat
+}
+
+#button_stb {
+    background: url("../images_logos/buttons/button_bank_standardbank.gif") 0 0 no-repeat
+}
+
+#button_u {
+    background: url("../images_logos/buttons/button_bank_eurobank.gif") 0 0 no-repeat
+}
+
+#button_g {
+    background: url("../images_logos/buttons/button_bank_ing.gif") 0 0 no-repeat
+}
+
+#button_i {
+    background: url("../images_logos/buttons/button_bank_inteligo.gif") 0 0 no-repeat
+}
+
+#button_p {
+    background: url("../images_logos/buttons/button_bank_ipko.gif") 0 0 no-repeat
+}
+
+#button_wk {
+    background: url("../images_logos/buttons/button_bank_kredytbank.gif") 0 0 no-repeat
+}
+
+#button_l {
+    background: url("../images_logos/buttons/button_bank_lukas.gif") 0 0 no-repeat
+}
+
+#button_wm {
+    background: url("../images_logos/buttons/button_bank_millennium.gif") 0 0 no-repeat
+}
+
+#button_n {
+    background: url("../images_logos/buttons/button_bank_multi.gif") 0 0 no-repeat
+}
+
+#button_o {
+    background: url("../images_logos/buttons/button_bank_pekao.gif") 0 0 no-repeat
+}
+
+#button_wp {
+    background: url("../images_logos/buttons/button_bank_polbank.gif") 0 0 no-repeat
+}
+
+#button_wr {
+    background: url("../images_logos/buttons/button_bank_raiffeisen.gif") 0 0 no-repeat
+}
+
+#button_w {
+    background: url("../images_logos/buttons/button_bank_wbk.gif") 0 0 no-repeat
+}
+
+#button_b {
+    background: url("../images_logos/buttons/button_inne_przelew.gif") 0 0 no-repeat
+}
+
+#button_t {
+    background: url("../images_logos/buttons/button_inne_testowa.png") 0 0 no-repeat
+}
+
+#button_ab {
+    background: url("../images_logos/buttons/button_bank_alior.gif") 0 0 no-repeat
+}
+
+#button_as {
+    background: url("../images_logos/buttons/button_bank_aliorsync.gif") 0 0 no-repeat
+}
+
+#button_pu {
+    background: url("../images_logos/buttons/button_inne_payu.gif") 0 0 no-repeat
+}
+
+#button_ai {
+    background: url("../images_logos/buttons/button_bank_aliorsyncinstallments.gif") 0 0 no-repeat
+}
+
+#button_ps {
+    background: url("../images_logos/buttons/button_bank_podkarpacki.gif") 0 0 no-repeat
+}
+
+#button_ib {
+    background: url("../images_logos/buttons/button_bank_idea.gif") 0 0 no-repeat
+}
+
+#button_cs {
+    background: url("../images_logos/buttons/button_bank_cs.gif") 0 0 no-repeat
+}
+
+#button_cb {
+    background: url("../images_logos/buttons/button_bank_csob.gif") 0 0 no-repeat
+}
+
+#button_era {
+    background: url("../images_logos/buttons/button_bank_era.gif") 0 0 no-repeat
+}
+
+#button_psc {
+    background: url("../images_logos/buttons/button_bank_paysec.gif") 0 0 no-repeat
+}
+
+#button_rf {
+    background: url("../images_logos/buttons/button_bank_raiffeisen_cz.gif") 0 0 no-repeat
+}
+
+#button_bt {
+    background: url("../images_logos/buttons/button_inne_przelew_cz.gif") 0 0 no-repeat
+}
+
+#button_pt {
+    background: url("../images_logos/buttons/button_inne_poczta_cz.gif") 0 0 no-repeat
+}
+
+#button_pg {
+    background: url("../images_logos/buttons/button_bank_pmw_ge.gif") 0 0 no-repeat
+}
+
+#button_pv {
+    background: url("../images_logos/buttons/button_bank_pmw_vb.gif") 0 0 no-repeat
+}
+
+#button_pf {
+    background: url("../images_logos/buttons/button_bank_pmw_fio.gif") 0 0 no-repeat
+}
+
+#button_sc {
+    background: url("../images_logos/buttons/button_bank_supercash.gif") 0 0 no-repeat
+}
+
+#button_kb {
+    background: url("../images_logos/buttons/button_bank_kb.gif") 0 0 no-repeat
+}
+
+#button_mo {
+    background: url("../images_logos/buttons/button_bank_mobito.gif") 0 0 no-repeat
+}
+
+#button_bo {
+    background: url("../images_logos/buttons/button_bank_bos.gif") 0 0 no-repeat
+}
+
+#button_bnx {
+    background: url("../images_logos/buttons/button_bank_bnp.gif") 0 0 no-repeat
+}
+
+#button_gbx {
+    background: url("../images_logos/buttons/button_bank_getin.gif") 0 0 no-repeat
+}
+
+#button_nlx {
+    background: url("../images_logos/buttons/button_bank_noble.gif") 0 0 no-repeat
+}
+
+#button_orx {
+    background: url("../images_logos/buttons/button_bank_orange.gif") 0 0 no-repeat
+}
+
+#button_mtx {
+    background: url("../images_logos/buttons/button_bank_mbank.gif") 0 0 no-repeat
+}
+
+#button_dbt {
+    background: url("../images_logos/buttons/button_bank_dbt.gif") 0 0 no-repeat
+}
+
+#button_gp {
+    background: url("../images_logos/buttons/button_bank_gp.gif") 0 0 no-repeat
+}
+
+#button_it {
+    background: url("../images_logos/buttons/button_bank_it.gif") 0 0 no-repeat
+}
+
+#button_pscd {
+    background: url("../images_logos/buttons/button_bank_pscd.gif") 0 0 no-repeat
+}
+
+#button_sb {
+    background: url("../images_logos/buttons/button_bank_sb.gif") 0 0 no-repeat
+}
+
+#button_sdd {
+    background: url("../images_logos/buttons/button_bank_sdd.gif") 0 0 no-repeat
+}
+
+#button_sp {
+    background: url("../images_logos/buttons/button_bank_sp.gif") 0 0 no-repeat
+}
+
+#tooltip {
+    font-size: 0.875em;
+    text-align: center;
+    line-height: 135%;
+    color: #000;
+    background: #FAFAFA;
+    border-radius: 5px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+    position: absolute;
+    z-index: 100;
+    padding: 10px 15px;
+    border: 2px solid #a6c307;
+    width: 140px;
+}
+
+#tooltip:after {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #333;
+    border-top-color: #a6c307;
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -10px;
+    margin-left: -10px;
+}
+
+.button-small,
+.button-medium,
+.button-big {
+    display: inline-block;
+    border-radius: 50px;
+    background-color: #A6C307;
+    color: white;
+    text-decoration: none;
+    border: 1px solid #A6C307;
+}
+
+.button-small:hover,
+.button-medium:hover,
+.button-big:hover {
+    background-color: #438F29;
+    border-color: #438F29;
+    color: white;
+    text-decoration: none;
+}
+
+.button-small {
+    padding: 5px 15px;
+    font-size: 11px;
+}
+
+.button-medium {
+    padding: 10px 25px;
+    font-size: 13px;
+}
+
+.button-big {
+    padding: 15px 40px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.button-secondary {
+    background-color: transparent;
+    border: 1px solid #DBE79F;
+    color: #333333;
+}
+
+.button-secondary:hover {
+    color: #ffffff;
+    background-color: #A6C307;
+    border-color: #A6C307;
+}
+
+.message.sandboxtop {
+    padding-top: 20px;
+}
+
+.valid {
+    color: #00A600;
+}
+
+.invalid {
+    color: #FF0000;
+}

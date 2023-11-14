@@ -1,0 +1,65 @@
+function changeLang(langForm) {
+
+    var selectLang = langForm.value;
+
+    window.location.href = prepareUrl(selectLang, "&");
+}
+
+function changeLangIpko(langForm, amount, description, merchantId, type, customParam, controlData, currency) {
+
+    var selectLang = langForm.value;
+    var url = prepareUrl(selectLang, "?");
+
+    var form = document.createElement("form");
+    form.method = 'post';
+    form.action = url;
+
+    form.appendChild(createHidenInput('Amount', amount));
+    form.appendChild(createHidenInput('Description', description));
+    form.appendChild(createHidenInput('MerchantID', merchantId));
+    form.appendChild(createHidenInput('Type', type));
+    form.appendChild(createHidenInput('CustomParam', customParam));
+    form.appendChild(createHidenInput('ControlData', controlData));
+    form.appendChild(createHidenInput('Currency', currency));
+
+    document.body.appendChild(form);
+
+    form.submit();
+}
+
+function prepareUrl(selectLang, connector) {
+
+    var url = window.location.href;
+    var res = getQueryVariable("lang");
+
+    if (res != null) {
+        url = url.replace(/lang=.*/i, "lang=" + selectLang);
+    }
+    else {
+        url = url + connector + "lang=" + selectLang;
+    }
+
+    return url;
+}
+
+function createHidenInput(name, value) {
+    var newinput = document.createElement('input');
+
+    newinput.type = 'hidden';
+    newinput.name = name;
+    newinput.value = value;
+
+    return newinput;
+}
+
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] === variable) {
+            return pair[1];
+        }
+    }
+    return null;
+}

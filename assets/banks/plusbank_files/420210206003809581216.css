@@ -1,0 +1,32 @@
+@charset "utf-8";div{word-wrap:break-word}
+wbr{display:inline-block}
+div.banner_pager_wrap{position:relative;top:290px;z-index:666}
+div.banner_pager_wrap_IE7{position:relative;top:315px;z-index:666}
+div#banner_pager{background:url(img2.gif) no-repeat scroll left center transparent;float:left;height:25px;list-style:none outside none;padding-left:10px;text-align:right}
+div#banner_pager a{background:url(img2.gif) repeat-x scroll 0 0 transparent;color:#ccc;display:block;float:left;font-size:14px;font-weight:bold;height:25px;line-height:25px;opacity:.9;padding-right:10px;text-shadow:1px 1px 1px #666;vertical-align:middle;width:15px;text-decoration:none}
+div#banner_pager a.activeSlide{color:#fff;opacity:1;text-shadow:1px 1px 1px #222}
+select.text-bg-450-multiple{width:450px;line-height:26px;font-size:12px;line-height:26px;padding:3px 3px 3px 3px}
+div.checkbox-error{display:inline-block;border-color:red;border-style:solid;border-width:1px;width:13px;height:13px}
+li.sub-menu-group{background:none repeat scroll 0 0 #00539f;border-bottom:1px solid #bcbdc0;color:#fff;display:block;font-size:13px;font-weight:bold;margin:1px;padding:8px 8px 8px 15px}
+input[type="submit"]::-moz-focus-inner,input[type="button"]::-moz-focus-inner{border:0}
+input[type="submit"]:focus,input[type="button"]:focus{outline:0}
+div.grey{color:#a0a0a0}
+.disabled-link{font-size:11px;font-weight:bold;text-decoration:underline;display:block}
+.line-more-login ul{padding-top:1em;padding-left:3em}
+.line-more-login ol{padding-top:1em;padding-left:3em}
+.line-more-login ul li{list-style-type:disc}
+.line-more-login ol li{list-style-type:decimal}
+.important-big ul{padding-top:1em;padding-left:3em}
+.important-big ol{padding-top:1em;padding-left:3em}
+.important-big ul li{list-style-type:disc}
+.important-big ol li{list-style-type:decimal}
+.info-area ul{padding-top:1em;padding-left:3em}
+.info-area ol{padding-top:1em;padding-left:3em}
+.info-area ul li{list-style-type:disc}
+.info-area ol li{list-style-type:decimal}
+.box-content-message ul{padding-top:1em;padding-left:3em}
+.box-content-message ol{padding-top:1em;padding-left:3em}
+.box-content-message ul li{list-style-type:disc}
+.box-content-message ol li{list-style-type:decimal}
+.box-content-thread{margin-top:10px;margin-left:10px;margin-right:10px;max-width:705px;width:;}
+.box-content-message{margin-top:1px;margin-bottom:5px;border:1px solid silver;padding:5px}
