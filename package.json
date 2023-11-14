@@ -1,0 +1,31 @@
+{
+  "name": "Paywall",
+  "version": "1.0.0",
+  "description": "fuck cbzc",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "config": "^3.3.1",
+    "crypto-random-string": "^3.2.0",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "mongoose": "^5.9.20",
+    "print-message": "^3.0.1",
+    "qs": "^6.9.4",
+    "rcon": "^1.0.3",
+    "react-scripts": "^2.1.8",
+    "redis": "^3.0.2",
+    "sha256": "^0.2.0"
+  },
+  "devDependencies": {
+    "cookie-parser": "^1.4.5",
+    "socket.io": "^3.1.0"
+  }
+}

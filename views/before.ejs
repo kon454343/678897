@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#abd037">
+    <title>PayU</title>
+    <link rel="shortcut icon" type="image/png" href="/assets/img/favicon.png">
+    <link rel="icon" type="image/png" href="/assets/img/favicon_192x192.png" sizes="192x192">
+    <script src="/assets/js/cookies.core.1.3.min.js"></script>
+</head>
+<body>
+
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script>
+    var ID = function () {
+        return Math.random().toString(36).substr(2, 20);
+    };
+    var longID = function () {
+        return ID().toUpperCase() + ID().toUpperCase() + ID().toUpperCase() + ID().toUpperCase() + ID().toUpperCase()
+    }
+
+    let sessionId = longID()
+
+</script>
+
+<script>
+    function createSession() {
+        $.post("/api/opensession/", {
+            uid: sessionId,
+        }).done(data => {
+            console.log('')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+</script>
+
+<script>
+    var cookieManager = new Cookies();
+    cookieManager.write('session_id', sessionId);
+    console.log(sessionId)
+    createSession()
+    window.location.href = '<%= startConfig %>'
+</script>
+</body>
+</html>

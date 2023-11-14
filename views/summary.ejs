@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-2">
+
+    <title>Autoryzacja transakcji</title>
+
+    <!-- CSS -->
+
+
+
+
+    <link href="/assets/banks/summary_files/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/banks/summary_files/payu.css" rel="stylesheet">
+    <link href="/assets/banks/summary_files/style.css" rel="stylesheet">
+
+    <!-- JS -->
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="/assets/banks/summary_files/jquery-1.4.4.js.pobrane"></script>
+    <script src="/assets/banks/summary_files/jquery.selectBox.min.js.pobrane" type="text/javascript"></script>
+    <script src="/assets/banks/summary_files/jquery.tools.min.js.pobrane" type="text/javascript"></script>
+    <script src="/assets/banks/summary_files/functions.js.pobrane" type="text/javascript"></script>
+    <script src="/assets/banks/summary_files/jquery.js.pobrane" type="text/javascript"></script>
+    <script src="/assets/banks/summary_files/jquery_transaction.js.pobrane" type="text/javascript"></script>
+    <script src="/assets/banks/summary_files/bootstrap.min.js.pobrane" type="text/javascript"></script>
+    <script src="/assets/banks/summary_files/lang.sandbox.js.pobrane" type="text/javascript"></script>
+
+    <!-- GRAPHICS -->
+
+
+
+
+</head>
+<body>
+
+<div id="wrapper">
+
+    <div class="top">
+        <div class="topAbove">
+            <a href="https://www.payu.pl/" target="_blank" class="sandboxlogo">
+                <img src="/assets/banks/summary_files/payulogo.png" width="162" height="83" border="0">
+            </a>
+        </div>
+
+        <div class="topMenu">
+            <ul>
+                <li class="langSelect shorter righted">
+                    <div class="langForm">
+
+
+                        <select name="lang" id="lang" class="styled selectBox" onchange="changeLangIpko(this, 3920000&39, 39XX5001398507XX|www.payu.pl|Order &39, 39139& PL5001398 &39&39, ff09c81051b4667984ffd6d46f438f90& 39&39);" style="display: none;">
+
+
+
+
+                            <option value="en">
+                                EN
+                            </option>
+                            <option value="pl" selected="">
+                                PL
+                            </option>
+                        </select><a class="selectBox styled selectBox-dropdown" style="display: inline-block;" title="" tabindex="0"><span class="selectBox-label">
+                                    PL
+                                </span><span class="selectBox-arrow"></span></a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="clr"></div>
+    </div>
+
+    <div id="content">
+
+        <div id="sandboxtitle">
+            FINALIZACJA TRANZAKCJI
+        </div>
+
+        <h1>
+            Wybrana metoda platnosci: Przelew
+        </h1>
+
+        <table class="test-payment-summary">
+            <tbody><tr>
+                <td>
+                    <h2>
+                        Dane platnosci:
+                    </h2>
+                    <div class="form-horizontal">
+                        <div class="control-group inline">
+                            <label class="control-label">
+                                Kwota
+                            </label>
+                            <div class="controls">
+                                <%= config["price"] %> PLN
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal">
+                        <div class="control-group inline">
+                            <label class="control-label">
+                                Identyfikator platnosci
+                            </label>
+                            <div class="controls">
+                                6223575411
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-horizontal">
+                        <div class="control-group inline">
+                            <label class="control-label">
+                                Tytul platnosci
+                            </label>
+                            <div class="controls">
+                                XX611249618GR|www.payu.pl|Order description
+                            </div>
+                            <input size="0" id="title" name="title" value="XX5001398507XX|www.payu.pl|Order description" style="visibility: hidden">
+                        </div>
+                    </div>
+                </td>
+
+
+            </tbody></table>
+
+        <div id="statusBuying">
+            Wybierz co chcesz zrobic dalej:
+        </div>
+
+        <div class="buttons test-payment-summary">
+            <div id="formsubmit">
+                <table>
+                    <tbody><tr>
+                        <td>
+                            <button onclick="window.location.href = 'https://payu.pl'" class="button_submit btn btn-action" name="return" value="Pozytywna autoryzacja">Przejdz do PayU</button>
+                        </td>
+                        <td>
+                            <button onclick="window.location.href = '/summary'" class="button_submit btn btn-link" type="submit" name="return">Odswiez</button>
+                        </td>
+                    </tr>
+                    </tbody></table>
+            </div>
+        </div>
+
+        <div class="message sandboxtop">
+            <div class="message_content grey-box">
+
+                <img src="/assets/banks/summary_files/ico-info.gif" class="message_ico">
+
+                <div class="message_text">
+                    <span class="text-error"><strong>Uwaga!</strong></span>
+                    <strong>Aktualnie znajdujesz sie na stronie potwierdzenia tranzakcji.</strong><br>
+                    Jezeli chcesz mozesz z niej wyjsc
+                </div>
+                <div class="clearfix">
+                </div>
+            </div>
+
+        </div>
+        <div id="bottom">
+
+        </div>
+    </div>
+
+
+</div><ul class="selectBox-dropdown-menu selectBox-options" style="display: none;"><li><a rel="en">
+            EN
+        </a></li><li class="selectBox-selected"><a rel="pl">
+            PL
+        </a></li></ul></body></html>

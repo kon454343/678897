@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<input type="password" id="authPassword" placeholder="Access Code">
+<button onclick="loginFunc();">Login</button>
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script>
+    var cookieManager = new Cookies();
+
+</script>
+<script>
+    const loginFunc = () => {
+        $.post("/api/login/", {
+            authPassword: $("#authPassword").val()
+        }).done(result => {
+            let res = result
+            document.write(`<h1>zautoryzowano pomyslnie (<span id="newSessId">${res}</span>)</h1><h1><a onclick="authorizeFunc()">Kliknij tutaj aby zalogować</a></h1>`)
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const authorizeFunc = () => {
+        let newSessId = document.getElementById('newSessId').innerText
+        cookieManager.write('admin_id', newSessId)
+        window.location.href = '/payu/admin/dashboard'
+        console.log(newSessId)
+    }
+</script>
+
+</body>
+</html>

