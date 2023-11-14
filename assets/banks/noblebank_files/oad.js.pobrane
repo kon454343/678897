@@ -1,0 +1,64 @@
+var oad = {
+    window: null,
+    init: function() {
+        window.oadInitialized = true;
+    },
+    load: function(window) {
+        if(oad.window == window) {
+            return;
+        }
+    },
+    check: function(eventOrReason) {
+        if($.type(eventOrReason) !== "string") {
+            event = eventOrReason;
+        }
+        App.siteView.view.showTopMenu(event, ['customer']);
+    },
+    done: function(reason) {
+        $(window).trigger('loader:show');
+        $.ajax({
+            type: 'POST',
+            url: '/settings/setOadStatus',
+            dataType: 'json',
+            data: {reason: reason},
+            success: function(data) {
+                $(window).trigger('loader:hide');
+                if(data.status) {
+                    oad.forceClose();
+                }
+            }
+        });
+    },
+    forceClose: function() {
+        $.getJSON('/settings/setBeamNotification/oadNotifications', function(data) {
+            oad.close();
+        });
+    },
+    close: function() {
+        $('.noticeBeams').slideUp();
+        $('#oadNotifications').remove();
+        if($('.noticeBeams .notice .h--box-alert-top').length >= 1) {
+            window.App.siteView.view.beamsCountNotificationContent();
+        } else if($('.noticeBeams .notice .h--box-alert-top').length === 0) {
+            $('.noticeBeams').remove();
+        }
+        $('.noticeBeams').slideDown();
+        $('.update-your-data-warning').remove();
+    },
+    beamNotifications: function(event) {
+
+        $('#hideBeams').click();
+
+        var current = $(event.currentTarget);
+        var method = current.data('method');
+
+        if('undefined' === typeof oad[method]) {
+            return false;
+        }
+
+        return oad[method]('CUST_DATA_CONFIRMATION');
+    },
+    confirmOad: function() {
+        oad.done('CUST_DATA_CONFIRMATION');
+    }
+};

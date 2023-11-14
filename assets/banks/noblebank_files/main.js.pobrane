@@ -1,0 +1,249 @@
+
+var inDevelopment = !0;
+
+!function(window) {
+    var pathName = window.location.pathname.replace(/\//g, '');
+    switch (pathName) {
+      case 'pbl':
+      case 'brokerstocks':
+      case 'pa':
+      case 'eid':
+        window.AppModule = pathName + '/';
+        break;
+
+      default:
+        window.AppModule = 'front/';
+    }
+}(window, document);
+
+!function(window) {
+    for (var method, noop = function() {}, methods = [ 'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn' ], length = methods.length, console = window.console = window.console || {}; length--; ) {
+        method = methods[length];
+        if (!console[method] || !inDevelopment) {
+            console[method] = noop;
+        }
+    }
+}(window, document);
+
+require.config({
+    baseUrl: '/static/scripts',
+    waitSeconds: 120,
+    paths: {
+        jquery: 'libs/jquery-1.11.2.min',
+        jqueryMigrate: 'libs/jquery-migrate-1.2.1.min',
+        jCaret: 'libs/jquery.caret',
+        jqueryui: 'libs/jquery-ui.min',
+        bootstrap: 'libs/bootstrap.min',
+        underscore: 'libs/underscore-min',
+        backbone: 'libs/backbone-min',
+        raphael: 'libs/raphael-min',
+        raphaelpiechart: 'libs/raphaelpiechart',
+        modernizr: 'libs/modernizr',
+        nanoscroller: 'libs/jquery.nanoscroller.min',
+        picker: 'libs/datepicker/picker',
+        pickerdate: 'libs/datepicker/picker.date',
+        legacy: 'libs/datepicker/legacy',
+        picker_pl: 'libs/datepicker/pl_PL',
+        inputmask_core: 'libs/inputmask.min',
+        mask: 'libs/jquery.mask',
+        inputmask: 'libs/jquery.inputmask.min',
+        hideseek: 'libs/jquery.hideseek.min',
+        icheck: 'libs/icheck.min',
+        validateForms: 'libs/validateForms',
+        popUp: 'libs/popup',
+        easing: 'libs/jquery.easing.min',
+        formSelect: 'libs/formSelect',
+        actual: 'libs/jquery.actual.min',
+        fileDownload: 'libs/jquery.fileDownload',
+        dragtable: 'libs/jquery.dragtable',
+        colpick: 'libs/colpick',
+        SmartBanner: 'libs/smart-app-banner',
+        MobileDetect: 'libs/mobile-detect',
+        Fingerprint2: 'libs/fp2.min',
+        RequestModel: window.AppModule + 'bb/RequestModel',
+        DefaultActions: window.AppModule + 'bb/DefaultActions',
+        SiteView: window.AppModule + 'bb/SiteView',
+        ModernView: window.AppModule + 'bb/ModernView',
+        CreditpaView: 'front/views/CreditpaView',
+        TopInfoBoxView: window.AppModule + 'bb/TopInfoBoxView',
+        TopView: window.AppModule + 'bb/TopView',
+        PopUpView: window.AppModule + 'bb/PopUpView',
+
+        router: window.AppModule + 'router',
+        mainRequestModel: 'main/bb/RequestModel',
+        mainDefaultActions: 'main/bb/DefaultActions',
+        mainSiteView: 'main/bb/SiteView',
+        mainTopInfoBoxView: 'main/bb/TopInfoBoxView',
+        mainTopView: 'main/bb/TopView',
+        mainPopUpView: 'main/bb/PopUpView',
+
+        mainRouter: 'main/router',
+        validateIBAN: 'libs/iban',
+        md5: 'libs/md5',
+        livequery: 'libs/jquery.livequery.min',
+        pieChart: 'libs/pieChart',
+        fitText: 'libs/jquery.fittext',
+        tutorial: 'libs/tutorial',
+        bootstrapTour: 'libs/bootstrap-tour.min',
+        charCount: 'libs/charCount',
+        jqScroller: 'libs/jquery.scrollbar.min',
+        accounting: 'libs/accounting.min',
+        datepicker: 'libs/bootstrap-datepicker',
+        eventManager: window.AppModule + 'bb/EventManager',
+        im: 'libs/node_modules/inputmask/dist/jquery.inputmask.bundle',
+        touch: 'libs/jquery.ui.touch.punch',
+        fatca: window.AppModule + 'bb/Fatca',
+        banner: window.AppModule + 'bb/Banner',
+        chat: 'main/bb/Chat',
+        notifications: window.AppModule + 'bb/Notifications',
+        tabMenu: 'libs/tabMenu',
+        slick: 'libs/slick',
+        acceptance: window.AppModule + 'lib/acceptance',
+        animateAuto: 'libs/jquery.animateAuto',
+        chartjs: 'libs/Chart.bundle.min',
+        uiKit: 'main/bb/UiKit',
+        transfer: 'main/bb/functional/Transfer',
+        stickyMenu: 'main/bb/stickyMenu',
+        confirmation: 'main/bb/Confirmation',
+        oad: 'main/bb/oad',
+        ferryt: 'main/bb/Ferryt',
+        creditInsurances: 'main/bb/CreditInsurances'
+    },
+    shim: {
+        'jqueryMigrate': {
+            deps: ['jquery'],
+            exports: '$'
+        },
+        jqueryui: {
+            deps: [ 'jquery', 'jqueryMigrate' ],
+            exports: '$'
+        },
+        bootstrap: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        easing: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        icheck: {
+            deps: [ 'jquery' ],
+            exports: 'jQuery.fn.iCheck'
+        },
+        picker: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        pickerdate: {
+            deps: [ 'picker' ],
+            exports: '$'
+        },
+        picker_pl: {
+            deps: [ 'pickerdate', 'legacy' ],
+            exports: '$'
+        },
+        inputmask: {
+            deps: [ 'jquery', 'inputmask_core' ],
+            exports: '$'
+        },
+        im: {
+            deps: [ 'jquery' ],
+            exports: '$'
+        },
+        mask: {
+            deps: [ 'jquery' ],
+            exports: '$'
+        },
+        hideseek: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        nanoscroller: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        modernizr: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        raphael: {
+            exports: "raphael"
+        },
+        raphaelpiechart: {
+            deps: [ 'raphael' ],
+            exports: "raphael"
+        },
+        validateForms: {
+            deps: [ 'jqueryMigrate', 'livequery' ],
+            exports: '$'
+        },
+        popUp: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        formSelect: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        actual: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        fileDownload: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        dragtable: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        colpick: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        },
+        validateIBAN: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        md5: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        livequery: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        pieChart: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        fitText: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        bootstrapTour: {
+            deps: [ 'jqueryMigrate' ],
+            exports: '$'
+        },
+        tutorial: {
+            deps: [ 'bootstrapTour' ],
+            exports: '$'
+        },
+        charCount: {
+            deps: [ 'jquery' ],
+            exports: '$'
+        },
+        jqScroller: {
+            deps: [ 'jquery' ],
+            exports: 'jQuery.fn.scrollbar'
+        },
+        touch: {
+            deps: [ 'jqueryui' ],
+            exports: '$'
+        }
+    }
+});
+
+require([ 'app' ], function(App) {
+    App.initialize();
+});

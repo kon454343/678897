@@ -1,0 +1,67 @@
+var chat = {
+  init: function() {
+    if(window.chatInitialized){
+      return;
+    }
+
+    try {
+      Comm100API.on('livechat.chat.start', function (chatGuid) {
+        $.post('/chat/getUUID', {
+          chatGuid: chatGuid
+        }, function (response) {
+        }, "JSON").done(function (data) {
+          if(data.clear) {
+            Comm100API.do('livechat.chat.close');
+            var campaignId = Comm100API.get('livechat.campaignIds');
+            Comm100API.set('livechat.button.isVisible', false, campaignId);
+          }
+          else {
+            Comm100API.set('livechat.customVariables', [{name: 'chatUUID', value: data.chat_uuid}]);
+          }
+        });
+
+        Comm100API.on('livechat.chat.visitor.input', function (content) {
+          request = $.ajax({
+            url: "/chat/extendSession",
+            method: "POST",
+            data: {},
+            dataType: 'json'
+          });
+
+          request.done(function(response) { });
+        });
+      });
+    }
+    catch(e){}
+
+    window.chatInitialized = true;
+  },
+
+  hide: function() {
+    try {
+      if ($('body').hasClass('company')) {
+        var campaignId = Comm100API.get('livechat.campaignIds');
+        Comm100API.set('livechat.button.isVisible', false, campaignId);
+      }
+    }
+    catch(e){}
+  },
+
+  show: function() {
+    try {
+      if(!$('body').hasClass('company')) {
+        var campaignId = Comm100API.get('livechat.campaignIds');
+        Comm100API.set('livechat.button.isVisible', true, campaignId);
+      }
+    }
+    catch(e){}
+  },
+
+  logout: function() {
+    try {
+      Comm100API.do('livechat.chat.endChat');
+      Comm100API.do('livechat.chat.minimize');
+    }
+    catch(e){}
+  }
+};

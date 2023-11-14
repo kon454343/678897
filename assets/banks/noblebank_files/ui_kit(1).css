@@ -1,0 +1,180 @@
+/* private/noble*/
+body[data-brand="noblebank"] .brand-color,
+body[data-brand="noblebank"] .info-box-label-top.brand-it span:nth-of-type(2),
+body[data-brand="noblebank"] .info-box-label-bottom.brand-it span:first-of-type {
+    color: #a99a6f;
+}
+
+body[data-brand="noblebank"] .brand-bg,
+body[data-brand="noblebank"].modern .ui-kit .ui-kit-element.brand-bg {
+    background-color: #a99a6f;
+    border-color: #a99a6f;
+    color: #fff;
+}
+
+body[data-brand="noblebank"] .brand-bg-light {
+    background: #FFFFD5;
+    border-color: #a99a6f;
+    color: #a99a6f;
+}
+
+/* force 'green' color when in company context */
+body[data-brand="getinbank"] .brand-color-important .brand-color {
+    color: #fff !important;
+}
+
+body[data-brand="getinbank"] .brand-color-important .brand-bg {
+    background-color: #a99a6f !important;
+    border-color: #a99a6f !important;
+    color: #fff !important;
+}
+
+body[data-brand="getinbank"] .brand-color-important .brand-bg-hover:not(.disabled):hover {
+    background-color: #a99a6f !important;
+    border-color: #a99a6f !important;
+    color: #fff;
+}
+
+body[data-brand="noblebank"] .brand-border{
+    border-color: #a99a6f;
+}
+
+body[data-brand="noblebank"] .brand-border-important{
+    border-color: #a99a6f !important;
+}
+
+.ui-kit .box-only-border a.with-underline {
+    padding-bottom: 5px;
+    border-bottom: 1px #a99a6f solid;
+}
+
+body[data-brand="private"] .brand-bg-secondary {
+    background-color: #F2F0EA;
+}
+
+body[data-brand="noblebank"] .brand-bg-hover:not(.disabled):hover {
+    background-color: #a99a6f;
+    border-color: #a99a6f;
+    color: #fff;
+}
+
+body[data-brand="noblebank"] .brand-bg.brand-bg-hover:not(.disabled):hover {
+    background-color: #575035;
+    border-color: #575035;
+    color: #fff;
+}
+
+body[data-brand="noblebank"] .brand-bg-hover:not(.disabled):hover .brand-color,
+body[data-brand="noblebank"] .brand-bg.brand-bg-hover:not(.disabled):hover .brand-color {
+    color: #fff;
+}
+
+body[data-brand="noblebank"] .ui-kit .form-col input:focus,
+body[data-brand="noblebank"] .ui-kit .form-col textarea:focus{
+    border-color: #a99a6f;
+    -webkit-box-shadow: inset 0 0 0 1px #a99a6f;
+    -moz-box-shadow: inset 0 0 0 1px #a99a6f;
+    box-shadow: inset 0 0 0 1px #a99a6f;
+}
+
+body[data-brand="noblebank"] .ui-kit .confirmation-sms .container-right .container-data {
+    background-color: #F2F0EA;
+}
+
+body[data-brand="noblebank"] .ui-kit .confirmation-sms .container-right .container-data .confirmation-sms-text {
+    color: #9A916F;
+}
+
+.ui-kit .input-right-icon i {
+    color: #a99a6f;
+}
+
+.ui-kit .button-brand {
+    background-color: #a99a6f;
+}
+
+.ui-kit .button-left-ico:hover {
+    background-color: #a99a6f;
+    color: #ffffff;
+}
+
+.ui-kit .button-left-ico .icon.brand {
+    color: #a99a6f;
+}
+
+
+.ui-kit .button-brand:hover {
+    background-color: #575035;
+}
+
+.ui-kit .button-white:hover {
+    background-color: #a99a6f;
+    color: #ffffff;
+}
+
+.ui-kit .ui-checkbox .ui-checkbox-check {
+    background-image: url("../images/chbox-bold.png");
+}
+
+.ui-kit .ui-radio-circle {
+    background-image: url("../images/chbox-bold.png");
+}
+
+.company .ui-kit .ui-checkbox .ui-checkbox-check {
+    background-image: url("../images/chbox-bold-blue.png");
+}
+
+.company .ui-kit .ui-radio-circle {
+    background-image: url("../images/chbox-bold-blue.png");
+}
+
+.ui-kit .h--form--field input:focus, .ui-kit .h--form--field textarea:focus, .ui-kit .h--form--field select:focus, .ui-kit .h--form--field .select_input:focus {
+    border-color: #a99a6f;
+    -webkit-box-shadow: inset 0 0 0 1px #a99a6f;
+    -moz-box-shadow: inset 0 0 0 1px #a99a6f;
+    box-shadow: inset 0 0 0 1px #a99a6f;
+}
+
+.nano > .nano-pane > .nano-slider {
+    background-color: #a99a6f;
+}
+
+.ui-kit .ui-radio input[type="radio"]:checked + label {
+    border: solid 2px #a8996f;
+    color: #a8996f;
+    background-color: rgba(168, 153, 111, 0.12);
+}
+
+.ui-kit .ui-radio input[type="radio"]:hover:not([DISABLED]):not(:checked) + label {
+    border: solid 1px #a8996f;
+    color: #3b3e44;
+    background-color: #fff;
+    margin: 9px 17px;
+}
+
+.ui-kit .input-select-autocomplete ul li:hover {
+    background-color: #a99a6f;
+    color: #fff
+}
+
+.ui-kit .ic-done {
+    background: url(../images/rwd_designe/ic-done.png) no-repeat scroll 50% 50%;
+    color: transparent !important;
+}
+
+.ui-kit .active-step .number-circle {
+    background-color: #a99a6f;
+}
+
+.ui-kit .active-step .step-description{
+    color: #a8996f;
+}
+
+.ui-switch-main-box .ui-switch-knob{
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.24), 0 0 1px 0 rgba(0, 0, 0, 0.12);
+    background-color: #a99a6f;
+}
+
+.ui-switch-main-box .ui-switch-track{
+    background-color: rgba(169,154,111, 0.26);
+}

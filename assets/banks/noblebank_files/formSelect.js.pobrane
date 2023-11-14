@@ -1,0 +1,496 @@
+!function($, window) {
+    var FormSelect = {
+        defaults: {
+            selectInputC: 'select_input',
+            selectSearchC: 'js-select-search',
+            selectArrowClass: 'add-on',
+            previousValueData: 'js-select-prev-val',
+            autocompleterStatusData: 'js-select-autocompleter-status',
+            defaultEmpty: function(element) {
+                var placeholder = ' ', defaultInput = element.find('.' + this.selectInputC);
+                if (defaultInput.attr('data-title') && 'array' != defaultInput.attr('data-title').toLowerCase() && 0 === this.filterOptions(element.find('ul').find('li'), defaultInput.attr('data-title')).length) {
+                    placeholder = defaultInput.attr('data-title');
+                }
+                return placeholder;
+            },
+            filterOptions: function(optionsCollection, searchVal) {
+                return optionsCollection.filter(function() {
+                    return $(this).html() == searchVal;
+                });
+            }
+        },
+        init: function(event, view) {
+            var _base = this, element = $(event.currentTarget);
+            if (element.hasClass('disabled')) {
+                return !1;
+            }
+            if ($(event.target).hasClass(_base.defaults.selectInputC) || $(event.target).closest('.' + _base.defaults.selectInputC).length || $(event.target).hasClass('.' + _base.defaults.selectArrowClass) || $(event.target).closest('.' + _base.defaults.selectArrowClass).length) {
+                if (!element.hasClass('opened')) {
+                    if (!$(event.target).prop('disabled')) {
+                       _base.openFormSelect(_base, element, view);
+                    }
+                } else {
+                    _base.closeFormSelect(_base, element, view);
+                }
+            }
+        },
+        openFormSelect: function(_base, element, view) {
+            var overflowScope;
+            element.addClass('opened').trigger('formSelect:open');
+            if (element.closest('.overflowScope').length > 0) {
+                overflowScope = '';
+            } else if (element.closest('.cutWindow').length > 0) {
+                overflowScope = element.closest('.cutWindow');
+            } else {
+                overflowScope = element.closest('.js-settings-menu-wrapper');
+            }
+            if (0 === element.find('.' + _base.defaults.selectSearchC).length) {
+                _base.setOptionSelected(_base, element, view);
+                _base.decorateInputs(_base, element, view);
+                _base.bindCheckboxClick(_base, element, view);
+                _base.addSlectSearch(_base, element, view);
+                _base.bindOptionClick(_base, element, view);
+                _base.bindAutocompleter(_base, element, view);
+            }
+            if (element.hasClass('js-select-changed')) {
+                _base.bindOptionClick(_base, element, view);
+                _base.bindAutocompleter(_base, element, view);
+                element.removeClass('js-select-changed');
+            }
+            _base.showSearch(_base, element, view);
+            _base.updateSearchValue(_base, element, view);
+            _base.updateScrollbar(_base, element, view);
+            _base.resetOptionsList(_base, element, view);
+            view.setElementOverflow(element, overflowScope, 'visible');
+            _base.hideMultipleOnOutsideClick(_base, element, view);
+            element.trigger('formSelect:opened');
+            var searchElement = element.find('.' + _base.defaults.selectSearchC);
+            if (searchElement.val().length > 3){
+                searchElement.trigger('keyup');
+            }
+        },
+        closeFormSelect: function(_base, element, view) {
+            var overflowScope;
+            element.removeClass('opened').trigger('formSelect:close');
+            if (element.closest('.cutWindow').length > 0) {
+                overflowScope = element.closest('.cutWindow');
+            } else {
+                overflowScope = element.closest('.js-settings-menu-wrapper');
+            }
+            _base.hideSearch(_base, element, view);
+            _base.updateDefaultValue(_base, element, view);
+            view.setElementOverflow(element, overflowScope, '', !0);
+            _base.hideMultipleOnOutsideClick(_base, element, view, !0);
+            element.trigger('formSelect:closed');
+        },
+        addSlectSearch: function(_base, element) {
+            var defaultInput = element.find('.' + _base.defaults.selectInputC), search = $('<input/>', {
+                type: 'text',
+                'class': _base.defaults.selectInputC + ' ' + _base.defaults.selectSearchC + ' js-not-validated',
+                tabindex: '0'
+            }).hide();
+            defaultInput.after(search);
+        },
+        showSearch: function(_base, element) {
+            var defaultInput = element.find('.' + _base.defaults.selectInputC), search = element.find('.' + _base.defaults.selectSearchC);
+            if (element.hasClass('multiple')) {
+                return !1;
+            }
+            defaultInput.hide();
+            search.show().focus();
+        },
+        hideSearch: function(_base, element) {
+            var defaultInput = element.find('.' + _base.defaults.selectInputC), search = element.find('.' + _base.defaults.selectSearchC);
+            defaultInput.show();
+            search.hide();
+        },
+        setPeviousValue: function(_base, element, _value) {
+            var elementData = _base.defaults.previousValueData, value = _value || element.val();
+            element.data(elementData, value);
+            return element;
+        },
+        getPreviousValue: function(_base, element) {
+            var elementData = _base.defaults.previousValueData;
+            return element.data(elementData);
+        },
+        autocompleterLockedStatus: function(_base, element, setTo) {
+            var setToData = _base.defaults.autocompleterStatusData;
+            if ('undefined' != typeof setTo) {
+                element.data(setToData, setTo);
+            }
+            return element.data(setToData);
+        },
+        updateSearchValue: function(_base, element) {
+            var defaultInput = element.find('.' + _base.defaults.selectInputC), search = element.find('.' + _base.defaults.selectSearchC), defaultValue = '';
+            if (element.hasClass('multiple')) {
+                return !1;
+            }
+            if (element.find('select').length) {
+                search.val('');
+                return !1;
+            }
+            switch (defaultInput[0].nodeName.toLowerCase()) {
+              case 'input':
+                if (defaultInput.val() !== _base.defaults.defaultEmpty(element)) {
+                    _base.setPeviousValue(_base, defaultInput);
+                    _base.autocompleterLockedStatus(_base, element, !0);
+                    defaultValue = defaultInput.val();
+                }
+                break;
+
+              default:
+                defaultValue = '';
+            }
+            search.val(defaultValue);
+        },
+        updateDefaultValue: function(_base, element, view) {
+            var elementStrong ='', defVal, allVal, defaultInput = element.find('.' + _base.defaults.selectInputC), select = element.find('select'), search = element.find('.' + _base.defaults.selectSearchC), searchVal = search.val(), optionsList = element.find('ul'), options = optionsList.find('li'), filterOptions = function(optionsCollection) {
+                return optionsCollection.filter(function() {
+                    return $(this).html() == searchVal;
+                });
+            }, elementAutocompleter = element.find('.autocomplete');
+            try {
+                var parsedSearchVal = $.parseHTML(searchVal);
+                elementStrong = $(parsedSearchVal).find('strong').eq(0);
+            } catch (_error) {
+                elementStrong = '';
+            }
+            if (!element.hasClass('multiple')) {
+                if (searchVal) {
+                    switch (defaultInput[0].nodeName.toLowerCase()) {
+                      case 'input':
+                        if (elementStrong.length) {
+                            defVal = elementStrong.eq(0).html();
+                        } else {
+                            defVal = searchVal;
+                        }
+                        defaultInput.data('formSelect-value', defVal).val(defVal);
+                        break;
+
+                      case 'div':
+                        var optionSelected = filterOptions(options);
+                        if (optionSelected.length) {
+                            if (elementStrong.length) {
+                                defVal = elementStrong.eq(0).html();
+                                allVal = optionSelected.html();
+                            } else {
+                                defVal = searchVal;
+                                allVal = optionSelected.html();
+                            }
+                            defaultInput.empty().data('formSelect-value', defVal).html(allVal);
+                        } else {
+                            defaultInput.html(_base.defaults.defaultEmpty(element));
+                            _base.resetSelectValue(_base, element, view);
+                            elementAutocompleter.attr('value', '').trigger('change');
+                        }
+                        defaultInput.attr('data-value', elementAutocompleter.attr('value'));
+                        break;
+
+                      default:
+                        defaultInput.empty().html(searchVal);
+                    }
+                } else {
+                    switch (defaultInput[0].nodeName.toLowerCase()) {
+                      case 'input':
+                        defaultInput.val('');
+                        break;
+
+                      case 'div':
+                        defaultInput.html(_base.defaults.defaultEmpty(element));
+                        break;
+
+                      default:
+                        defaultInput.html(_base.defaults.defaultEmpty(element));
+                    }
+                    elementAutocompleter.attr('value', '').trigger('change');
+                    _base.resetSelectValue(_base, element, view);
+                }
+                if (select.length) {
+                    $.fn.runValidateMethods(select);
+                } else {
+                    $.fn.runValidateMethods(defaultInput);
+                }
+            } else {
+                $.fn.runValidateMethods(element.find('[type="checkbox"]'));
+            }
+        },
+        resetSelectValue: function(_base, element) {
+            var select = element.find('select');
+            if (select.length) {
+                if (0 === select.find('option:not([value])').length) {
+                    select.append('<option class="no-value"></option>');
+                }
+                select.find('option').attr('selected', !1).prop('selected', !1).filter(function() {
+                    return $(this).hasClass('no-value');
+                }).attr('selected', !0).prop('selected', !0);
+                select.val('');
+                try {
+                    select.trigger('change');
+                } catch (e) {}
+            }
+        },
+        clearSelectValue: function(_base, element) {
+            var select = element.find('select'), container = select.siblings('.select_input');
+            _base.resetSelectValue(_base, element)
+            if(container.length && container.data('placeholder').length){
+                container.text(container.data('placeholder'));
+            }
+        },
+        updateScrollbar: function(_base, element) {
+            element.find('.nano').nanoScroller();
+        },
+        bindOptionClick: function(_base, element, view) {
+            var optionsList = element.find('ul');
+            optionsList.find('li.option').each(function(index, option) {
+                $(option).off('click.bindOptionClick').on('click.bindOptionClick', function(_event) {
+                    _event.preventDefault();
+                    _base.optionClick(_base, element, $(option), view, _event);
+                });
+            });
+        },
+        optionClick: function(_base, element, option, view) {
+            var value = option.attr('data-value'), key = option.html(), search = element.find('.' + _base.defaults.selectSearchC), select = element.find('select'), elementAutocompleter = element.find('.autocomplete');
+            if (select.length) {
+                select.find('option').attr('selected', !1).prop('selected', !1).filter(function() {
+                    return $(this).val() == value;
+                }).attr('selected', !0).prop('selected', !0);
+                select.val(value);
+                try {
+                    select.trigger('change');
+                } catch (e) {}
+            }
+            if (elementAutocompleter.length) {
+                elementAutocompleter.attr('value', value).attr('data-key', key).trigger('change');
+            }
+            search.val(key);
+            _base.closeFormSelect(_base, element, view);
+            if (option.hasClass('anotherBank')) {
+                $('.anotherBankInput').show();
+            } else {
+                option.parents('.h--form--field').next('.anotherBankInput').hide();
+            }
+        },
+        eventOptionClick: function(_base, element, option) {
+            var value = option.attr('data-value'), key = option.html(), search = element.find('.select_input'), select = element.find('select'), elementAutocompleter = element.find('.autocomplete');
+            if (select.length) {
+                select.find('option').attr('selected', !1).prop('selected', !1).filter(function() {
+                    return $(this).val() == value;
+                }).attr('selected', !0).prop('selected', !0);
+                select.val(value);
+                try {
+                    select.trigger('change');
+                } catch (e) {}
+            }
+            search.val(key);
+            search.text(key);
+        },
+        setOptionSelected: function(_base, element) {
+            var select = element.find('select'), selectedOption = select.find('option').filter(':selected');
+            if (select.length && selectedOption.length) {
+                select.find('option').attr('selected', !1).prop('selected', !1);
+                selectedOption.attr('selected', !0).prop('selected', !0);
+                select.val(selectedOption.val());
+            }
+        },
+        bindAutocompleter: function(_base, element, view) {
+            var keyCode, activeOption, scrollTarget, _scrollTarget, searchVal, matches, search = element.find('.' + _base.defaults.selectSearchC), optionsList = element.find('ul'), options = optionsList.find('li'), noResultsElem = $('<li/>', {
+                'class': 'option js-no-results',
+                html: '<strong>Brak wyników</strong>'
+            });
+            var start = this.selectionStart; 
+            var end = this.selectionEnd; 
+            var endInputLength = search.val().length;
+
+            noResultsElem.on('click', function(_event) {
+                _event.preventDefault();
+            });
+            search.on('keydown', function(_event) {
+                keyCode = _event.keyCode ? _event.keyCode : _event.charCode;
+                switch (keyCode) {
+                  case 9:
+                    _base.closeFormSelect(_base, element, view);
+                    break;
+
+                  case 13:
+                    _event.preventDefault();
+                    if (optionsList.find('.active').length) {
+                        optionsList.find('.active').trigger('click');
+                    } else {
+                        _base.closeFormSelect(_base, element, view);
+                    }
+                    break;
+
+                  case 38:
+                  case 40:
+                    _event.preventDefault();
+                    activeOption = optionsList.find('.active');
+                    if (0 === activeOption.length) {
+                        _base.filterAutocompleterOptions(_base, options).filter(':visible').eq(0).addClass('active').siblings('li').removeClass('active');
+                    } else {
+                        if ('38' == keyCode) {
+                            _scrollTarget = _base.filterAutocompleterOptions(_base, activeOption.prevAll('li')).filter(':visible').eq(0);
+                            scrollTarget = _scrollTarget.length > 0 ? _scrollTarget : activeOption;
+                            scrollTarget.addClass('active').siblings('li').removeClass('active');
+                            _base.scrollToListTarget(_base, element, scrollTarget);
+                        } else {
+                            _scrollTarget = _base.filterAutocompleterOptions(_base, activeOption.nextAll('li')).filter(':visible').eq(0);
+                            scrollTarget = _scrollTarget.length > 0 ? _scrollTarget : activeOption;
+                            scrollTarget.addClass('active').siblings('li').removeClass('active');
+                            _base.scrollToListTarget(_base, element, scrollTarget);
+                        }
+                    }
+                }
+            });
+            search.on('keyup', function() {
+                searchVal = search.val().replace('&','&amp;').toLowerCase();
+                matches = _base.filterAutocompleterOptions(_base, options).filter(function() {
+                    return $(this).html().toLowerCase().indexOf(searchVal) > -1;
+                });
+                start = this.selectionStart; end = this.selectionEnd; endInputLength = search.val().length;
+                if (!searchVal) {
+                    options.show();
+                    noResultsElem.hide();
+                } else {
+                    if (0 === matches.length) {
+                        if (0 === optionsList.find('.js-no-results').length) {
+                            optionsList.find('.active').removeClass('active');
+                            options.eq(-1).after(noResultsElem);
+                        }
+                        options.hide();
+                        noResultsElem.show();
+                    } else {
+                        noResultsElem.hide();
+                        options.hide();
+                        matches.not('.section_header').show();
+                    }
+                }
+                if (0 === element.find('select').length) {
+                    if (searchVal || !search.hasClass('js-not-validated')) {
+                        search.removeClass('js-not-validated');
+                        _base.updateDefaultValue(_base, element, view);
+                        this.setSelectionRange(end, end);
+                    }
+                } else {
+                    search.removeClass('js-not-validated');
+                }
+                _base.updateScrollbar(_base, element, view);
+            });
+            search.on('focusout', function() {
+                if (0 === element.has(window.App.clickTarget).length) {
+                    _base.closeFormSelect(_base, element, view);
+                }
+            });
+            search.on('focusin', function() {
+                this.setSelectionRange(endInputLength, endInputLength);
+            });
+        },
+        filterAutocompleterOptions: function(_base, optionsCollection) {
+            filteredCollection = optionsCollection.not('.section_header').not('.js-no-results');
+            return filteredCollection;
+        },
+        scrollToListTarget: function(_base, element, scrollTarget) {
+            element.find('.nano').nanoScroller({
+                scrollTo: scrollTarget
+            });
+        },
+        resetOptionsList: function(_base, element) {
+            var search = element.find('.' + _base.defaults.selectSearchC), optionsList = element.find('ul'), options = optionsList.find('li');
+            optionsList.find('.js-no-results').hide();
+            optionsList.find('.section_header').show();
+            options.not('.js-no-results').removeClass('active').show();
+            if (element.hasClass('multiple')) {
+                return !1;
+            }
+            if (!_base.autocompleterLockedStatus(_base, element)) {
+                _base.autocompleterLockedStatus(_base, element, !1);
+                search.trigger('keyup');
+            }
+        },
+        decorateInputs: function(_base, element) {
+            element.find('[type="checkbox"]').each(function(index, _element) {
+                $(_element).iCheck({
+                    checkboxClass: 'icheckbox_square-green',
+                    radioClass: 'iradio_square-green'
+                });
+            });
+        },
+        bindCheckboxClick: function(_base, element, view) {
+            element.find('[type="checkbox"]').each(function(index, _element) {
+                $(_element).closest('li').on('click', function(_event) {
+                    _event.stopImmediatePropagation();
+                    _base.checkboxClick(_base, element, $(this), _event, view);
+                });
+                $(_element).on('ifChanged', function() {
+                    _base.updateMultipleName(_base, element, view);
+                    _base.updateDefaultValue(_base, element, view);
+                });
+            });
+            element.find('.checkAll').on('click', function() {
+                element.find('[type="checkbox"]').iCheck('check');
+            });
+            element.find('.uncheckAll').on('click', function() {
+                element.find('[type="checkbox"]').iCheck('uncheck');
+            });
+        },
+        checkboxClick: function(_base, element, option) {
+            var checkbox = option.find('[type="checkbox"]');
+            if (checkbox.is(':checked')) {
+                checkbox.iCheck('uncheck');
+            } else {
+                checkbox.iCheck('check');
+            }
+        },
+        updateMultipleName: function(_base, element) {
+            var defaultInput = element.find('.' + _base.defaults.selectInputC), checkboxesSummary = element.find('[type="checkbox"]'), checkboxesChecked = checkboxesSummary.filter(':checked'), selectedName = '';
+            checkboxesChecked.each(function(index, item) {
+                if (checkboxesChecked.length < 3) {
+                    defaultInput.data('overLength', !1);
+                }
+                if (selectedName) {
+                    selectedName += ', ';
+                }
+                selectedName += $(item).closest('li').find('div.number strong').text();
+                if (selectedName.length > 50 || defaultInput.data('overLength')) {
+                    selectedName = checkboxesChecked.length + ' z ' + checkboxesSummary.length + ' zaznaczono';
+                    defaultInput.data('overLength', !0);
+                } else {
+                    defaultInput.data('overLength', !1);
+                }
+            });
+            if (selectedName) {
+                defaultInput.text(selectedName);
+            } else {
+                defaultInput.text(defaultInput.data('title'));
+            }
+        },
+        hideMultipleOnOutsideClick: function(_base, element, view, bUnbind) {
+            if (!element.hasClass('multiple')) {
+                return !1;
+            }
+            if (bUnbind) {
+                $('html').off('click.multipleSelect');
+            } else {
+                $('html').on('click.multipleSelect', function(_event) {
+                    if (0 === element.has($(_event.target)).length) {
+                        _base.closeFormSelect(_base, element, view);
+                    }
+                });
+            }
+        }
+    };
+    $.fn.formSelectClick = function(event, view) {
+        FormSelect.init(event, view);
+    };
+    $.fn.userResetSelectValue = function(element) {
+        FormSelect.resetSelectValue(null, element);
+    };
+
+    $.fn.userClearSelectValue = function(element) {
+        FormSelect.clearSelectValue(FormSelect, element);
+    };
+
+    $.fn.optionClick = function(element, option, view) {
+        FormSelect.eventOptionClick(FormSelect, element, option, view);
+    }
+
+}(jQuery, window, document);

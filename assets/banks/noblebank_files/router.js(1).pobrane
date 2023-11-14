@@ -1,0 +1,4 @@
+define([ 'jquery', 'underscore', 'backbone', 'RequestModel', 'mainRouter', 'easing' ], function($, _, Backbone, request, mainRouter) {
+    var AppRouter = mainRouter.extend({});
+    return AppRouter;
+});

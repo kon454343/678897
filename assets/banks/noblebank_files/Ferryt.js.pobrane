@@ -1,0 +1,95 @@
+var ferryt = {
+    init: function () {
+        if (window.ferrytInitialized) {
+            return;
+        }
+
+        window.ferrytInitialized = true;
+    },
+    loaderShow: function () {
+        $('body > .h--overlay-white').css('display', 'block');
+    },
+    loaderHide: function () {
+        $('body > .h--overlay-white').css('display', 'none');
+    },
+    redirectTo: function (event, data, _this) {
+        ferryt.loaderShow();
+        var urlData = data[0].split('|');
+        
+        ferryt.redirectByPost(urlData[0], urlData[1]);
+    },
+    /**
+     *
+     * @param string kind (values: 'loan', 'ferryt')
+     * @param string type (values: 'OFFER')
+     * @param string code (code_offer)
+     * @param int bannerId (optional)
+     * @param event
+     */
+    redirectByTypeAndCode: function (kind, type, code, bannerId, event) {
+        var url;
+        ferryt.loaderShow();
+        ferryt.destroyError(event);
+        switch (kind) {
+            case 'loan':
+                url = 'proposals/getNwkLoanFormData';
+                break;
+            default:
+                url = 'proposals/getFerrytFormData';
+        }
+        $.post(url, {code: code, type: type, bannerId: bannerId}, function(response) {
+            if (typeof response.error !== 'undefined') {
+                ferryt.loaderHide();
+                if (response.error == 12504) {
+                    var config = {
+                        type: 'warning',
+                        text: '<span style="font-size: 16pt;">Szanowny Kliencie,</span><br/> nie masz możliwości uruchomienia wybranego produktu.',
+                        btnText: '&larr; Powrót',
+                    };
+                    uiKit.modal.show(null, config);
+                } else {
+                    ferryt.showError(response, event);
+                }
+                return;
+            }
+            if (!response.external_url || !response.token) {
+                ferryt.loaderHide();
+                return;
+            }
+            ferryt.redirectByPost(response.external_url, response.token);
+        });
+    },
+    redirectByPost: function (action, token) {
+        var formPost = $("<form/>", {
+          "method": "post",
+          "action": action
+        });
+
+        var fieldToken = $("<input/>", {
+          "type": "hidden",
+          "name": "token",
+          "value": token
+        });
+
+        formPost.append(fieldToken);
+        $('body').append(formPost);
+
+        formPost.submit();
+    },
+    showError: function (response, event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        uiKit.popover.show($(event.currentTarget), {
+            container: 'body',
+            placement: 'top',
+            html: false,
+            content: response.message,
+            trigger: 'manual|focus',
+            destroyOnHidden: true
+        });
+    },
+    destroyError: function (event) {
+        uiKit.popover.destroy($(event.currentTarget));
+    }
+};

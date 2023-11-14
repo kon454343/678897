@@ -1,0 +1,21 @@
+.popupWindow-content {
+    background-color: #ffffff;
+}
+
+.popupWindow-title {
+    color: #a99a6f;
+}
+
+.popupWindow-message {
+    color: #3b3e44;
+}
+
+.popupWindow-buttons .btn-primary {
+    border: 1px solid #a99a6f;
+    background-color: #a99a6f;
+}
+
+.popupWindow-buttons .btn-primary:hover {
+    border: 1px solid #1e1e1e;
+    background-color: #1e1e1e;
+}

@@ -1,0 +1,1268 @@
+var uiKit = {
+    view: null,
+    init: function(view) {
+        uiKit.view = view;
+        if(window.uiKitInitiated) {
+            return;
+        }
+        $('body')
+            .on('click.uiKit', '.jsToLoading', uiKit.buttons.blockButtonLoading)
+
+            .on('change.uiKit', '.ui-kit input:not(.disabled, .jsNoRevalidateOnChange)', uiKit.tools.revalidate)
+            .on('change.uiKit', '.ui-kit input.revalidate', uiKit.tools.dataRevalidate)
+
+            .on('click.uiKit', '.ui-calendar i', uiKit.calendar.showCalendar)
+            .on('change.uiKit', 'input.jsDisableCalendarInput', uiKit.calendar.disableCalendar)
+
+            .on('click.uiKit', '.jsSlideMeUp', uiKit.endScreen.slideMeUp)
+
+            .on('click.uiKit', '.jsUiKitModal', uiKit.modal.showByEvent)
+
+            .on('click.uiKit', '.input-select-autocomplete', uiKit.inputSelectAutocomplete.init)
+            .on('click.uiKit', '.jsSelect2Input', uiKit.tools.runNano)
+            .on('keyup.uiKit', '.jsInputValue', uiKit.inputSelect.inputValue)
+            .on('keyup.uiKit', '.jsSelect2Input', uiKit.inputSelect.selectHideList)
+            .on('click.uiKit', '.jsSelect2 .jsDropdownItem', uiKit.inputSelect.changeInputValue)
+            .on('change.uiKit', '.new_ttp', uiKit.inputSelect.changeShowTppList)
+
+            .on('click.uiKit', '.list.ui-select', uiKit.select.toogleSelectList)
+            .on('click.uiKit', '.jsShowMoreLess', uiKit.moreLess.toggleMoreLess)
+            .on('click.uiKit', '.jsToogleHandler', uiKit.moreLess.toogleBox)
+
+            .on('click.uiKit', '.jsValidateField:not(.jsDisabled)  .ui-switch-main-box:not(.disabled)', uiKit.switchbox.toogleSwitch)
+
+            .on('click.uiKit', '.ui-checkbox div.ui-checkbox-check', uiKit.checkbox.toogleCheckbox)
+            .on('click.uiKit', '.ui-checkbox label.ui-checkbox-label', uiKit.checkbox.toogleCheckbox)
+            .on('change.uiKit', 'input.jsToogleDisableElementData:checkbox', uiKit.checkbox.toogleDisableElementData)
+
+            .on('mouseover.uiKit', '.ui-popover:not(.jsPopoverAlwaysOn, .jsPopoverAlwaysOnAndOnStart)', uiKit.popover.showByEvent)
+            .on('mouseout.uiKit', '.ui-popover:not(.jsPopoverAlwaysOn, .jsPopoverAlwaysOnAndOnStart)', uiKit.popover.hideByEvent)
+
+            .on('click.uiKit', '.jsRadioToggleAll:not(.jsDisabled)', uiKit.radio.toggleAllByEvent)
+            .on('change.uiKit', '.jsRadioHasChilds:not(.jsDisabled)', uiKit.radio.toggleAllChildsByEvent)
+            .on('change.uiKit', '.ui-radio-button input[type="radio"]:not(.jsDisabled, .disabled)', uiKit.radio.toggleMessageByEvent)
+
+            .on('change.uiKit', '.jsSubmitOnChange:not(.jsDisabled, .disabled)', uiKit.tools.submitOnChange)
+            .on('click.uiKit', '.jsSubmitOnClick:not(.jsDisabled, .disabled)', uiKit.tools.submitOnClick)
+            .on('click.uiKit', '.jsRefreshSite:not(.jsDisabled, .disabled)', uiKit.tools.refreshSite)
+        ;
+
+        window.uiKitInitiated = true;
+    },
+
+    afterRender: function() {
+        uiKit.popover.show($('.ui-popover.jsShowPopupOnStart'));
+        uiKit.popover.show($('.ui-popover.jsPopoverAlwaysOn'), {trigger: 'manual'});
+        uiKit.popover.show($('.ui-popover.jsPopoverAlwaysOnAndOnStart'), {trigger: 'manual'});
+        uiKit.number.initMask();
+
+        $('.ui-radio-button input[type="radio"].jsRadioHasChilds:not(.jsConfirmationDisabled):checked').each(function() {
+            if($(this).attr('data-klvalue') == 0) {
+                uiKit.radio.disableChilds($(this));
+            }
+        });
+    },
+
+    popover: {
+        showByEvent: function(event) {
+            uiKit.popover.show($(event.currentTarget));
+        },
+        hideByEvent: function(event) {
+            uiKit.popover.hide($(event.currentTarget));
+        },
+        show: function(el, config) {
+            if(el.length < 1) {
+                return;
+            }
+            var popoverClass = 'ui-popover-container popover ' + el.data('popover-class'),
+                delay = el.attr('data-delay'),
+                popoverTemplate = ['<div class="' + popoverClass + '">',
+                    '<div class="arrow"></div>',
+                    '<div class="popover-title"></div>',
+                    '<div class="popover-content">',
+                    '</div>',
+                    '</div>'].join(''),
+                defaultConfig = {
+                    trigger: 'hover',
+                    template: popoverTemplate,
+                    content: el.data('content')
+                }
+            ;
+
+            if(typeof config !== 'object') {
+                config = {};
+            }
+
+            if(config.destroyAll !== undefined && config.destroyAll) {
+                this.destroyAll('.' + config.destroyAll);
+            }
+
+            var finalConfig = $.extend(defaultConfig, config);
+            if(!delay) {
+                delay = 0;
+            }
+
+            uiKit.tools.sleep(delay).then(function() {
+                if(finalConfig.destroyOnHidden === true) {
+                    el.on('hidden.bs.popover', function() {
+                        uiKit.popover.destroy(el);
+                    });
+                }
+                el.popover(finalConfig).popover('show');
+            });
+        },
+        hide: function(el) {
+            el.popover('hide');
+        },
+        destroy: function(el) {
+            el.popover('destroy');
+        },
+        destroyAll: function(name) {
+            $(name).popover('destroy');
+        }
+    },
+
+    moreLess: {
+        toggleMoreLess: function(event) {
+            var el = $(event.currentTarget),
+                oneAtTime = el.hasClass('moreLessOneAtTime')
+            ;
+
+            uiKit.moreLess._toggleMoreLess(el);
+
+            if (oneAtTime) {
+                var toggled = $('.toggled');
+                toggled.removeClass('toggled');
+
+                if (toggled !== undefined && !toggled.is(el)) {
+                    uiKit.moreLess._toggleMoreLess(toggled);
+                }
+
+                if (!toggled.is(el)) {
+                    el.addClass('toggled');
+                }
+            }
+        },
+        _toggleMoreLess: function(el) {
+            var parent = el.closest('.jsToggleMoreLess'),
+                textContainer = parent.find('.jsToggleTextTarget'),
+                name = el.attr('data-toggle-button'),
+                text = parent.attr('data-toggle-text')
+            ;
+
+            parent.attr('data-toggle-text', textContainer.html());
+            textContainer.html(text).slideDown(300);
+
+            el.attr('data-toggle-button', el.html()).html(name);
+        },
+        toogleBoxElement: function(el, noChangeState) {
+            var event = {currentTarget: el};
+            uiKit.moreLess.toogleBox(event, noChangeState);
+        },
+        toogleBox: function(event, noChangeState) {
+            var _this = this, self = $(event.currentTarget),
+                toogleContainer = $('.js-toogle-container'),
+                toogleElement = toogleContainer.find('.box-toogle');
+            if(window.isVisibletoogleBox === undefined) {
+                window.isVisibletoogleBox = false;
+            }
+            if(noChangeState) {
+                if(window.isVisibletoogleBox) {
+                    _this._toogleBoxShow(self, toogleElement, self.data('expended'));
+                } else {
+                    _this._toogleBoxHide(self, toogleElement, self.data('unexpended'));
+                }
+            } else {
+                if(toogleElement.is(':visible')) {
+                    toogleElement.slideUp('slow', function() {
+                        uiKit.moreLess._toogleBoxShow(self, toogleElement, self.data('unexpended'));
+                        window.isVisibletoogleBox = false;
+                    });
+                } else {
+                    toogleElement.slideDown('slow', function() {
+                        uiKit.moreLess._toogleBoxHide(self, toogleElement, self.data('expended'));
+                        window.isVisibletoogleBox = true;
+                    });
+                }
+            }
+        }
+        ,
+        _toogleBoxShow: function(handler, toogleElement, text) {
+            toogleElement.removeClass('unexpanded');
+            toogleElement.addClass('expended');
+            handler.text(text);
+        }
+        ,
+        _toogleBoxHide: function(handler, toogleElement, text) {
+            toogleElement.removeClass('expended');
+            toogleElement.addClass('unexpanded');
+            handler.text(text);
+        }
+    },
+
+    calendar: {
+        showCalendar: function(event) {
+            var self = $(event.currentTarget), calendar = self.siblings('.datepicker2, .datepicker2Earning');
+            if(calendar.attr('disabled') === 'disabled') {
+                return;
+            }
+            calendar.datepicker2('show');
+        },
+        disableCalendar: function(event) {
+            var currentTarget = event.currentTarget,
+                toChange = $($(currentTarget).attr('data-disable'));
+            toChange.val('').attr('value', '').closest('.jsValidateField ').removeClass('alert');
+
+            $.fn.resetValidation(toChange, !0);
+            toChange.prop('disabled', function() {
+                return $(currentTarget).is(':checked');
+            });
+            toChange.data('state', (toChange.prop('disabled') ? 'disabled' : ''));
+        }
+    },
+
+    select: {
+        toogleSelectList: function(event) {
+            var self = $(event.currentTarget), input = self.find('input');
+
+            if(self.closest('.jsValidateField').hasClass('disabled') || self.hasClass('disabled')) {
+                return;
+            }
+
+            if(self.hasClass('jsSelectListOpened')) {
+                self.removeClass('jsSelectListOpened ui-select-opened');
+                $('.ui-select-list.opened').remove();
+            } else {
+                self.addClass('jsSelectListOpened ui-select-opened');
+
+                var list = self.find('.ui-select-list'),
+                    sub = list.clone().addClass('opened').appendTo('body'),
+                    position = self.offset(),
+                    parent = self.closest('.select-container')
+                ;
+                sub.find('li.option[data-value="' + input.val() + '"]').addClass('brand-bg');
+                sub.find('.jsHide').remove();
+                sub.css({
+                    display: 'block',
+                    top: position.top + self.height(),
+                    left: position.left,
+                    width: parent.width() - 1
+                }).nanoScroller({sliderMaxHeight: 186});
+
+                $('body').on('click', function(e) {
+                    var current = $(e.target);
+                    if(current.hasClass('nano-pane') || current.closest('.nano-pane').length > 0) {
+                        return false;
+                    }
+                    if(!self.is(e.target) && 0 === self.has(e.target).length) {
+                        self.removeClass('jsSelectListOpened ui-select-opened');
+                        sub.slideUp('normal', function() {
+                            $(this).remove();
+                        });
+                    }
+                });
+                sub.on('click', 'li', function() {
+                    uiKit.select.selectElement(this);
+                })
+            }
+        },
+        selectElement: function(event) {
+            var self = $(event),
+                parent = $('.ui-select.jsSelectListOpened'),
+                selected = parent.find('.jsUiSelectPlaceholder'),
+                input = parent.find('.jsUiSelectInputTarget')
+            ;
+            selected.html(self.html());
+            input.val(self.attr('data-value'));
+            input.trigger('change', [self]);
+            parent.closest('.jsValidateField').removeClass('alert');
+            if(parent.attr('data-input-additional-target') !== undefined && parent.attr('data-input-additional-target') !== '') {
+                $.each(parent.attr('data-input-additional-target').split(';'), function(i, v) {
+                    uiKit.select.triggerAdditional(self, input, parent, v);
+                });
+            }
+        },
+        triggerAdditional: function(self, input, parent, target) {
+            var additional = self.attr('data-additional'),
+                inputTarget = target !== undefined && target !== '' ? target : null,
+                inputTargetForAdditional = target !== undefined && target !== '' ? parent.find($(target + ':not(:disabled)')) : null;
+            if(inputTargetForAdditional !== null && inputTargetForAdditional.length == 0) {
+                var name = inputTarget.replace('.', '');
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: name,
+                    class: name
+                }).appendTo(input.parent());
+            }
+            if(inputTargetForAdditional !== null) {
+                inputTargetForAdditional = parent.find($(target + ':not(:disabled)'));
+                inputTargetForAdditional.removeData();
+                $.map(self.data(), function(value, key) {
+                    inputTargetForAdditional.data(key, value);
+                });
+                inputTargetForAdditional.attr('data-link', input.attr('name'));
+                inputTargetForAdditional.val(additional);
+                if(additional) {
+                    inputTargetForAdditional.trigger('change');
+                }
+            }
+        },
+        manualSelectElement: function(name, value) {
+            var self = $('input[name="' + name + '"]').siblings('.ui-select-list').find('ul li[data-value="' + value + '"]'),
+                parent = self.closest('.ui-select'),
+                selected = parent.find('.jsUiSelectPlaceholder'),
+                input = parent.find('.jsUiSelectInputTarget')
+            ;
+            selected.html(self.html());
+            input.val(self.attr('data-value'));
+            input.trigger('change', [self]);
+            parent.closest('.jsValidateField').removeClass('alert');
+            if(parent.attr('data-input-additional-target') !== undefined && parent.attr('data-input-additional-target') !== '') {
+                $.each(parent.attr('data-input-additional-target').split(';'), function(i, v) {
+                    uiKit.select.triggerAdditional(self, input, parent, v);
+                });
+            }
+        },
+        clear: function(el) {
+            var parent = el.closest('.ui-select'),
+                selected = parent.find('.jsUiSelectPlaceholder'),
+                input = parent.find('.jsUiSelectInputTarget')
+            ;
+            selected.html(selected.data('placeholder'));
+            input.val('');
+            parent.closest('.jsValidateField').removeClass('alert');
+
+        }
+    },
+    inputSelectAutocomplete: {
+        init: function(event) {
+            uiKit.view.h_select(event);
+        }
+    },
+    inputSelect: {
+        changeShowTppList: function(event) {
+            var currentTarget = $(event.currentTarget).parents('.jsTppController').find('.jsSelect2');
+            if(event.currentTarget.checked === true) {
+                currentTarget.find('.jsDivInputValue').show();
+                currentTarget.find('.dropdown').hide();
+
+                currentTarget.find('.jsDivInputValue').find('input').removeAttr('disabled');
+                currentTarget.find('.dropdown').find('input').attr('disabled', 'disabled');
+            } else {
+                currentTarget.find('.dropdown').show();
+                currentTarget.find('.jsDivInputValue').hide();
+
+                currentTarget.find('.jsDivInputValue').find('input').attr('disabled', 'disabled');
+                currentTarget.find('.dropdown').find('input').removeAttr('disabled');
+            }
+            currentTarget.find('.jsInputValue').val(null);
+            currentTarget.find('.jsSelect2Input').val(null);
+            currentTarget.find('.jsInputSelectValue').val(null);
+        },
+        changeInputValue: function(event) {
+            var parent = $(event.currentTarget).parents('.jsContent');
+            var inputParent = parent.find('.jsValidateField');
+            parent.find('.jsSelect2Input').val($(event.currentTarget).html());
+            $(event.currentTarget).parents('.jsSelect2').find('.jsInputSelectValue').attr('value', $(event.currentTarget).data('value'));
+            $.fn.runValidateMethods(inputParent);
+        },
+        inputValue: function(event) {
+            var currentTarget = $(event.currentTarget).parents('.jsSelect2');
+            currentTarget.find('.jsInputSelectValue').val(currentTarget.find('.jsInputValue').val());
+            setTimeout(function() {
+                $(".nano").nanoScroller();
+            });
+            uiKit.tools.revalidate(event);
+        },
+        selectHideList: function(event) {
+            var key = $(event.currentTarget);
+            key.parents('.jsContent').find('.jsDropdownItem').each(function() {
+                if($(this).html().toLowerCase().indexOf(key.val().toLowerCase()) !== -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    },
+
+    endScreen: {
+        slideMeUp: function(event) {
+            var button = $(event.currentTarget),
+                container = button.attr('data-container'),
+                itemsContainer = button.attr('data-items-container'),
+                emptyItemsContainer = button.attr('data-empty-items-container'),
+                buttonContainer = button.closest(container),
+                parent = buttonContainer.parent()
+            ;
+
+            buttonContainer.slideUp('slow', function() {
+                $(this).remove();
+                if(parent.find(itemsContainer).length < 1) {
+                    parent.find(emptyItemsContainer).slideDown('slow');
+                }
+            });
+        }
+    },
+
+    popup: {
+        show: function(config) {
+
+            var defaultConfig = {
+                destination: '',
+                closeButton: undefined,
+                content: ''
+            };
+            var finalConfig = $.extend(defaultConfig, config);
+
+            var div = $(
+                    '<div class="ui-popup-overlay jsPopupContainer"></div>\n' +
+                    '<div class="ui-kit jsPopupContainer">\n' +
+                    '    <div class="ui-popup-wrapper">\n' +
+                                finalConfig.content +
+                    '    </div>\n' +
+                    '</div>'
+                );
+
+            $('body')
+                .on('click.uiKit', '.jsUiPopupClose', function (){
+                    $('.jsPopupContainer').remove();
+                });
+
+            $(finalConfig.destination).html(div);
+        },
+    },
+
+    modal: {
+        showByEvent: function(event) {
+            uiKit.modal.show($(event.currentTarget), {});
+        },
+        show: function(el, config) {
+            var defaultConfig = {
+                type: '',
+                text: '',
+                closeButton: undefined,
+                backUrl: undefined,
+                btnText: undefined,
+                content: '',
+                actions: undefined,
+            };
+            if(typeof config !== 'object') {
+                config = {};
+            }
+            if(el) {
+                var text = el.data('text');
+                if(text) {
+                    config.text = text;
+                }
+                var type = el.data('type');
+                if(type) {
+                    config.type = type;
+                }
+                var closeButton = el.data('closebutton');
+                if(closeButton) {
+                    config.closeButton = closeButton;
+                }
+                var backUrl = el.data('backurl');
+                if(backUrl) {
+                    config.backUrl = backUrl;
+                }
+                var btnText = el.data('btntext');
+                if(btnText) {
+                    config.btnText = btnText;
+                }
+            }
+            var btnLabel = (config.backUrl) ? 'Powrót' : 'Zamknij';
+            if(config.btnText !== undefined) {
+                btnLabel = config.btnText;
+            }
+            if(!config.content) {
+                config.content =
+                    '            <div class="top-section"><i class="brand-color icon icon--information"></i></div>\n' +
+                    '            <div class="bottom-section">\n' +
+                    '                <span>' + config.text + '</span>\n' +
+                    '                <button class="btn-normal ui-kit-element " type="button"><span>' + btnLabel + '</span></button>\n' +
+                    '            </div>\n';
+            }
+            if(el) {
+                var content = el.data('content');
+                if(content) {
+                    config.content = content;
+                }
+            }
+            var finalConfig = $.extend(defaultConfig, config);
+
+            btnLabel = (finalConfig.backUrl) ? 'Powrót' : 'Zamknij';
+            if(finalConfig.btnText !== undefined) {
+                btnLabel = finalConfig.btnText;
+            }
+            if(finalConfig.text) {
+                finalConfig.content =
+                    '            <div class="top-section"><i class="brand-color icon icon--information"></i></div>\n' +
+                    '            <div class="bottom-section">\n' +
+                    '                <span>' + finalConfig.text + '</span>\n' +
+                    '                <button class="btn-normal ui-kit-element " type="button"><span>' + btnLabel + '</span></button>\n' +
+                    '            </div>\n';
+            }
+            var modalClass = 'ui-modal-' + finalConfig.type,
+                div = $(
+                    '<div class="ui-modal-overlay"></div>\n' +
+                    '<div class="ui-kit">\n' +
+                    '    <div class="ui-modal-wrapper">\n' +
+                    '        <div class="ui-modal ' + modalClass + '">\n' +
+                    finalConfig.content +
+                    '        </div>\n' +
+                    '    </div>\n' +
+                    '</div>'
+                );
+            if(finalConfig.actions !== undefined && finalConfig.actions.length > 0) {
+                $.each(finalConfig.actions, function(index, value) {
+                    div.find(value.button).on('click', {modal: div}, value.handler);
+                });
+            } else {
+                div.find('.btn-normal').click(function() {
+                    var current = $(this);
+                    var closeButton = current.data('closebutton');
+                    var backUrl = current.data('backurl');
+                    if(finalConfig.backUrl) {
+                        window.location.assign(finalConfig.backUrl);
+                    } else if(finalConfig.closeButton === 'reload') {
+                        window.location.reload();
+                    } else if(finalConfig.closeButton === 'resend') {
+                        div.remove();
+                        el.click();
+                    } else if(backUrl) {
+                        window.location.assign(backUrl);
+                    } else if(closeButton === 'reload') {
+                        window.location.reload();
+                    } else if(closeButton === 'resend') {
+                        div.remove();
+                        el.click();
+                    } else {
+                        div.remove();
+                    }
+                });
+            }
+
+            $('body').append(div);
+            $(".nano").nanoScroller();
+        },
+    },
+    tools: {
+        revalidate: function(event) {
+            $.fn.runValidateMethods($(event.currentTarget));
+        },
+        revalidateElement: function(el) {
+            $.fn.runValidateMethods(el);
+        },
+        dataRevalidate: function(event) {
+            var current = $(event.currentTarget), revalidate = current.data('revalidate');
+            if(revalidate === undefined) {
+                return false;
+            }
+            $.each(revalidate.split(';'), function(key, name) {
+                var input = $('input[name="' + name + '"]');
+                if(input !== undefined && input.length > 0 && input.val() !== "" && !uiKit.field.isDisable(input)) {
+                    uiKit.tools.revalidateElement(input);
+                }
+            });
+        },
+        runNano: function() {
+            setTimeout(function() {
+                $(".nano").nanoScroller();
+                $(".nano-pane").css("display", "block");
+                $(".nano-slider").css("display", "block");
+            }, 100);
+        },
+        slideDown: function(el, duration, easing) {
+            if(!duration) {
+                duration = 400;
+            }
+            if(!easing) {
+                easing = 'easeOutQuad';
+            }
+            if(el.hasClass('flex-row')) {
+                el.slideDown({
+                    start: function() {
+                        $(this).css({
+                            display: "flex"
+                        })
+                    },
+                    easing: easing,
+                    duration: duration
+                });
+            } else {
+                el.slideDown(duration, easing);
+            }
+        },
+        sleep: function(time) {
+            var $d = $.Deferred();
+
+            setTimeout(function() {
+                $d.resolve(time);
+            }, time);
+
+            return $d.promise();
+        },
+        submitOnChange: function (el){
+            $(el.target).closest('form').find('button[type="submit"]').click();
+        },
+        submitOnClick: function (el){
+            $(el.target).closest('form').find('button[type="submit"]').click();
+        },
+        refreshSite: function (el){
+            window.location.reload();
+        }
+    },
+
+    buttons: {
+        blockButtonLoading: function(event) {
+            var button = $(event.currentTarget);
+            button.addClass('disabled loading jsDisabledClick');
+        },
+        unblockButtonLoading: function(parentMain) {
+            parentMain.find('button.loading').removeClass('loading disabled jsDisabledClick');
+        },
+        blockButton: function(el) {
+            el.addClass('disabled jsDisabledClick');
+        },
+        unblockButton: function(el) {
+            el.removeClass('disabled jsDisabledClick');
+        },
+    },
+
+    field: {
+        mainContainer: '.jsValidateField',
+        getValue: function(el) {
+            if(el.prop('checked')) {
+                return el.val();
+            }
+            return null;
+        },
+        disable: function(el, disable, label) {
+            var mainContainer = el.closest(uiKit.field.mainContainer)
+            ;
+
+            if(true === disable) {
+                el.attr('disabled', 'disabled');
+                mainContainer.addClass('disabled');
+
+                if(true === label) {
+                    mainContainer.addClass('label-disabled');
+                }
+            } else {
+                el.attr('disabled', false);
+                mainContainer.removeClass('disabled');
+
+                mainContainer.removeClass('label-disabled');
+            }
+        },
+        isDisable: function(el) {
+            if(el.attr('disabled')) {
+                return true;
+            }
+            return false;
+        },
+        clearValue: function(boxClear) {
+            boxClear.each(function() {
+                var current = $(this);
+                if(current.hasClass('jsUiSelectInputTarget')) {
+                    uiKit.select.clear(current);
+                }
+                if(current.closest('.ui-radio-button')) {
+                    uiKit.radio.clearChecked(current);
+                }
+                if(current.closest('.ui-checkbox')) {
+                    uiKit.checkbox.unCheck(current);
+                }
+                if(current.hasClass('calendar')){
+                    current.datepicker2('setValue', (new Date()).toISOString().split('T')[0]);
+                }
+                current.val('');
+                $.fn.resetValidation(current);
+            });
+        },
+        clearBoxValue: function(event) {
+            var el = $(event.currentTarget);
+            var boxClear = el.closest('.jsClear').find('input:not(.jsSkip)')
+            uiKit.field.clearValue(boxClear);
+        },
+        clearBoxValueElement: function(el) {
+            var boxClear = el.find('input:not(.jsSkip)')
+            uiKit.field.clearValue(boxClear);
+        },
+        isChecked: function(el, isInt) {
+            var isChecked = false;
+            if(el.prop('checked') || el.hasClass('checked')) {
+                isChecked = true;
+            }
+            if(isInt === true) {
+                if(isChecked) {
+                    isChecked = 1;
+                } else {
+                    isChecked = 0;
+                }
+            }
+            return isChecked;
+        }
+    },
+
+    radio: {
+        mainContainer: '.jsValidateField',
+        radioContainer: '.jsUiRadioContainer',
+        isChecked: function(el, isInt) {
+            return uiKit.field.isChecked(el, isInt);
+        },
+        getValue: function(el) {
+            return uiKit.field.getValue(el);
+        },
+        unCheck: function(el, isSilent) {
+            var radio = el.closest(uiKit.radio.radioContainer),
+                realRadio = radio.find('input[type="radio"]')
+            ;
+
+            realRadio.attr('checked', false);
+            radio.removeClass('checked');
+
+            if (!isSilent) {
+                realRadio.trigger('change');
+            }
+        },
+        check: function(el, isSilent) {
+            var radio = el.closest(uiKit.radio.radioContainer),
+                realRadio = radio.find('input[type="radio"]')
+            ;
+            if(radio.length === 0) {
+                realRadio = el.find('input[type="radio"]');
+            } else {
+                radio.addClass('checked');
+            }
+            realRadio.attr('checked', true);
+
+            if (!isSilent) {
+                realRadio.trigger('change');
+            }
+        },
+        checkEvent: function(event) {
+            uiKit.radio.check($(event.currentTarget));
+        },
+        disable: function(el, disable, label) {
+            uiKit.field.disable(el, disable, label);
+        },
+        toogleDisableElementData: function(event) {
+            let currentTarget = event.currentTarget,
+                toChange = $($(currentTarget).attr('data-disable')),
+                mainContainer = toChange.closest(uiKit.radio.mainContainer),
+                isDisabled = mainContainer.hasClass('disabled') || toChange.prop('disabled')
+            ;
+
+            toChange.toggleClass('toValidate').closest(uiKit.radio.mainContainer).removeClass('alert');
+
+            $.fn.resetValidation(toChange, !0);
+            uiKit.field.disable(toChange, !isDisabled, true);
+        },
+        clearChecked: function(element) {
+            element.attr('checked', false);
+        },
+        toggleAllByEvent: function(event){
+            uiKit.radio.toggleAll($(event.currentTarget))
+        },
+        toggleAll: function(el) {
+            var checkbox = el.closest(uiKit.checkbox.checkboxContainer),
+                realCheckbox = checkbox.find('input[type="checkbox"]')
+            ;
+
+            if(realCheckbox.attr('disabled') === 'disabled') {
+                return;
+            }
+
+            var radioContainer = realCheckbox.attr('data-radioCheckAllContainer'),
+                radioCheckDataName = realCheckbox.attr('data-radioCheckAllDataName'),
+                radioCheckDataValue = realCheckbox.attr('data-radioCheckAllDataValue'),
+                elements = $(radioContainer).find('input[type="radio"][data-' + radioCheckDataName + '="'+radioCheckDataValue+'"][data-parent=""]'),
+                elementsChilds = $(radioContainer).find('input[type="radio"][data-' + radioCheckDataName + '="'+radioCheckDataValue+'"][data-parent!=""]'),
+                isChecked = checkbox.hasClass('checked')
+            ;
+
+            if(isChecked){
+                elements.attr('checked', 'checked').trigger('change');
+                elementsChilds.attr('checked', 'checked').trigger('change');
+            } else{
+                elements.attr('checked', false);
+                elementsChilds.attr('checked', false);
+                $(radioContainer).find('input[type="radio"][data-parent=""]').attr('checked', false);
+                $(radioContainer).find('input[type="radio"][data-parent!=""]').attr('checked', false);
+                $(radioContainer).find('input[type="radio"]').each(function() {
+                    uiKit.popover.destroy($(this));
+                });
+            }
+        },
+        toggleMessageByEvent: function(event){
+            uiKit.radio.toggleMessage($(event.currentTarget))
+        },
+        toggleMessage: function(el) {
+            var message = el.attr('data-message_on_check'),
+                name = el.attr('name'),
+                additionalClass = el.attr('data-additional_class') ? el.attr('data-additional_class') : 'ui-popover-yellow',
+                placement = el.attr('data-placement')? el.attr('data-placement'): 'top',
+                destroyAll = el.hasClass('closePopoversBefore')? 'closePopoversBefore' : false
+            ;
+
+            if (!message) {
+                $('input[name="'+name+'"]').each(function() {
+                    uiKit.popover.destroy($(this));
+                });
+                return;
+            }
+
+            if ($('input[name="' + el.attr('data-parent') + '"][data-message_on_check!=""]').attr('checked')) {
+                return;
+            }
+
+            if (el.attr('checked') && message.length > 0) {
+                var popoverTemplate = ['<div class="ui-popover-container popover ' + additionalClass + '" data-html="true" style="width:360px;">',
+                    '<div class="arrow"></div>',
+                    '<div class="popover-title"></div>',
+                    '<div class="popover-content">',
+                    '</div>',
+                    '</div>'].join('');
+                uiKit.popover.show(el, {html: true, content: message, placement: placement, trigger: 'manual', template: popoverTemplate, destroyAll: destroyAll});
+            }
+        },
+        toggleAllChildsByEvent: function (event) {
+            uiKit.radio.toggleAllChilds($(event.currentTarget));
+        },
+        disableChilds: function(el) {
+            var
+                name = el.attr('name')
+            ;
+
+            uiKit.field.disable($('input[data-parent="' + name + '"]:not(:checked)'), true);
+        },
+        toggleAllChilds: function(el) {
+            if(!el.hasClass('jsRadioHasChilds')){
+                return;
+            }
+            var
+                name = el.attr('name')
+            ;
+
+            if(el.attr('data-klvalue') == 0){
+                $('input[data-parent="'+name+'"][data-klvalue="0"]').attr('checked', 'checked').trigger('change');
+                //make childs read only
+                uiKit.field.disable($('input[data-parent="'+name+'"]'), true)
+             } else{
+                uiKit.field.disable($('input[data-parent="'+name+'"]'), false);
+                $('input[data-parent="'+name+'"]').attr('checked', false).removeClass('disabled').trigger('change');
+             }
+        }
+    },
+
+    checkbox: {
+        mainContainer: '.jsValidateField',
+        checkboxContainer: '.jsUiCheckboxContainer',
+        isChecked: function(el, isInt) {
+            return uiKit.field.isChecked(el, isInt);
+        },
+        getValue: function(el) {
+            return uiKit.field.getValue(el);
+        },
+        toogleCheckbox: function(event) {
+            var self = $(event.currentTarget),
+                checkbox = self.closest(uiKit.checkbox.checkboxContainer),
+                realCheckbox = checkbox.find('input[type="checkbox"]'),
+                isChecked = checkbox.hasClass('checked'),
+                mainContainer = checkbox.closest(uiKit.checkbox.mainContainer)
+            ;
+            if(mainContainer.hasClass('disabled')) {
+                return false;
+            }
+
+            if(isChecked) {
+                uiKit.checkbox.unCheck(checkbox, realCheckbox);
+            } else {
+                uiKit.checkbox.check(checkbox, realCheckbox);
+            }
+
+
+            if(!realCheckbox.hasClass('no-validate')) {
+                $.fn.runValidateMethods(realCheckbox);
+            }
+        },
+        unCheck: function(el) {
+            var checkbox = el.closest(uiKit.checkbox.checkboxContainer),
+                realCheckbox = checkbox.find('input[type="checkbox"]')
+            ;
+
+            realCheckbox.attr('checked', false);
+            checkbox.removeClass('checked');
+
+            realCheckbox.trigger('change');
+        },
+        check: function(el) {
+            var checkbox = el.closest(uiKit.checkbox.checkboxContainer),
+                realCheckbox = checkbox.find('input[type="checkbox"]')
+            ;
+
+            realCheckbox.attr('checked', true);
+            checkbox.addClass('checked');
+
+            realCheckbox.trigger('change');
+        },
+        disable: function(el, disable, label) {
+            uiKit.field.disable(el, disable, label);
+        },
+        change: function(el, value) {
+            if(!value === !0) {
+                this.unCheck(el);
+            } else {
+                this.check(el);
+            }
+        },
+        toogleDisableElementData: function(event) {
+            let currentTarget = event.currentTarget,
+                toChange = $($(currentTarget).attr('data-disable')),
+                mainContainer = toChange.closest(uiKit.checkbox.mainContainer),
+                isDisabled = mainContainer.hasClass('disabled') || toChange.prop('disabled')
+            ;
+
+            toChange.toggleClass('toValidate').closest(uiKit.checkbox.mainContainer).removeClass('alert');
+
+            $.fn.resetValidation(toChange, !0);
+            uiKit.field.disable(toChange, !isDisabled, true);
+        }
+    },
+    switchbox: {
+        toogleSwitch: function (el){
+            var container = $(el.target).closest('.ui-switch-main-box'),
+                input = container.find('input')
+            ;
+
+            if('right' === container.attr('data-position')){
+                container.removeClass('knob-on-right').attr('data-position', 'left');
+                input.val(container.find('.jsSwitchLeft').attr('data-value'));
+            } else{
+                container.addClass('knob-on-right').attr('data-position', 'right');
+                input.val(container.find('.jsSwitchRight').attr('data-value'));
+            }
+            input.trigger('change');
+        }
+    },
+
+    number: {
+        round: function(amount, precision, part) {
+            var factor = Math.pow(10, precision), result = 0;
+            result = Math.round(amount * factor) / factor;
+            if(part !== undefined) {
+                result = Math.round(result / part) * part;
+            }
+            return result;
+        },
+        /**
+         * kwota bez części dziesiętnej
+         * @param {type} amount
+         * @returns {unresolved}
+         */
+        clearAmount: function(amount) {
+            amount += '';
+            x = amount.replace(',', '.').split('.');
+            x1 = x[0];
+            if(x[1] === undefined) {
+                x[1] = '00';
+            }
+
+            return parseFloat(x1.replace(/\D/g, '') + '.' + x[1]);
+        },
+        /**
+         * formatowanie kwoty
+         * @param {type} amount
+         * @returns {x1|x|x2|String}
+         */
+        filterAmount: function(amount, separator) {
+            amount += '';
+            x = String(this.round(amount.replace(',', '.'), 2)).split('.');
+            x1 = x[0];
+            var complement = separator + x[1];
+            x2 = x.length > 1 ? x[1].length === 1 ? complement + 0 : complement : separator + '00';
+            var rgx = /(\d+)(\d{3})/;
+            while(rgx.test(x1)) {
+                x1 = x1.replace(rgx, '$1' + ' ' + '$2');
+            }
+            return x1 + x2;
+        },
+        initMask: function() {
+            $('.money.float').inputmask("numeric", {
+                radixPoint: ",",
+                groupSeparator: " ",
+                digits: 2,
+                autoGroup: true,
+                prefix: '', //No Space, this will truncate the first character
+                rightAlign: false,
+                oncleared: function() {
+                }
+            });
+        },
+        initMaskElement: function(el) {
+            el.inputmask("numeric", {
+                radixPoint: ",",
+                groupSeparator: " ",
+                digits: 2,
+                autoGroup: true,
+                prefix: '', //No Space, this will truncate the first character
+                rightAlign: false,
+                oncleared: function() {
+                }
+            });
+        }
+    },
+
+    message: {
+        errorHandler: function(error) {
+            if(error !== undefined && error.error !== undefined) {
+                $('.info-error').removeClass('hide').find('.description').text(error.message);
+                $("html, body").animate({scrollTop: 0}, 600);
+                return true;
+            }
+            $('.info-error').addClass('hide').find('.description').text('');
+            return false;
+        },
+    },
+    depending: {
+        current: null,
+        load: function() {
+            var _this = this, name, depending = $('input[name="depending"]').data('meta');
+            if(!depending) {
+                return false;
+            }
+            $.each(depending, function(field, conditions) {
+                var el = $('[name*="' + field + '"]');
+                if(el.length > 1) {
+                    el.each(function(index, value) {
+                        _this.init($(this), field);
+                    })
+                } else {
+                    _this.init(el, field);
+                }
+            })
+
+        },
+        init: function(el, name) {
+            var self = this.current = el, value = el.val(),
+                depending = $('input[name="depending"]').data('meta');
+            if(name === undefined) {
+                var regexName = /\[(\w*)\]$|(^\w*$)/.exec(el.data('link'));
+                name = regexName[1] === undefined ? regexName[2] : regexName[1];
+            }
+            if(name !== undefined && depending[name]) {
+                this.searchConditions(this, depending[name]);
+            }
+        },
+        searchConditions: function(_this, dep) {
+            var result = null;
+            $.each(dep, function(key, value) {
+                if(_this.ifOr(_this, value['if'])) {
+                    _this.then(_this, value['then']);
+                    result = true;
+                    return false;
+                } else {
+                    if(value['else']) {
+                        _this.then(_this, value['else']);
+                        return false;
+                    }
+                }
+            })
+        },
+        ifAnd: function(_this, data) {
+            var result = false;
+            $.each(data, function(key, value) {
+                var element = _this.getElement(_this, key, value);
+                if(element.length > 0 && _this.compare(_this, $(element), value)) {
+                    result = true;
+                } else {
+                    result = false;
+                    return false;
+                }
+
+            });
+            return result;
+        },
+        ifOr: function(_this, data) {
+            var condResult = false;
+            $.each(data, function(key, val) {
+                condResult = _this.ifAnd(_this, data, val);
+                if(condResult) {
+                    return false;
+                }
+            })
+            return condResult;
+        },
+        then: function(_this, fields) {
+            $.each(fields, function(fieldName, actions) {
+                _this.actions(_this, fieldName, actions);
+            })
+        },
+        actions: function(_this, fieldName, actions) {
+            $.each(actions, function(action, data) {
+                if(_this.definitionActions[action] !== undefined) {
+                    _this.definitionActions[action](_this, fieldName, data);
+                }
+            })
+        },
+        definitionActions: {
+            validateDate: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data), min = '', max = '', message_min = '',
+                    message_max = '';
+                if(element.hasClass('datepicker2Earning') || element.hasClass('datepicker2')) {
+                    if(data['min']) {
+                        min = 'min:' + data['min'] + ';';
+                    }
+                    if(data['max']) {
+                        max = 'max:' + data['max'] + ';';
+                    }
+                    if(data['message_min']) {
+                        message_min = 'message_min:' + data['message_min'] + ';';
+                    }
+                    if(data['message_max']) {
+                        message_max = 'message_max:' + data['message_max'] + ';';
+                    }
+                    element.attr('data-validatedate', min + max + message_min + message_max).datepicker2('fill');
+                    $.fn.unbindSpecificValidation(element, 'validateDate');
+                    $.fn.bindValidation(element, 'validateDate');
+                }
+            },
+            checkDates: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data), message = data.message_low,
+                    message_high = data.message_high,
+                    period = 1000 * 86400 * 30 * parseInt(data.min), name = element.attr('name');
+                var definitionValidate = [];
+                definitionValidate[0] = 'with:' + name.replace(fieldName, data['with']);
+                definitionValidate[1] = 'type:' + data['type'];
+                switch(data['type']) {
+                    case  'lower':
+                        definitionValidate[2] = 'message_low:' + message;
+                        break;
+                    case 'higher':
+                        definitionValidate[2] = 'message_high:' + message_high;
+                        break;
+                    case 'diff':
+                        definitionValidate[2] = 'message_diff:' + message;
+                        definitionValidate[3] = 'period:' + period;
+                        break;
+                }
+                element.attr('data-validatehigherlower', definitionValidate.join(';'));
+                $.fn.unbindSpecificValidation(element, 'validateHigherLower');
+                $.fn.bindValidation(element, 'validateHigherLower');
+
+            },
+            OnDisabledField: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data);
+                element = element.is('input') ? element : element.find('input');
+                if(element.hasClass('jsUiSelectInputTarget')) {
+                    uiKit.field.disable(element, true);
+                }
+                element.attr('disabled', 'disabled');
+            },
+            OffDisabledField: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data);
+                element = element.is('input') ? element : element.find('input');
+                if(element.hasClass('jsUiSelectInputTarget')) {
+                    uiKit.field.disable(element, false);
+                }
+                if(element.hasClass('linked')) {
+                    if(!$('input[name="' + 'unlimited_' + element.attr('name') + '"]').is(':checked')) {
+                        element.removeAttr('disabled')
+                    }
+                } else {
+                    element.removeAttr('disabled')
+                }
+            },
+            hideField: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data);
+                element = element.is('input') ? element : element.find('input');
+                if(element.hasClass('jsUiSelectInputTarget')) {
+                    uiKit.field.disable(element, true);
+                }
+                element.attr('disabled', 'disabled').closest('.jsGroup').slideUp('slow');
+                $.fn.resetValidation(element, false);
+            },
+            showField: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data);
+                element = element.is('input') ? element : element.find('input');
+                if(element.hasClass('jsUiSelectInputTarget')) {
+                    uiKit.field.disable(element, false);
+                }
+                if(element.hasClass('linked')) {
+                    if(!$('input[name="' + 'unlimited_' + element.attr('name') + '"]').is(':checked')) {
+                        element.removeAttr('disabled')
+                    }
+                } else {
+                    element.removeAttr('disabled')
+                }
+                element.closest('.jsGroup').slideDown('slow');
+            },
+            requiredOn: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data);
+                element = element.is('input') ? element : element.find('input');
+                if(element.prop('type') == "radio") {
+                    $.fn.bindValidation(element, 'validateRequiredRadio');
+                } else {
+                    $.fn.bindValidation(element, 'validateRequired');
+                }
+            },
+            requiredOff: function(_this, fieldName, data) {
+                var element = _this.getElement(_this, fieldName, data);
+                element = element.is('input') ? element : element.find('input');
+                if(element.prop('type') == "radio") {
+                    $.fn.unbindSpecificValidation(element, 'validateRequiredRadio');
+                } else {
+                    $.fn.unbindSpecificValidation(element, 'validateRequired');
+                }
+            },
+            selectOptionHide: function(_this, fieldName, data) {
+                var currentContainer = _this.current.closest('.ui-select').addClass('jsSkip');
+                var list = _this.current.closest('form').find('.ui-select:not(.jsSkip)').find('input[name*="' + fieldName + '"]').parent().find('.ui-select-list ul');
+                $.each(data.values, function(key, val) {
+                    list.find('li.option[data-value="' + val + '"]').addClass('jsHide');
+                });
+                currentContainer.removeClass('jsSkip');
+            },
+            selectOptionShow: function(_this, fieldName, data) {
+                var currentContainer = _this.current.closest('.ui-select').addClass('jsSkip');
+                var list = _this.current.closest('form').find('.ui-select:not(.jsSkip)').find('input[name*="' + fieldName + '"]').parent().find('.ui-select-list ul');
+                $.each(data.values, function(key, val) {
+                    list.find('li.option[data-value="' + val + '"]').removeClass('jsHide');
+                });
+                currentContainer.removeClass('jsSkip');
+            }
+        },
+        getElement: function(_this, name, options) {
+            var element;
+            if(options['sections'] === 'self') {
+                var handler = _this.current.closest('.jsSection');
+                var tmp_element = _this.current.closest('.jsSection').find('[name="' + name + '"]:not(.noDepending)');
+                if(tmp_element.length > 0) {
+                    element = tmp_element;
+                } else {
+                    element = handler.find('[name*="[' + name + ']"]:not(.noDepending)');
+                }
+            } else if(options['sections'] === 'other') {
+                element = _this.current.closest('form').find('[name*="' + name + '"]:not(.noDepending)');
+            }
+            return $(element);
+        },
+        getElementValue: function(_this, el, options) {
+            switch(options.type) {
+                case "checkbox":
+                    return uiKit.checkbox.isChecked(el, true);
+                    break;
+            }
+            return el.val();
+        },
+        compare: function(_this, el, options) {
+            if(_this.getElementValue(_this, el, options) == options.value) {
+                return true;
+            }
+            return false;
+        }
+    }
+};

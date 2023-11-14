@@ -1,0 +1,18 @@
+var eventManager = {
+    
+    items: {},
+    
+    
+    bindEvent: function(name, object, methodName) {
+        this.items[name] = {
+            object: object,
+            methodName: methodName
+        };
+    },
+    
+    trigger: function(name, data) {
+        var item = this.items[name];
+        item.object[item.methodName](data);
+    }
+    
+};

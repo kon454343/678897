@@ -1,0 +1,75 @@
+var stickyMenu = {
+
+    stickyMenus: {},
+
+    defaultConfig: {
+        scrollLinkHighlighted:   true,
+        scrollLinkDataAttr:     'scroll-link',
+        scrollTargetDataAttr:   'scroll-target',
+        scrollToSectionClass:   'scroll-section',
+        stickyBlurClass:        'sticky-blur',
+        stickyLinkClass:        'sticky-link',
+        bottomEdgeSpace:        0
+    },
+
+    stickyInit: function (menuId, config) {
+        this.stickyMenus[menuId] && (this.stickyMenus[menuId]['jQuery'] = $('#' + menuId)); //this step is needed every time stickyInit is called for existing setup
+        menu = this.stickyMenus[menuId] || this.stickySetup(menuId, config);
+        window.onscroll = function () {
+            stickyMenu.stickyMove(menu);
+        };
+    },
+
+    stickySetup: function (menuId, config) {
+        this.stickyMenus[menuId] = config || this.defaultConfig;
+        this.stickyMenus[menuId]['jQuery'] = $('#' + menuId);
+        this.stickyMenus[menuId]['origin'] = this.stickyMenus[menuId]['jQuery'].offset().top;
+        this.stickyMenus[menuId]['height'] = this.stickyMenus[menuId]['jQuery'].height();
+        this.stickyMenus[menuId]['bottomEdge'] = this.stickyMenus[menuId]['height'] + $('.' + this.stickyMenus[menuId]['stickyBlurClass']).height();
+        this.stickyMenus[menuId]['scroll'] = true;
+        $('body').on('click', '.' + this.stickyMenus[menuId]['stickyLinkClass'], {menu: this.stickyMenus[menuId]}, stickyMenu.stickyScrollToSection);
+        return this.stickyMenus[menuId];
+    },
+
+    stickyMove: function (menu) {
+        if (window.pageYOffset >= menu['origin'] - $('.' + menu['stickyBlurClass']).height()) {
+            menu['jQuery'].addClass("sticky");
+            $('.' + menu['stickyBlurClass']).addClass('show');
+        } else {
+            menu['jQuery'].removeClass("sticky");
+            $('.' + menu['stickyBlurClass']).removeClass('show');
+        }
+
+        // ustawianie aktywnej zakładki submenu w przypadku przewijania
+        if (menu['scroll'] && menu['scrollLinkHighlighted']) {
+            var pageTop = $(window).scrollTop();
+
+            $('.' + menu['scrollToSectionClass']).each(function () {
+                var elementBottom = $(this).offset().top + $(this).height() - menu['bottomEdge'] - menu['bottomEdgeSpace'];
+                
+                if (pageTop < elementBottom) {
+                    $('.' + menu['stickyLinkClass']).removeClass('active');
+                    $('.' + menu['stickyLinkClass'] + '[data-' + menu['scrollLinkDataAttr'] + '="' + $(this).data(menu['scrollTargetDataAttr']) + '"]').addClass('active');
+                    return false;
+                }
+            });
+        }
+    },
+
+    stickyScrollToSection: function (event) {
+        var target = $(event.target);
+        var menu = event.data.menu;
+        var section = $('.scrollSection[data-' + menu['scrollTargetDataAttr'] + '="' + target.data(menu['scrollLinkDataAttr']) + '"]').offset().top - menu['bottomEdge'] - menu['bottomEdgeSpace'] - $('.' + menu['stickyBlurClass'] + ':not(.show)').height();
+
+        menu['scroll'] = false;
+        $('.' + menu['stickyLinkClass']).removeClass('active');
+        target.addClass('active');
+
+        $('body, html').animate({
+            scrollTop: section,
+        }, 500, 'easeOutQuad', function () {
+            menu['scroll'] = true;
+        });
+    }
+
+};

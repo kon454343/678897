@@ -1,0 +1,815 @@
+define(['jquery', 'underscore', 'backbone', 'validateForms', 'DefaultActions', 'picker_pl', 'banner', 'slick'], function($, _, Backbone, ValidateForms, DefaultActions) {
+    var SiteView = DefaultActions.extend({
+        events: {
+            'click .print-pdf': 'printPdf',
+            'click form button[type="submit"]:not(.otherSubmit, .jsDisabledClick), form input[type="submit"]:not(.otherSubmit, .jsDisabledClick)': 'submit',
+            'click [data-hash-change]': 'clickDataHashChange',
+            'click a:not(.jsDisabledClick)': 'click',
+            'click [data-link-href]:not(.jsDisabledClick)': 'goUrl',
+            'click .disableSMS': 'cancelConfirmation',
+            'click .h--select': 'h_select',
+            'click .renewConfirmation': 'renewConfirmation',
+            'click span.copy-account-number': 'copyNrb',
+            'click form button.goFormPrevStep': 'prevFormStep',
+            'click button.gotoNext': 'gotoNext',
+            'click .download-attachment-ann': 'printPdf',
+            'mouseover .h--submenu.context-container': 'hoverContext',
+            'mouseout .h--submenu.context-container': 'hoverContext',
+            'click .h--submenu.context-container > li a': 'changeContext',
+            'click button[name="amlGoToUpdateId"]': 'showTopMenu',
+            'click .banner-message .orderMarketingContactWithoutBanner': banner.orderMarketingContactWithoutBanner
+        },
+        showSpecialOffer: function (event) {
+            var that = this;
+            event.stopPropagation();
+            event.preventDefault();
+
+            $(window).trigger('loader:show');
+            $.get('banner/getSpecialOffer').done(function(result) {
+                if (result) {
+                    $('#siteViewWrapper').append(result);
+                    $('#goalKeeperBanner .banner-message').width(880);
+                    $('#goalKeeperBanner').find('.return-homepage').on('click', function () {
+                        $('.banner-button-close').click();
+                        $('#goalKeeperBanner').remove();
+                    });
+
+                    that.slickGenerate(1, 1);
+                    that.specialOfferSlider();
+                    $('#goalKeeperBanner .banner-message').height($('#goalKeeperBanner .special-offer-form').height());
+                }
+                $(window).trigger('loader:hide');
+            });
+        },
+        specialOfferSlider: function() {
+            var specialOfferSlider = $('#special-offer-slider'),
+                specialOfferNextButton = $('#special-offer-slider .slick-next'),
+                specialOfferPrevButton = $('#special-offer-slider .slick-prev');
+
+            if (this.isSpecialOfferSliderExist) {
+                $('#special-offer-slider').slick('unslick');
+                this.isSpecialOfferSliderExist = false;
+            }
+
+            this.isSpecialOfferSliderExist = specialOfferSlider.length > 0;
+            if (this.isSpecialOfferSliderExist) {
+                var imagesCounter = specialOfferSlider.find('.special-offer-slide').length,
+                    imagesCounterLg = null,
+                    arrowsLg = false,
+                    centerMode = false,
+                    varWidth = false,
+                    centerPadd = '0px',
+                    imagesLg = 3,
+                    initialSlide = 0;
+
+                if (imagesCounter < imagesLg) {
+                    imagesCounterLg = imagesCounter;
+                } else {
+                    imagesCounterLg = imagesLg;
+                }
+
+                if (imagesCounter === 1) {
+                    specialOfferSlider.addClass('one-offer');
+                } else if (imagesCounter === 2) {
+                    specialOfferSlider.addClass('two-offers');
+                } else if (imagesCounter >= imagesLg) {
+                    specialOfferSlider.addClass('three-offers');
+                }
+
+                if (imagesCounter >= imagesLg) {
+                    centerMode = true;
+                    varWidth = true;
+                    initialSlide = 1;
+                    centerPadd = '0';
+                }
+
+                if (imagesCounter > imagesLg) {
+                    arrowsLg = true;
+                }
+
+                specialOfferSlider.slick({
+                    dots: false,
+                    centerMode: centerMode,
+                    infinite: false,
+                    arrows: arrowsLg,
+                    speed: 300,
+                    autoplay: false,
+                    autoplaySpeed: 5000,
+                    slidesToShow: imagesCounterLg,
+                    slidesToScroll: 1,
+                    initialSlide: initialSlide,
+                    centerPadding: centerPadd,
+                    variableWidth: varWidth,
+                    prevArrow: "<button type=\"button\" class=\"slick-prev\"><i class=\"icon ico-arrowOpen\"></i></button>",
+                    nextArrow: "<button type=\"button\" class=\"slick-next\"><i class=\"icon ico-arrowClose\"></i></button>",
+                });
+                function isSlideAfterFirst() {
+                    var currentSlide = parseInt($('.special-offer-slide.slick-current.slick-center').attr('data-slick-index')),
+                        afterFirst = 1,
+                        isAfterFirst = currentSlide === afterFirst;
+
+                    if(isAfterFirst) {
+                        specialOfferPrevButton.addClass('slick-disabled');
+                    } else {
+                        specialOfferPrevButton.removeClass('slick-disabled');
+                    }
+                }
+
+                function isSlideBeforeLast() {
+                    var currentSlide = parseInt($('.special-offer-slide.slick-current.slick-center').attr('data-slick-index')),
+                        beforeLast = imagesCounter - 2,
+                        isBeforeLast = currentSlide === beforeLast;
+
+                    if(isBeforeLast) {
+                        specialOfferNextButton.addClass('slick-disabled');
+                    } else {
+                        specialOfferNextButton.removeClass('slick-disabled');
+                    }
+                }
+
+
+                isSlideAfterFirst();
+                isSlideBeforeLast();
+
+                specialOfferNextButton.on('click', function() { isSlideBeforeLast(); });
+
+                specialOfferPrevButton.on('click', function() { isSlideAfterFirst(); });
+            }
+        },
+        showTopMenu: function (event, page) {
+            var _view = this;
+            var element = $(event.currentTarget);
+            var controllerView = 'SettingsView';
+            if(typeof element.attr('data-action') == 'undefined' && typeof page === 'undefined'){
+                return;
+            }
+            event.stopPropagation();
+            event.preventDefault();
+            if(typeof page !== 'undefined') {
+                var action = page[0];
+            } else {
+                var action = element.data('action');
+                var inner = element.data('inner');
+                var queryString = element.data('querystring');
+            }
+            var directUrl = 'settings/' + (inner && inner !== '' ? inner : action) + '/load' + (queryString ? '/' + queryString : '');
+            if(action == 'recipients') {
+                directUrl = action + '/index';
+                controllerView = 'RecipientsView';
+                $('.banner-button-close').click();
+            }
+            var data = {
+                view: window.App.topView.view,
+                element: $('#topViewWrapper').find('[data-name="settings"]'),
+                'event': event,
+                controller: controllerView,
+                action: 'add',
+                directUrl: directUrl
+            };
+
+            $('body, html').animate({
+                scrollTop: 0
+            }, 250, 'easeOutQuad');
+            if(action == 'recipients') {
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="recipients"]'), !0);
+            }
+            else {
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="settings"]'), !0);
+            }
+            window.App.topView.view.updateSlideBoxContent.init(data).promise().done(function() {
+                var menu = $('.js-settings-menu-wrapper .js-setting-menu');
+                var activeButton = menu.find('[data-href="settings/' + action + '"]');
+                if (!activeButton.length) {
+                    activeButton = menu.find('[data-href="settings/' + action.split('_')[0] + '"]');
+
+                    if (!activeButton.length) {
+                        activeButton = menu.find('[data-href="settings/' + action + '/' + queryString + '"]');
+                    }
+                }
+                activeButton.addClass('active');
+                activeButton.closest('.js-setting-menu').siblings('.js-setting-menu').addClass('js-size-cached no-transitions not-active').attr('data-prev-width', '280').attr('data-prev-margin', '20px').css({
+                    overflow: 'hidden',
+                    width: '0px',
+                    margin: '0px'
+                });
+                activeButton.siblings('.closeSettingsContent').show();
+
+                // execute when amlPopupContainer exists
+                if ($('#amlPopupContainer').length && $('#amlPopupContainer').html().length) {
+                    _view.enableBodyScrolling();
+                    $('#amlPopupContainer').html('').hide();
+                    $('.amlPopupOffer').addClass('rememberAmlOffer').removeClass('amlPopupOffer');
+                    window.rememberAmlOffer = !0;
+                    $.post('aml/setSessionAmlReturn', '', function() {});
+                }
+
+                if(action == 'recipients') {
+                    $(".doRender")[0].click();
+                }
+            });
+//            this.closeSection(event);
+
+        },
+        expandAccountsList: function(accountBox, accountListWrapper, expandListBtn) {
+            var boxBottomOT = accountBox.offset().top + accountBox.outerHeight(),
+                listBottomOT = accountListWrapper.offset().top + accountListWrapper.outerHeight();
+            if (boxBottomOT > listBottomOT) {
+                expandListBtn.click();
+            }
+        },
+        proposalInitialize: function() {
+            var deferr = $.Deferred();
+
+            $.post("layout/getProposalsSession").done(function(data) {
+
+                if (data.isChangedProposals != true) {
+                    $.post("layout/setProposalsSession").done(function() {
+                    });
+
+                    $.getJSON('/layout/changeView/proposal', function() {
+                        window.killRequest = !0;
+                        deferr.resolve();
+                    });
+                } else {
+                    deferr.resolve();
+                }
+            });
+            return deferr;
+        },
+        getProposalInitialzie: function() {
+            return this.needProposalInitialize;
+        },
+        modernInitialize: function() {
+            var deferr = $.Deferred();
+
+            $.post("layout/unsetProposalsSession").done(function() {
+            });
+
+            if (!$('body').hasClass('modern') || this.getProposalInitialzie() === undefined && $('body').hasClass('modern')) {
+                $.getJSON('/layout/changeView/modern/', function() {
+                    window.killRequest = !0;
+                    deferr.resolve();
+                });
+            } else {
+                deferr.resolve();
+            }
+            return deferr;
+        },
+        unInitializeOtherView: function() {
+            var deferr = $.Deferred();
+
+            $.post("layout/unsetProposalsSession").done(function() {
+            });
+
+            $.getJSON('/layout/changeView/', function() {
+                window.killRequest = !0;
+                deferr.resolve();
+            });
+            return deferr;
+        },
+        getModernInitialzie: function() {
+            return this.needModernInitialize;
+        },
+        render: function() {
+
+            var _this = this, deferr = $.Deferred(),
+                action = window.location.hash.split('/'), href = action[0] + "/" + action[1],
+                //w tym array'u podaje metody z wnioskow, ktore nie maja by prezentowane w starym layout
+                //tutaj mozna dodac kolejne metody z wnioskow - spowoduje to ze zostana wczytane z standardowym layout
+                newproposals = ['#proposals/index', '#proposals/submitted', '#proposals/unfinished', '#proposals/list', '#proposals/recommendationProgram', '#proposals/bonusPromotion'];
+            if ((_this.getProposalInitialzie()) && (($.inArray(href, newproposals)) == -1)) {
+                _this.proposalInitialize().promise().done(function() {
+                    if (window.killRequest) {
+                        window.location.reload();
+                        deferr.reject(null);
+                    } else {
+                        _this.getPageParts().promise().done(function(view, viewDestination, viewAnimation) {
+                            deferr.resolve(_this, viewDestination, viewAnimation);
+                        });
+                    }
+                });
+            } else if (_this.getModernInitialzie()) {
+                _this.modernInitialize().promise().done(function() {
+                    if (window.killRequest && !$('body').hasClass('modern')) {
+                        window.location.reload();
+                        deferr.reject(null);
+                    } else {
+                        _this.getPageParts().promise().done(function(view, viewDestination, viewAnimation) {
+                            deferr.resolve(_this, viewDestination, viewAnimation);
+                        });
+                    }
+                });
+            } else {
+                if ($('body').hasClass('modern') && _this.getModernInitialzie() === undefined) {
+                    _this.unInitializeOtherView().promise().done(function() {
+                        if (window.killRequest) {
+                            window.location.reload();
+                            deferr.reject(null);
+                        }
+                    });
+                } else if (href != '#index/index' && window.AppModule != 'pa/') { //sprawdzenie czy to strona logowania
+                    $.post("/layout/getProposalsSession").done(function(data) {
+                        if (data.isChangedProposals == true) {
+                            _this.unInitializeOtherView().promise().done(function() {
+                                if (window.killRequest) {
+                                    window.location.reload();
+                                    deferr.reject(null);
+                                }
+                            });
+                        } else {
+                            _this.getPageParts().promise().done(function(view, viewDestination, viewAnimation) {
+                                deferr.resolve(_this, viewDestination, viewAnimation);
+                            });
+                        }
+                    });
+                } else {
+                    _this.getPageParts().promise().done(function(view, viewDestination, viewAnimation) {
+                        deferr.resolve(_this, viewDestination, viewAnimation);
+                    });
+                }
+            }
+            var $form = $('form.form');
+            if ($form.attr('id') == 'formStandard' || $form.attr('id') == 'formUs' || $form.attr('id') == 'formZus' || $form.attr('id') == 'formCurrency') {
+                $('.error .cloud').addClass('show');
+            }
+
+            return deferr;
+        },
+        getPageParts: function() {
+            var destination, viewAnimation, _this = this, deferr = $.Deferred();
+            if (0 === $('#siteViewWrapper').children().length) {
+                _this.model.set('destination', '#siteViewWrapper');
+            }
+            destination = _this.model.get('destination');
+            _this.model.sendRequest(_this, destination).promise().done(function(data, xhr, status, viewDestination) {
+                if (0 === $('#siteViewWrapper').length) {
+                    $('body').append('<div id="siteViewWrapper" class="wrapper"></div>');
+                }
+                _this.setElement($('#siteViewWrapper'));
+                $.when(_this.renderTopWrapper(), _this.renderView(data, xhr, status, viewDestination)).done(function(topViewArgs, siteViewArgs) {
+                    if (void 0 !== topViewArgs) {
+                        topViewArgs.$el.fadeIn(150, 'easeOutQuad', function() {
+                            window.App.setSiteNavigation();
+                        });
+                    }
+                    if (3 === siteViewArgs.length) {
+                        _viewDestination = siteViewArgs[1];
+                        viewAnimation = siteViewArgs[2];
+                        if (!viewAnimation) {
+                            siteViewArgs[0].fadeIn(150, 'easeOutQuad', function() {
+                                deferr.resolve(_this, _viewDestination, viewAnimation);
+                            });
+                        } else {
+                            deferr.resolve(_this, _viewDestination, viewAnimation);
+                        }
+                    } else {
+                        deferr.resolve(_this, siteViewArgs[1]);
+                    }
+                });
+            });
+            return deferr;
+        },
+        renderView: function(data, xhr, status, destination, dataType) {
+            if (window.changeContext) {
+                this.checkTransfer();
+                window.changeContext = 0;
+                this.notificationBarsCheck();
+            }
+
+            if(window.changeFeaturesAccess) {
+                this.updateFeaturesAccess();
+                window.changeFeaturesAccess = 0;
+            }
+
+            var $data, element, _this = this,
+                viewDestination = void 0 !== destination ? destination : _this.model.get('destination'),
+                deferr = (void 0 !== dataType ? dataType : _this.model.get('dataType'),
+                    $.Deferred()), beforeAnimation = _this.model.get('beforeAnimation'),
+                afterAnimation = _this.model.get('afterAnimation'),
+                beforeAnimationEvent = _this.model.get('beforeAnimationEvent'),
+                afterAnimationEvent = _this.model.get('afterAnimationEvent');
+            window.viewDestination = viewDestination;
+            switch(_this.getResponceType(data, xhr)) {
+                case 'html':
+                    $data = $(data);
+                    if ('#siteViewWrapper' === viewDestination) {
+                        element = _this.$el;
+                    } else {
+                        element = _this.$el.find($(viewDestination));
+                    }
+                    if (beforeAnimation) {
+                        _this[beforeAnimation](destination, beforeAnimationEvent).promise().done(function() {
+                            _this.model.unset('beforeAnimation');
+                            _this.model.unset('beforeAnimationEvent');
+                            element.fadeOut(150, function() {
+                                if (void 0 !== $data.attr('id') && $data.attr('id') === element.attr('id')) {
+                                    element.html($data.html());
+                                } else {
+                                    element.html(data);
+                                }
+                                if (afterAnimation) {
+                                    var afterAnimations = afterAnimation.split(','), animation = null;
+                                    for(animation in afterAnimations) {
+                                        _this[afterAnimations[animation]](destination, afterAnimationEvent);
+                                    }
+                                    _this.model.unset('afterAnimation');
+                                    _this.model.unset('afterAnimationEvent');
+                                }
+                                deferr.resolve(element, viewDestination, _this.model.get('animation'));
+                            });
+                        });
+                    } else {
+                        element.fadeOut(150, function() {
+                            if (void 0 !== $data.attr('id') && $data.attr('id') === element.attr('id')) {
+                                element.html($data.html());
+                            } else {
+                                element.html(data);
+                            }
+                        });
+                        if (afterAnimation) {
+                            var afterAnimations = afterAnimation.split(','), animation = null;
+                            for(animation in afterAnimations) {
+                                _this[afterAnimations[animation]](destination, afterAnimationEvent);
+                            }
+                            _this.model.unset('afterAnimation');
+                            _this.model.unset('afterAnimationEvent');
+                        }
+                        deferr.resolve(element, viewDestination, _this.model.get('animation'));
+                    }
+                    break;
+
+                case 'json-string':
+                    _this.model.set('responseData', data);
+                    deferr.resolve(_this, data);
+                    break;
+
+                case 'json-object':
+                    _this.model.set('responseData', data);
+                    deferr.resolve(_this, data);
+                    break;
+
+                default:
+                    deferr.reject(null);
+            }
+            _this.model.resetOptions();
+            if (null !== xhr.getResponseHeader('X-Wallet-Wrapper')) {
+                $('#siteViewWrapper').addClass(xhr.getResponseHeader('X-Wallet-Wrapper'));
+            } else if (_this.model.get('demoNotFound') == false) {
+                $('#siteViewWrapper').removeAttr('class');
+            }
+            if (null !== xhr.getResponseHeader('X-Wallet-Body-Class')) {
+                $('body').attr('class', xhr.getResponseHeader('X-Wallet-Body-Class'));
+            } else if (_this.model.get('demoNotFound') == false) {
+                $('body').removeAttr('class');
+            }
+            if (null !== xhr.getResponseHeader('X-Wallet-executeEvents')) {
+                _this.executeEvents(xhr.getResponseHeader('X-Wallet-executeEvents'));
+            }
+            return deferr;
+        },
+        renderTopWrapper: function() {
+            var view = this, _deferr = $.Deferred();
+            if ($('#topViewWrapper').length > 0 && 0 === $('#topViewWrapper').children().length) {
+                var data = {
+                    requirePath: window.AppModule + 'bb/TopView',
+                    globalObject: window.App,
+                    viewName: 'topView',
+                    model: view.model
+                };
+                window.App.createView(data).promise().done(function(view) {
+                    view.$el.hide();
+                    $('body').removeClass('app-init');
+                    _deferr.resolve(view);
+                });
+            } else {
+                _deferr.resolve();
+            }
+            return _deferr;
+        },
+        setFormAction: function(event) {
+            var currentTarget = $(event.currentTarget);
+            currentTarget.closest('form').data('action', currentTarget.val());
+        },
+        showAnnouncements: function(event, action) {
+            var deferr = $.Deferred(), data = {};
+            if (window.showAnnouncements || window.App.siteView.currentController === 'ManagementView' || window.App.siteView.currentController === 'ReleaseView') {
+                return;
+            }
+            $('#topViewWrapper, #siteViewWrapper').addClass('blurry');
+            window.showAnnouncements = !0;
+            if (!$('#announcements').length) {
+                $('body').append($('<div/>', {
+                    id: 'announcements'
+                }));
+            }
+            data.controller = 'AnnouncementsView';
+            data.viewName = 'popupView';
+            data.forceReload = !0;
+            $(window).trigger('loader:show');
+            window.App.executeView(data).promise().done(function(_view) {
+                _view.model.set('destination', '#announcements');
+                _view.model.set('url', 'announcements/' + action);
+                _view.model.set('navigate', !1);
+                _view.model.set('event', event);
+                _view.render().promise().done(function(view, _data) {
+                    $(window).trigger('loader:hide');
+                    $(window).trigger('loaderAnnouncements:hide');
+                    $(window).trigger('loaderAml:hide');
+                    try {
+                        if ('object' == typeof _data && _data.noresults) {
+                            view.closeAnnouncements(!0);
+                        } else {
+                            window.App.siteView.view.undelegateEvents();
+                            window.App.topView.view.undelegateEvents();
+                            $('body').find('[href]').filter(function() {
+                                return 0 === $(this).closest('#announcements').length;
+                            }).on('click.announcements', function(__event) {
+                                __event.stopImmediatePropagation();
+                                window.App.navigate('index/index', {
+                                    trigger: !0
+                                });
+                                return !1;
+                            });
+                        }
+                    } catch (_error) {
+                    }
+                    deferr.resolve(_view);
+                });
+            });
+            return deferr;
+        },
+        showCreditAnnouncement: function(event) {
+            var deferr = $.Deferred(), data = {};
+            if (window.showAnnouncements || window.App.siteView.currentController === 'ManagementView' || window.App.siteView.currentController === 'ReleaseView') {
+                return;
+            }
+            $('#topViewWrapper, #siteViewWrapper').addClass('blurry');
+            window.showAnnouncements = !0;
+            if (!$('#announcements').length) {
+                $('body').append($('<div/>', {
+                    id: 'announcements'
+                }));
+            }
+            data.controller = 'AnnouncementsView';
+            data.viewName = 'popupView';
+            data.forceReload = !0;
+            $(window).trigger('loader:show');
+            window.App.executeView(data).promise().done(function(_view) {
+                _view.model.set('destination', '#announcements');
+                _view.model.set('navigate', !1);
+                _view.model.set('event', event);
+                _view.render().promise().done(function(view, _data) {
+                    $(window).trigger('loader:hide');
+                    deferr.resolve(_view);
+                });
+            });
+            return deferr;
+        },
+        showAml: function(event, action) {
+            var deferr = $.Deferred(), data = {};
+            if (window.showAml || window.App.siteView.currentController === 'ManagementView' || window.App.siteView.currentController === 'ReleaseView') {
+                return;
+            }
+            $('#topViewWrapper, #siteViewWrapper').addClass('blurry');
+            window.showAml = !0;
+            if (!$('#announcements').length) {
+                $('body').append($('<div/>', {
+                    id: 'announcements'
+                }));
+            }
+            data.controller = 'AmlView';
+            data.viewName = 'popupView';
+            data.forceReload = !0;
+            $(window).trigger('loader:show');
+            window.App.executeView(data).promise().done(function(_view) {
+                _view.model.set('destination', '#announcements');
+                _view.model.set('url', 'aml/' + action);
+                _view.model.set('navigate', !1);
+                _view.model.set('event', event);
+                _view.render().promise().done(function(view, _data) {
+                    $(window).trigger('loader:hide');
+                    $(window).trigger('loaderAml:hide');
+                    try {
+                        if ('object' == typeof _data && _data.noresults) {
+                            view.closeAml(!0);
+                        } else {
+                            window.App.siteView.view.undelegateEvents();
+                            window.App.topView.view.undelegateEvents();
+                            $('body').find('[href]').filter(function() {
+                                return 0 === $(this).closest('#aml').length;
+                            }).on('click.aml', function(__event) {
+                                __event.stopImmediatePropagation();
+                                window.App.navigate('index/index', {
+                                    trigger: !0
+                                });
+                                return !1;
+                            });
+                        }
+                    } catch (_error) {
+                    }
+                    deferr.resolve(_view);
+                });
+            });
+            return deferr;
+        },
+        gotoNext: function(event) {
+            {
+                var step = $('section.announcement-step').data('step'), next_step = (parseInt(step) - 1,
+                parseInt(step) + 1);
+                $(event.currentTarget);
+            }
+            $('.first-login .steps').show();
+            if ($('[name="current_step"]').val() == $('[name="step"]').val()) {
+                $('.steps .step.active').removeClass('active').addClass('noactive').addClass('green');
+                $('.steps .step-' + next_step).removeClass('noactive').addClass('active');
+                $('.step-' + next_step).removeClass('noactive').addClass('active').css('background', '#06ba41');
+            } else {
+                $('.steps .step-' + step).removeClass('active').removeClass('green').addClass('noactive').css('background', '#eee');
+            }
+        },
+        changeContext: function(event) {
+            var view = this,
+                element = $(event.currentTarget),
+                pathname = element.attr('href'),
+                pathSplit = pathname.split('/');
+            $(window).trigger('carousel:destroy');
+            view.updateWrapperClass(event);
+            window.changeContext = 1;
+            window.changeFeaturesAccess = 1;
+        },
+        checkTransfer: function() {
+            $('#transferLink').addClass('disableTransfer');
+            $.getJSON('wallet/checkTransfer', function(data) {
+                if (data.length) {
+                    $('#transferLink').removeClass('disableTransfer');
+                    $('#transferLink').attr('href', '#transfers/index/' + data);
+                    $('#transferLink').attr('data-href', 'transfers/index/' + data);
+                }
+            });
+        },
+        updateWrapperClass: function(event) {
+            var element = $(event.currentTarget);
+
+            if (element.closest('li.select').hasClass('blue')) {
+                $('html').data('add-company-class', !0);
+                $('#goToPermanentstorage').hide();
+            } else {
+                $('html').data('add-company-class', !1);
+                $('#goToPermanentstorage').show();
+            }
+        },
+        showBannerContact: function(event, bannerCode) {
+            var view = this;
+            view.model.set('navigate', !1);
+            view.model.set('method', 'post');
+            view.model.set('url', 'banner/contact/' + bannerCode);
+            view.model.set('reload', 0);
+
+            view.render().promise().done(function(view, data) {
+                try {
+                    $.fn.setTopCounters();
+                    var approve_box = $('#approve_box');
+                    if (approve_box.length) {
+                        approve_box.iCheck({
+                            checkboxClass: 'icheckbox_square-green'
+                        });
+                    } else {
+                        $('.banner-message .orderContact').addClass('h--btn-green').attr('disabled', false);
+                    }
+                } catch (_error) {
+                }
+            });
+
+        },
+        showMarketingBannerContact: function(event, bannerCode) {
+            var view = this;
+            view.model.set('navigate', !1);
+            view.model.set('method', 'post');
+            view.model.set('url', 'banner/contactMarketing/' + bannerCode);
+            view.model.set('reload', 0);
+
+            view.render().promise().done(function(view, data) {
+                try {
+                    $.fn.setTopCounters();
+                    var approve_box = $('#approve_marketing_box');
+                    if (approve_box.length) {
+                        approve_box.iCheck({
+                            checkboxClass: 'icheckbox_square-green'
+                        });
+                    } else {
+                        $('.banner-message .orderMarketingContact').addClass('h--btn-green').attr('disabled', false);
+                    }
+                } catch (_error) {
+                }
+            });
+
+        },
+        prepareCreditData: function(event, type) {
+            $(window).trigger('loader:show');
+            var newEvent = {
+                stopPropagation: function() {
+                },
+                preventDefault: function() {
+                },
+                codeFromBanner: type[0]
+            };
+            this.checkCredit(newEvent, false);
+        },
+        toggleDropSubmenu: function(event) {
+            var submenu = $(event.currentTarget), dropSubmenu = submenu.find('.h--drop--submenu'),
+                dropParent = dropSubmenu.closest('.h--submenu');
+            if (!dropSubmenu.hasClass('js-hideOnBlur')) {
+                dropSubmenu.addClass('js-hideOnBlur');
+                $('html').on('click', function() {
+                    if (0 === dropParent.has(window.App.clickTarget).length) {
+                        dropSubmenu.hide();
+                    }
+                });
+            }
+            if (dropSubmenu.is(':visible')) {
+                dropSubmenu.hide();
+            } else {
+                dropSubmenu.show();
+            }
+        },
+        updateDropSubmenu: function(event) {
+            var element = $(event.currentTarget),
+                description = element.closest('.h--drop--submenu').siblings('.select-field'),
+                html = element.html() + '<i class="icon icon--select"></i>';
+            description.data('beforeHover', html).html(html).addClass('active');
+        },
+        submenuChange: function(event) {
+            var self = $(event.currentTarget), that = this, fevent = event;
+            if (self.hasClass('reloadPage')) {
+                return;
+            }
+            $('ul.h--submenu li a.active').removeClass('active');
+            $('ul.h--submenu .select-field').removeClass('active').html('wybierz inny<i class="icon icon--select"></i>');
+            if (self.hasClass('zusToStandard')) {
+                $('ul.h--submenu li a[data-href="transfers/standard"]').addClass('active');
+            } else {
+                self.addClass('active');
+            }
+            $(window).trigger('loader:show');
+            $('.hideOverAll').animate({
+                opacity: 0
+            }, 1e3, 'easeOutQuad').remove();
+            $('.h--box-transfer-wrapper').removeClass('disabled');
+            $('.transferTab').addClass("remove");
+            $('#menu_title_small').addClass('active').html(self.html());
+            setTimeout(function() {
+                that.setModelButton(fevent, self);
+                that.model.set('method', 'get');
+                if ('transfers/own' == self.data('href') && 1 == $('#accTypeH').val() && 9 == $('#accSubTypeH').val()) {
+                    that.model.set('url', 'transfers/piggyBank');
+                }
+                that.render();
+            }, 1e3);
+        },
+        submenuSmallChange: function(event) {
+            var self = $(event.currentTarget), that = this, fevent = event;
+            if (self.hasClass('reloadPage')) {
+                return;
+            }
+            $('ul.h-submenu-head li a.active').removeClass('active');
+            $('ul.h-submenu-head li a[data-href="' + self.data('href') + '"]').addClass('active');
+            $('.h--burger-menu').removeClass('open');
+            $(window).trigger('loader:show');
+            $('.hideOverAll').animate({
+                opacity: 0
+            }, 1e3, 'easeOutQuad').remove();
+            $('.h--box-transfer-wrapper').removeClass('disabled');
+            $('.transferTab').addClass("remove");
+            $('#menu_title_small').addClass('active').html(self.html());
+            setTimeout(function() {
+                that.setModelButton(fevent);
+                that.model.set('method', 'get');
+                if ('transfers/own' == self.data('href') && 1 == $('#accTypeH').val() && 9 == $('#accSubTypeH').val()) {
+                    that.model.set('url', 'transfers/piggyBank');
+                }
+                that.render();
+            }, 1e3);
+        },
+        showFormList: function(event) {
+            var self = $(event.currentTarget), menu_list = self.parents('.h--burger-menu');
+            if (menu_list.hasClass('open')) {
+                menu_list.removeClass('open');
+            } else {
+                menu_list.addClass('open');
+            }
+        },
+        updateFeaturesAccess: function () {
+            $.getJSON("wallet/getFeaturesAccess", function (data) {
+                $.each(data, function (key, value) {
+                    if (value === true) {
+                        $('.featuresAccessMenu' + key).removeClass('hide');
+                    } else {
+                        $('.featuresAccessMenu' + key).addClass('hide');
+                    }
+                });
+            });
+        },
+
+    });
+    return SiteView;
+});

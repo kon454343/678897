@@ -1,0 +1,3180 @@
+define(['jquery', 'underscore', 'backbone', 'Fingerprint2', 'jqueryui', 'validateForms', 'popUp', 'formSelect', 'bootstrap', 'modernizr', 'nanoscroller', 'icheck', 'inputmask', 'easing', 'actual', 'picker_pl', 'fileDownload', 'md5', 'tutorial', 'datepicker', 'notifications', 'animateAuto', 'uiKit', 'stickyMenu', 'confirmation', 'chat', 'transfer', 'oad', 'banner', 'ferryt'], function($, _, Backbone, Fingerprint2) {
+    var DefaultActions = Backbone.View.extend({
+        creditCode: '',
+        isDataCompleted: '',
+        isForceLoader: false,
+        events: {
+            'click .print-pdf': 'printPdf',
+            'click .setFormAction': 'setFormAction',
+            'click form button[type="submit"]:not(.otherSubmit, .jsDisabledClick), form input[type="submit"]:not(.otherSubmit, .jsDisabledClick)': 'submit',
+            'click [data-hash-change]': 'clickDataHashChange',
+            'click [data-link-href]:not(.jsDisabledClick)': 'goUrl',
+            'click .getAll': 'allOpenElements',
+            'click .disableSMS': 'cancelConfirmation',
+            'click .mobile-show .disableMobile': 'cancelMobileConfirmation',
+            'click .settings-mobile .disableMobile': 'cancelMobileConfirmation',
+            'click .removeAuthorization': 'removeConfirmation',
+            'click .h--select': 'h_select',
+            'click .renewConfirmation': 'renewConfirmation',
+            'click .renewConfirmationAdditional': 'renewConfirmationAdditional',
+            'click form .goFormPrevStep': 'prevFormStep',
+            'click .js-logout': 'logout',
+            'mouseover .h--submenu.context-container': 'hoverContext',
+            'mouseout .h--submenu.context-container': 'hoverContext',
+            'click  a > div[class="innerLinkToSetting"]': 'showTopMenuSetting',
+            'click .goToDriversBank': 'goToDriversBank',
+            'click .creditPA:not(.jsDisabledClick)': 'checkCredit',
+            'click .jsCreditStd': 'checkCreditStd',
+            'click .modern-checkbox': 'modernCheckbox',
+            'click .showTopSection': 'showTopSection',
+            'click .shortcuts a': 'showTopMenu',
+            'click .shortcuts div[data-action="channels"]': 'showTopMenu',
+            'click .shortcuts div[data-action="channels_changeLoginAlias"]': 'showTopMenu',
+            'click .shortcuts div[data-action="notify"]': 'showTopMenu',
+            'click .shortcuts div[data-action="mobile"]': 'showTopMenu',
+            'click div[data-action="agreements"]': 'setBannerStatus',
+            'click a[data-action="specialOffer"]': 'showSpecialOffer',
+            'click .personal-finanse-manager a[data-action="pfm"]': 'showTopMenu',
+            'click .shortcuts div[data-action="customer_changePersonal"]': 'showTopMenu',
+            'click #customerChangePersonal': 'showTopMenu',
+            'click a[data-action="recipients"]': 'showTopMenu',
+            'click .addClassName': 'addClassName',
+            'click .scroll': 'setScroll',
+            'click .offer-sale .handler': 'toogleOfferSale',
+            'click .offer-recommended .handler': 'toogleOfferRecomended',
+            'click .ui-kit-filter-box .clear-form': 'clearValue',
+            'click .prevent-in-demo-mode': 'promptIfDemoWithOut',
+            'click .carousel-banner-button-close': 'closeCarousel',
+            'click .nwkLoanRedirect:not(.jsDisabledClick)': 'loanRedirectByTypeAndCode',
+            'click .ferrytRedirect:not(.jsDisabledClick)': 'ferrytRedirectByTypeAndCode',
+            'click form.insuranceForm button[type="submit"]:not(.jsDisabledClick)': 'getInsuranceFormData',
+            'click form.insuranceForm input[type="submit"]:not(.jsDisabledClick)': 'getInsuranceFormData',
+            'mouseover .black-popover': 'popoverShow',
+            'mouseout .black-popover': 'popoverHide',
+            'click .jsCheckAml': 'showAmlIdPopup',
+            'click button[name="amlGoToUpdateId"]': 'showTopMenu',
+            'click .jsDisabledClick': 'disabledClick',
+            'click .selectOption': 'clickSelectOption',
+            'click .sortTable': 'sortTable',
+            'click .tablePage:not(.active)': 'setTablePage',
+            'click .conversion-close': 'closeConversionOffer',
+            'click button[name="backToTopMenu"]': 'closeContent',
+            'click .proposalsShowTopMenu': 'showTopMenu',
+            'click .jsShowStrongAuthPopup': 'showStrongAuthPopup',
+        },
+        initialize: function() {
+            var _this = this, history = window.App.history, historyLength = history.length;
+            if(historyLength > 1 && 'index/forbidden' == history[historyLength - 2]) {
+                window.location.reload();
+            }
+            if('undefined' != _this._initialize && 'function' == typeof _this._initialize) {
+                _this._initialize();
+            }
+            _this.render = _.wrap(_this.render, function(render) {
+                var deferr = $.Deferred();
+                $.when(_this.beforeRender(_this)).done(function(view) {
+                    $.when(render.call(view)).done(function(view, viewDestination, viewAnimation) {
+                        deferr.resolve(view, viewDestination, viewAnimation);
+                        _this.afterRender(view, viewDestination, viewAnimation);
+                        uiKit.afterRender();
+                    }).fail(function(msg) {
+                        _this.renderFail(msg);
+                    });
+                }).fail(function(msg) {
+                    _this.renderFail(msg);
+                });
+                return deferr;
+            });
+            $.fn.openSettings = function(action, toOpenFatca) {
+                var data = {
+                    view: window.App.topView.view,
+                    element: $('#topViewWrapper').find('[data-name="settings"]'),
+                    controller: 'SettingsView',
+                    directUrl: 'settings/' + action + '/load'
+                };
+                $(window).trigger('overlay:hide');
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 250, 'easeOutQuad');
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="settings"]'), !0);
+                window.App.topView.view.updateSlideBoxContent.init(data).promise().done(function() {
+                    var activeButton = $('.js-settings-menu-wrapper').find('[data-href="settings/' + action + '"]');
+                    activeButton.closest('.js-setting-menu').siblings('.js-setting-menu').addClass('js-size-cached no-transitions not-active').attr('data-prev-width', '280').attr('data-prev-margin', '20px').css({
+                        overflow: 'hidden',
+                        width: '0px',
+                        margin: '0px'
+                    });
+                    activeButton.siblings('.closeSettingsContent').show();
+                    if(toOpenFatca) {
+                        $('#fatcaSettingsButton').click();
+                    }
+                });
+            };
+            $.fn.openMessages = function() {
+                var data = {
+                    view: window.App.topView.view,
+                    element: $('#topViewWrapper').find('[data-name="contactBank"]'),
+                    controller: 'MessagesView',
+                    action: 'newMessage'
+                };
+                $(window).trigger('overlay:hide');
+                $('body, html').animate({
+                    scrollTop: 0
+                }, 250, 'easeOutQuad');
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="contactBank"]'), !0);
+                window.App.topView.view.updateSlideBoxContent.init(data).promise().done(function() {
+                    var newMessageButton = $('#menuInformationBox').find('#newMessage');
+                    newMessageButton.click();
+                    $(window).trigger('overlay:hide');
+                });
+            };
+            $.fn.goToFaqCategory = function(event) {
+                var data = {
+                    view: window.App.topView.view,
+                    element: $('#topViewWrapper').find('[data-name="faq"]'),
+                    'event': event,
+                    controller: 'FaqView',
+                    action: 'changeCategory',
+                    directUrl: $(event.currentTarget).data('href')
+                };
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="faq"]'), !0);
+                window.App.topView.view.updateSlideBoxContent.init(data);
+            };
+            $.fn.goToFaq = function(event) {
+                var data = {
+                    view: window.App.topView.view,
+                    element: $('#topViewWrapper').find('[data-name="faq"]'),
+                    'event': event,
+                    controller: 'FaqView',
+                    action: 'changeCategory',
+                    directUrl: $(event.currentTarget).data('href')
+                };
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="faq"]'), !0);
+                window.App.topView.view.updateSlideBoxContent.init(data).done(function() {
+                    $('button[data-faq="4/' + $(event.currentTarget).data('destination') + '"]').click();
+                });
+            };
+            $.fn.setTopCounters = function() {
+                _this.setTopCounters();
+            };
+            $.fn.unbindTopCounters = function() {
+                _this.unbindTopCounters();
+            };
+            $('body').click(function() {
+                $('.alert .cloud').removeClass("show");
+                $('.error .cloud').removeClass("show");
+            });
+
+            uiKit.init(_this);
+            chat.init();
+            confirmation.init();
+            oad.init();
+            ferryt.init();
+        },
+        getInsuranceFormData: function(event) {
+            var self = $(event.currentTarget), form = self.closest('form')[0], returnUrl = form.action,
+                code = $(form).data('code'), type = $(form).data('type') || null;
+
+            if(!isDemoMode) {
+                $(window).trigger('loader:show');
+
+                $.post('proposals/getFerrytFormData', {
+                    code: code,
+                    returnUrl: returnUrl,
+                    type: type
+                }, function(response, status) {
+                    if (typeof response.error !== 'undefined' && response.error == 12504) {
+                        var config = {
+                            type: 'warning',
+                            text: '<span style="font-size: 16pt;">Szanowny Kliencie,</span><br/> nie masz możliwości uruchomienia wybranego produktu.',
+                            btnText: '&larr; Powrót',
+                        };
+                        $(window).trigger('loader:hide');
+                        uiKit.modal.show(null, config);
+                    } else {
+                        var input = $("<input/>").attr({type: "hidden", name: "token"}).val(response.token);
+                        $(form).prepend(input);
+                        $(form).attr({action: response.external_url});
+                        $(form).submit();
+                    }
+                });
+
+                event.preventDefault();
+                event.stopPropagation();
+            } else {
+                $(self).attr('data-container', 'body');
+                $(self).popover({
+                    container: "body",
+                    placement: 'top',
+                    html: true,
+                    title: '<button class="close icon-demo-close"></button>',
+                    content: '<p>' + 'Funkcja niedostępna w wersji demonstracyjnej.' + '</p>',
+                    trigger: 'manual'
+                }).popover('show');
+                return false;
+            }
+        },
+        calculateFingerprint: function(event, data) {
+            var sendData = 'undefined' !== typeof data && 'sendData' === data[0],
+                _this = this,
+                deferr = $.Deferred()
+            ;
+
+            Fingerprint2.get(function(components) {
+                var values = components.map(function(pair) {
+                    return pair.value;
+                });
+
+                var params = {}, index;
+
+                for(index in components) {
+                    if((components[index].key === 'canvas' || components[index].key === 'webgl') && Array.isArray(components[index].value)) {
+                        params[components[index].key] = Fingerprint2.x64hash128(components[index].value.join(','), 31);
+                        continue;
+                    }
+                    params[components[index].key] = components[index].value;
+                }
+
+                _this.fingerprint = Fingerprint2.x64hash128(values.join(','), 31);
+                _this.fingerprintParams = JSON.stringify(params);
+                if(true === sendData) {
+                    deferr.resolve(_this.refreshBrowserInfo());
+                }
+            });
+
+            return deferr.promise();
+        },
+        refreshBrowserInfo: function() {
+            var resolution = screen.width + 'x' + screen.height;
+            $.post('index/setBrowserParams', {
+                resolution: resolution,
+                fingerprint: this.getFingerprint(),
+                fingerprintParams: this.getFingerprintParams()
+            });
+        },
+        getFingerprint: function() {
+            if(this.fingerprint === undefined) {
+                return '';
+            }
+            return this.fingerprint;
+        },
+        getFingerprintParams: function() {
+            if(this.fingerprintParams === undefined) {
+                return '';
+            }
+            return this.fingerprintParams;
+        },
+        loginError: function(event) {
+            $('.jsDeviceConfirmationPopover').hide();
+        },
+        reloadFooter: function(event) {
+            $('.footer-wrapper').remove();
+
+            $.get('wallet/footer/', function(data) {
+                $('body').append(data);
+                $('.footer-wrapper').show();
+            });
+        },
+        closeCarousel: function(event) {
+            event.preventDefault();
+            var element = $(event.currentTarget);
+            var href = element[0]['href'];
+            $.ajax({
+                dataType: "json",
+                url: href,
+                type: 'post',
+                async: true,
+                data: {},
+                error: function(xhr, status, error) {
+                },
+                success: function(data, status, xhr) {
+                }
+            });
+            $('.banners_carousel').addClass('hidden');
+        },
+        setTopCounters: function() {
+            var view = this;
+            view._setTopCounters();
+            window.topCounters = setInterval(function() {
+                view._setTopCounters();
+            }, 6e4);
+        },
+        showTopMenuSetting: function(event) {
+            var element = $(event.currentTarget);
+            if(typeof element.attr('data-href') == 'undefined') {
+                return;
+            }
+            event.stopPropagation();
+            event.preventDefault();
+            var outHref = element.data('href');
+            var outAction = element.data('action');
+            var data = {
+                view: window.App.topView.view,
+                element: $('#topViewWrapper').find('[data-name="settings"]'),
+                'event': event,
+                controller: 'SettingsView',
+                action: 'add',
+                directUrl: 'settings/' + outHref + '/load'
+            };
+            $('body, html').animate({
+                scrollTop: 0
+            }, 250, 'easeOutQuad');
+            window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="settings"]'), !0);
+            window.App.topView.view.updateSlideBoxContent.init(data).promise().done(function() {
+                var activeButton = $('.js-settings-menu-wrapper').find('[data-href="settings/' + outHref + '"]');
+                activeButton.closest('.js-setting-menu').siblings('.js-setting-menu').addClass('js-size-cached no-transitions not-active').attr('data-prev-width', '280').attr('data-prev-margin', '20px').css({
+                    overflow: 'hidden',
+                    width: '0px',
+                    margin: '0px'
+                });
+                activeButton.siblings('.closeSettingsContent').show();
+                if(typeof outAction !== 'undefined' && outAction.length > 0) {
+                    var newActiveButton = $('.js-settings-menu-wrapper').find('[data-href="settings/' + outAction + '"]');
+                    newActiveButton.click();
+                }
+            });
+        },
+        _setTopCounters: function() {
+            var _this = this,
+                messagesContainer = $('#topViewWrapper').find('.js-button[data-href="messages/index"]'),
+                transfersContainer = $('#topViewWrapper').find('.js-button[data-href="basket/index"]');
+				//tymczasowe
+				transfersContainer2 = $('#topViewWrapper').find('.js-button[data-href="futureTransfers/index"]');
+            $.getJSON('wallet/getActualNotifications', function(data) {
+                var messages = parseInt(data.messages);
+                var transfers = parseInt(data.transfers);
+                window.hasCreditNotification = data.credit;
+                if(messages > 0) {
+                    messagesContainer.append('<div class="h--alert-circle">' + messages + '</div>');
+                    if($('.messages-navigation button#received').length) {
+                        $('.messages-navigation button#received').find('.message-counter').text(messages).removeClass('hide');
+                    }
+                } else {
+                    messagesContainer.find('.h--alert-circle').remove();
+                    $('.messages-navigation button#received').find('.message-counter').addClass('hide');
+                }
+                if(transfers > 0) {
+                    transfersContainer.append('<div class="h--alert-circle">' + transfers + '</div>');
+					//tymczasowe
+					transfersContainer2.append('<div class="h--alert-circle">' + transfers + '</div>');
+                } else {
+                    transfersContainer.find('.h--alert-circle').remove();
+					//tymczasowe
+					transfersContainer2.find('.h--alert-circle').remove();
+                }
+                _this.updateCreditNotificationMark();
+            });
+        },
+        updateCreditNotificationMark: function() {
+            if (window.hasCreditNotification === undefined) {
+                this._initCreditNotificationMark();
+            }
+            if (window.hasCreditNotification === true) {
+                this._addCreditNotificationMark();
+            } else if (window.hasCreditNotification === false) {
+                this._removeCreditNotificationMark();
+            }
+        },
+        _initCreditNotificationMark: function() {
+            var markClass = 'red-dot-mark';
+            var proposalsItem = $('div#siteViewMenu a[href="#proposals/index"]');
+            var unfinishedItem = $('div#siteViewWrapper div#unfinished_proposals a span');
+            window.hasCreditNotification = proposalsItem.hasClass(markClass) || unfinishedItem.hasClass(markClass);
+        },
+        _addCreditNotificationMark: function() {
+            var markClass = 'red-dot-mark';
+            var proposalsItem = $('div#siteViewMenu a[href="#proposals/index"]');
+            var unfinishedItem = $('div#siteViewWrapper div#unfinished_proposals a span');
+            if (!proposalsItem.hasClass('active') && window.location.hash.indexOf('proposals') === -1) {
+                proposalsItem.addClass(markClass).parent().removeClass('last');
+            } else {
+                proposalsItem.removeClass(markClass).parent().addClass('last');
+                unfinishedItem.addClass(markClass);
+            }
+        },
+        _removeCreditNotificationMark: function() {
+            var markClass = 'red-dot-mark';
+            var proposalsItem = $('div#siteViewMenu a[href="#proposals/index"]');
+            var unfinishedItem = $('div#siteViewWrapper div#unfinished_proposals a span');
+            if (proposalsItem.hasClass(markClass)) {
+                proposalsItem.removeClass(markClass).parent().addClass('last');
+            }
+            if (unfinishedItem.length > 0 && unfinishedItem.hasClass(markClass)) {
+                unfinishedItem.removeClass(markClass);
+            }
+        },
+        unbindTopCounters: function() {
+            try {
+                window.clearInterval(window.topCounters);
+            } catch(error) {
+            }
+        },
+        getContext: function() {
+            return ('undefined' != typeof window.App.context) ? window.App.context : defaultContext;
+        },
+        copyNrb: function(event) {
+            $(event.currentTarget).prev().select();
+        },
+        beforeRender: function(view) {
+            var _this = this, deferr = $.Deferred();
+            $(window).trigger('loader:show');
+            try {
+                if(window.location.href.indexOf('/changeContext') !== -1) {
+                    window.notifications.removeGroupBars('fatca-notifications');
+                }
+            } catch(e) {
+            }
+            if('undefined' != _this._beforeRender && 'function' == typeof _this._beforeRender) {
+                _this._beforeRender().promise().done(function() {
+                    deferr.resolve(view);
+                });
+            } else {
+                deferr.resolve(view);
+            }
+
+            $(document.documentElement).css('overflow') === 'hidden' && _this.enableBodyScrolling();
+
+            return deferr;
+        },
+        afterRender: function(view, viewDestination, viewAnimation) {
+            var destination, _this = this;
+
+            try {
+                destination = $(viewDestination);
+            } catch(e) {
+            }
+            try {
+                if(!(window.App.siteView.currentController === 'IndexView' && window.location.href.indexOf('/logout') !== -1)) {
+                    $.fn.enableHeartBeat();
+                } else {
+                    $.fn.unbindTopCounters();
+                }
+            } catch(e) {
+            }
+            $(window).trigger('afterRenderLoad');
+            _this.checkIfCompany();
+            if('undefined' != _this._afterRender && 'function' == typeof _this._afterRender) {
+                _this._afterRender(view, viewDestination, viewAnimation);
+            }
+            _this.viewLoaded(_this);
+            _this.preparedAfterRender(view, viewDestination, viewAnimation);
+            _this.alertAccNoPaste();
+
+            //init tooltip when user data needs to be verified
+            //if ($('.verifyUserData').length) {
+            //$('.js-close-button').on('click', function (event) {
+            //this.initPageTour('data-confirm','verifyUserData');
+            //});
+
+            if(!$('.main').hasClass('popupMessages')) {
+                if(!$('.runTooltip').length && !$('.popover').length && !$('.top-menu-content').length && !$('.main').hasClass('displayTutorial')) {
+                    if($('.incorrectData').length) {
+                        $.fn.initPageTour('incorrect-data', 'incorrectData');
+                    } else if($('.verifyUserData').length) {
+                        $.fn.initPageTour('data-confirm', 'verifyUserData');
+                    } else if($('.documentExpires').length) {
+                        $.fn.initPageTour('document-expires', 'documentExpires');
+                    }
+                    $('.main').addClass("runTooltip");
+                }
+            }
+            this.scrollAfterRedirect();
+
+            if(
+                window.location.href.indexOf('/logout') === -1 &&
+                window.location.href.indexOf('/forbidden') === -1 &&
+                window.location.href.indexOf('index/index') === -1
+            ) {
+                $('.footer-wrapper').show();
+            }
+        },
+        scrollAfterRedirect: function() {
+            if(window.gotoElement !== null && window.gotoElement !== undefined) {
+                $(window.gotoElement).click();
+                window.gotoElement = null;
+            }
+        },
+        alertAccNoPaste: function() {
+            var view = this, noFields = $();
+            noFields = noFields.add('.validateNrbIRP, .validateNrb, [name="recipient_nrb"], [name="nrb"]').filter(':enabled');
+            noFields.each(function() {
+                var input = $(this);
+                if(!input.data('pasteEventBinded')) {
+                    var validatedClass = 'js-validatedElement';
+                    input.data('pasteEventBinded', !0);
+                    input.on('paste', function() {
+                        input.removeClass(validatedClass);
+                        view.alertAccNoTimeout(input, validatedClass);
+                    });
+                }
+            });
+        },
+        alertAccNoTimeout: function(input, validatedClass) {
+            var interval, view = this;
+            interval = setInterval(function() {
+                if(view._alertAccNoTimeout(input, validatedClass)) {
+                    clearInterval(interval);
+                    view.alertAccNoCheckIfShow(input);
+                }
+            }, 20);
+        },
+        _alertAccNoTimeout: function(input, validatedClass) {
+            var response;
+            if(input.hasClass(validatedClass) || !input.hasClass('toValidate')) {
+                response = !0;
+            } else {
+                response = !1;
+            }
+            return response;
+        },
+        alertAccNoCheckIfShow: function(input) {
+            var view = this, wrapper = input.closest('.h--form--field');
+            if(!wrapper.hasClass('alert') && !wrapper.hasClass('error')) {
+                view.alertAccNoShow(input);
+            } else {
+                view.alertAccNoHide(input);
+            }
+        },
+        alertAccNoShow: function(input) {
+            var view = this,
+                accNoCloud = input.siblings('label').length ? input.siblings('label').find('.acc-no-cloud') : input.siblings('.acc-no-cloud');
+            if(!accNoCloud.length) {
+                accNoCloud = view.alertAccNoCreateCloud(input);
+            }
+            if($('#formCurrency').length) {
+                $.fn.resetValidation('nrb', !0);
+                $.fn.unbindValidation('nrb', !0);
+            }
+            accNoCloud.css('display', 'inline-block');
+        },
+        alertAccNoHide: function(input) {
+            var accNoCloud = input.siblings('label').length ? input.siblings('label').find('.acc-no-cloud') : input.siblings('.acc-no-cloud');
+            accNoCloud.hide();
+        },
+        alertAccNoCreateCloud: function(input) {
+            var view = this, accNoCloud = $('<div/>', {
+                'class': 'acc-no-cloud',
+                html: "<div class=\"cloud-container clearfix\"><strong class=\"cloud-title\">Uwaga!</strong><p class=\"cloud-text\">Numer rachunku odbiorcy został wklejony. Upewnij się, czy podany numer jest prawidłowy.</p><button class=\"cloud-close\"><i class=\"icon icon--cancel\"></i></button></div>"
+            }).hide();
+            if(input.siblings('label').length) {
+                accNoCloud.addClass('acc-no-in-label').appendTo(input.siblings('label'));
+            } else {
+                input.before(accNoCloud);
+            }
+            accNoCloud.find('.cloud-close').on('click', function(event) {
+                event.preventDefault();
+                view.alertAccNoHide(input);
+                if($('#formCurrency').length) {
+                    $.fn.bindValidation($('input[name="nrb"]'), 'toValidate validateRequired validateString validateDictionary');
+                    $.fn.runValidateMethods($('input[name="nrb"]'));
+                }
+                if($('#formCurrency').find('input[name="nrb"]').next('label').find('.cloud').length) {
+                    $('input[name="nrb"]').next('label').find('.cloud').removeClass('hide');
+                    setTimeout(function() {
+                        $('input[name="nrb"]').next('label').find('.cloud').addClass('show');
+                    }, 50);
+                    $('input[name="nrb"]').parent('div').addClass('alert');
+                }
+            });
+            return accNoCloud;
+        },
+        checkIfCompany: function() {
+            var isCompany = $('html').data('add-company-class');
+            if(isCompany === !1) {
+                $('body').removeClass('company');
+                $('#siteViewWrapper').removeClass('company');
+            }
+        },
+        renderFail: function(msg) {
+            if(msg) {
+                ;
+            } else {
+            }
+            $(window).trigger('loader:hide');
+        },
+        viewLoaded: function(view) {
+            var _this = this;
+            $('.scrollMe').each(function() {
+                element = $(this);
+                element.addClass('nano');
+                if(!element.attr('id')) {
+                    element.attr('id', Date.now() + '_nanoScroller');
+                }
+                if(0 === element.children('.nano-content').length) {
+                    element.wrapInner('<div class="nano-content content"></div>');
+                    element.children('.nano-content').css({
+                        padding: element.css('padding')
+                    });
+                    element.nanoScroller({
+                        scrollTop: 0
+                    });
+                }
+            });
+            $('.inputMask').inputmask();
+            if('undefined' != _this._viewLoaded && 'function' == typeof _this._viewLoaded) {
+                _this._viewLoaded(view);
+            }
+            if($('.h--select.multiple').length > 0) {
+                var element, elements = $('.h--select.multiple');
+                $(document).on('click', function() {
+                    elements.each(function() {
+                        element = $(this);
+                        if(element.hasClass('opened') && 0 === element.has(window.App.clickTarget).length) {
+                            element = $(this);
+                            element.trigger('click');
+                        }
+                    });
+                });
+            }
+            _this.runDatePicker();
+            $(window).trigger('loader:hide');
+        },
+        getDataType: function(data) {
+            var responceType, $data;
+            switch(typeof data) {
+                case 'string':
+                    try {
+                        $data = $(data);
+                        responceType = 'html';
+                    } catch(error) {
+                        try {
+                            $.parseJSON(data);
+                            responceType = 'json-string';
+                        } catch(_error) {
+                        }
+                    }
+                    break;
+
+                case 'object':
+                    responceType = 'json-object';
+            }
+            return responceType;
+        },
+        getResponceType: function(data, xhr) {
+            var responceType, $data, xhrResponceType = xhr.getResponseHeader("content-type") || "";
+            switch(typeof data) {
+                case 'string':
+                    if(xhrResponceType.indexOf('html') > -1) {
+                        try {
+                            $data = $(data);
+                            responceType = 'html';
+                        } catch(error) {
+                            try {
+                                $.parseJSON(data);
+                                responceType = 'json-string';
+                            } catch(_error) {
+                            }
+                        }
+                    } else {
+                        if(xhrResponceType.indexOf('json') > -1) {
+                            try {
+                                $.parseJSON(data);
+                                responceType = 'json-string';
+                            } catch(error) {
+                                try {
+                                    $data = $(data);
+                                    responceType = 'html';
+                                } catch(_error) {
+                                }
+                            }
+                        } else {
+                            if(xhrResponceType.indexOf('pdf') > -1) {
+                                ;
+                            } else {
+                            }
+                        }
+                    }
+                    break;
+
+                case 'object':
+                    responceType = 'json-object';
+            }
+            return responceType;
+        },
+        clickDataHashChange: function(event) {
+            var view = this, element = $(event.currentTarget);
+            if('false' == element.attr('data-hash-change')) {
+                view.model.set('navigate', !1);
+            }
+        },
+        click: function(event) {
+            this._click(event);
+        },
+        _click: function(event) {
+            var $e = $(event.currentTarget);
+            if(!$e.attr('href') || $e.attr('href') && !$e.attr('href').length) {
+                event.preventDefault();
+            }
+            if(0 === $e.closest('.h--icon-menu').length) {
+                if($e.data('destination')) {
+                    this.model.set('destination', $e.data('destination'));
+                } else {
+                    if($e.closest('a').data('destination')) {
+                        this.model.set('destination', $e.closest('a').data('destination'));
+                    }
+                }
+                if('body' !== this.model.get('destination')) {
+                    this.model.set('reload', 0);
+                }
+                this.model.set('event', event);
+                this.checkUrl(event);
+            }
+        },
+        elementInViewport: function(el) {
+            if(el instanceof jQuery) {
+                el = el[0];
+            }
+            if(0 === $(el).length) {
+                return !1;
+            }
+            var rect = el.getBoundingClientRect();
+            return rect.top >= 0 && rect.bottom <= $(window).height() && rect.height > 0 && rect.width > 0;
+        },
+        validate: function($form) {
+            var _this = this, toValidateCheck = ($form.find('[type="submit"]'), deferr = $.Deferred(),
+                $form.find('.toValidate'));
+
+            if(toValidateCheck.length > 0) {
+                toValidateCheck.each(function() {
+                    $.fn.runValidateMethods($(this));
+                }).promise().done(function() {
+                    deferr.resolve();
+                });
+            } else {
+                deferr.resolve();
+            }
+            return deferr;
+        },
+        goToError: function(form) {
+            let notValidElem, _this = this;
+            if(form.find('.alert').length > 0) {
+                notValidElem = form.find('.alert').eq(0);
+                if(notValidElem && notValidElem.length && !_this.elementInViewport(notValidElem)) {
+                    $('html, body').animate({
+                        scrollTop: notValidElem.offset().top - notValidElem.closest('.h--form--field').find('.cloud').eq(0).actual('outerHeight') - 25 + 'px'
+                    }, 250, 'easeOutQuad');
+                }
+                setTimeout(
+                    function() {
+                        if(form.attr('id') == 'formStandard' || form.attr('id') == 'formUs' || form.attr('id') == 'formZus' || form.attr('id') == 'formCurrency') {
+                            form.find(".alert .cloud").addClass("show");
+                        }
+                    }
+                    , 300);
+            }
+        },
+        validateFormManual: function(el, noValidate, goToError) {
+            var btn = el,
+                $form = btn.closest('form'), toValidateCheck = ($form.find('[type="submit"]'),
+                    $form.find('.toValidate'));
+            if(toValidateCheck.length > 0 && !noValidate && $form.find('.alert').length === 0) {
+                toValidateCheck.each(function() {
+                    $.fn.runValidateMethods($(this));
+                });
+                if(goToError) {
+                    this.goToError($form);
+                }
+            }
+            if ($form.find('.alert').length === 0) {
+                $.fn.unlock($form);
+            }
+            return $form;
+        },
+        submit: function(event, noValidate, isLogError) {
+            var notValidElem, _this = this, btn = $(event.currentTarget),
+                $form = btn.closest('form'), toValidateCheck = ($form.find('[type="submit"]'),
+                    $form.find('.toValidate')), deferr = $.Deferred();
+            if(noValidate === undefined) {
+                noValidate = false;
+            }
+            if(isLogError === undefined) {
+                isLogError = false;
+            }
+            event.preventDefault();
+            if($form.hasClass('submiting')) {
+                deferr.reject(!1);
+                return deferr;
+            } else {
+                $form.addClass('submiting');
+            }
+            if($form.attr('data-beforeSubmit')) {
+                var methodName = $form.attr('data-beforeSubmit');
+                if('undefined' != _this[methodName] && 'function' == typeof _this[methodName]) {
+                    _this[methodName]();
+                }
+            }
+            if(btn.attr('data-beforeSubmit')) {
+                var methodsName = btn.attr('data-beforeSubmit');
+                var _res = !0;
+                $.map(methodsName.split(' '), function(methodName) {
+                    if('undefined' != _this[methodName] && 'function' == typeof _this[methodName]) {
+                        var __res = _this[methodName](event);
+
+                        if(__res === !1) {
+                            _res = !1;
+                        }
+                    }
+                });
+                if(_res === !1) {
+                    $form.removeClass('submiting');
+                    deferr.reject(!1);
+                    return deferr;
+                }
+            }
+            this.validateFormManual(btn, noValidate, true);
+            if($form.hasClass('disabled')) {
+                $form.removeClass('submiting');
+                $(window).trigger('form:disabled', {
+                    form: $form
+                });
+                deferr.reject(!1);
+
+                return deferr;
+            }
+            $form.find('.toValidate').filter(function() {
+                return $(this).hasClass('validatePhone') || $(this).hasClass('validatePhonePL');
+            }).each(function() {
+                var _currValue, valLength, _currElement = $(this);
+                if(_currElement.hasClass('inputMask')) {
+                    _currElement.inputmask('remove');
+                }
+                _currValue = _currElement.val();
+                valLength = _currValue.replace(/\s+/g, '').length;
+            });
+            $form.find('.js-visible-password').prev('input[type="password"]').show().end().toggle('change').remove();
+            $form.find('.showPass-field').removeClass('active');
+            _this.model.set('event', {});
+            _this.model.set('event', event);
+            _this.model.set('method', 'post');
+            _this.model.set('data', $form.serializeArray());
+            if('body' !== _this.model.get('destination')) {
+                _this.model.set('reload', 0);
+            }
+            if($form.data('navigate')) {
+                _this.model.set('navigate', !0);
+            } else {
+                _this.model.set('navigate', !1);
+            }
+            if($form.data('destination')) {
+                _this.model.set('destination', $form.data('destination'));
+            }
+            if($form.data('type')) {
+                _this.model.set('dataType', $form.data('type'));
+            }
+            if($form.data('action')) {
+                _this.model.set('url', $form.data('action'));
+            }
+            if($form.data('before') && 'json' !== $form.data('type')) {
+                _this.model.set('beforeAnimation', $form.data('before'));
+                _this.model.set('beforeAnimationEvent', event);
+            }
+            if($form.data('after') && 'json' !== $form.data('type')) {
+                _this.model.set('afterAnimation', $form.data('after'));
+                _this.model.set('afterAnimationEvent', event);
+            }
+            _this.render().promise().done(function() {
+                $form.removeClass('submiting');
+                deferr.resolve();
+            });
+            return deferr;
+            /**
+             checkPhoneNumber: function () {
+                var prefix = $('[name=phone_prefix]').val(),
+                    number = $('#phone_number').val().replace(/_/g, ''),
+                    length = number.length;
+
+                return prefix == '+48' ? length == 9 : length >= 4 && length <= 16;
+            }
+             */
+        },
+        /**
+         * otwieranie elementów w nowych zakładkach
+         * @param {type} event
+         * @returns {undefined}
+         */
+        allOpenElements: function(event) {
+            var self = $(event.currentTarget), elements = $(self.data('elements'));
+            elements.each(function() {
+                var url = $(this).data('href');
+                window.open(url, '_blank');
+            });
+        },
+        goUrl: function(event) {
+            event.preventDefault();
+            var _this = this, $element = $(event.currentTarget), url = $element.data('link-href'),
+                destination = $element.data('destination'), bubble = !0, deferr = $.Deferred();
+            if(void 0 !== $element.attr('data-link-bubble') || '' !== $element.attr('data-link-bubble')) {
+                bubble = $element.attr('data-link-bubble');
+            }
+            if(this.promptIfDemoMode(event)) {
+                return false;
+            }
+            event.cancelBubble = bubble;
+            if(bubble === !0 && event.stopPropagation) {
+                event.stopPropagation();
+            }
+            if(void 0 !== destination) {
+                if('#' === url.charAt(0)) {
+                    url = url.slice(1);
+                }
+                _this.model.set('destination', destination);
+                _this.model.set('url', url);
+                _this.beforeRender(_this).done(function(view) {
+                    _this.model.sendRequest(_this, destination).promise().done(function(data, xhr, status, viewDestination) {
+                        _this.renderView(data, xhr, status, viewDestination).promise().done(function(element) {
+                            element.fadeIn(150, 'easeOutQuad', function() {
+                                deferr.resolve();
+                                _this.afterRender(view, viewDestination);
+                            });
+                        });
+                    });
+                });
+            } else {
+                deferr.resolve();
+                window.App.navigate(url, !0);
+            }
+            return deferr;
+        },
+        preparedAfterRender: function(_view) {
+            var view = this, viewDestinationElements = _view ? _view.$el.find('form') : $('body').find('form');
+            viewDestinationElements.each(function() {
+                view.prepareForm(this);
+            });
+        },
+        prepareForm: function(form) {
+            var ref, newRef,
+                element = $(form).find('input[type="hidden"]:not(.notPrepare)').filter(function(index, item) {
+                    return $(item).length && $(item).attr('name') && 32 === $(item).attr('name').length;
+                }).eq(0);
+            if(element && element.length) {
+                if(parseFloat(element.val()) == element.val()) {
+                    return;
+                }
+                ref = $.fn.md5(element.attr('name') + element.val());
+                newRef = parseFloat(ref.replace(/[a-zA-Z]/g, '').substring(0, 12)) + parseFloat(window.AppStartTime);
+                element.val(newRef);
+                element.data('value', newRef);
+            }
+        },
+        setElementOverflow: function(element, scope, overflowType, overrideOnly) {
+            var elements = $();
+            if(0 === scope.length) {
+                return !1;
+            }
+            elements = elements.add(scope);
+            elements = elements.add(element.parentsUntil(scope));
+            elements.each(function() {
+                if(overrideOnly) {
+                    if($(this).hasClass('js-overflow-changed')) {
+                        $(this).removeClass('js-overflow-changed').css('overflow', overflowType);
+                    }
+                } else {
+                    if($(this).css('overflow') != overflowType) {
+                        $(this).addClass('js-overflow-changed').css('overflow', overflowType);
+                    }
+                }
+            });
+        },
+        h_select: function(event) {
+            var view = this, element = $(event.currentTarget), parentBox = element.closest('.moveBox'),
+                parentBoxHeight = element.closest('.moveBox').outerHeight(!0), listHeight = 0,
+                parentLi = element.closest('li');
+            $.fn.formSelectClick(event, view);
+            if(element.closest('#topViewWrapper')) {
+                return !1;
+            }
+            var select_height = element.height(), select_list_height = element.find('ul').height(),
+                select_position_top = element.position().top;
+            listHeight = select_height + select_list_height + select_position_top;
+            if(element.closest('.boutique-page').is(':visible')) {
+                var element_parentBox = element.closest('.h--box-big'),
+                    element_parentBox_top = element_parentBox.position().top;
+                parentBox = element.closest('.cutWindowTab');
+                parentBoxHeight = element.closest('.cutWindowTab').outerHeight(!0);
+                listHeight = select_height + select_position_top + element_parentBox_top;
+            }
+            if(listHeight > parentBoxHeight) {
+                var newHeight = listHeight - parentBoxHeight, newHeight2 = parentBoxHeight + newHeight;
+                parentBox.css('height', newHeight2);
+                if($('.deposits-page').is(':visible')) {
+                    parentLi.css({
+                        display: 'block',
+                        'margin-bottom': 0 - newHeight
+                    });
+                } else {
+                    if($('.settings-details-info').is(':visible')) {
+                        parentLi.css({
+                            display: 'block',
+                            'margin-bottom': -55 - newHeight
+                        });
+                    }
+                }
+            }
+        },
+        h_option_multiple_name: function(e) {
+            var self = $(e.currentTarget),
+                select = self.closest('.h--select.multiple').length > 0 ? self.closest('.h--select.multiple') : $('body').find('.h--select.multiple'),
+                selectedName = '', selectInput = select.find('.select_input'),
+                checkboxes = select.find('[type="checkbox"]'), checkboxesChecked = checkboxes.filter(':checked');
+            select.find('.toValidate').each(function() {
+                $.fn.runValidateMethods($(this));
+            });
+            checkboxesChecked.each(function(k, v) {
+                if(checkboxesChecked.length < 3) {
+                    select.find('.select_input').data('overLength', !1);
+                }
+                if(selectedName) {
+                    selectedName += ', ';
+                }
+                selectedName += $(v).closest('li').find('div.number strong').text();
+                if(selectedName.length > 50 || select.find('.select_input').data('overLength')) {
+                    selectedName = checkboxesChecked.length + ' z ' + checkboxes.length + ' zaznaczono';
+                    select.find('.select_input').data('overLength', !0);
+                } else {
+                    select.find('.select_input').data('overLength', !1);
+                }
+            });
+            if(selectedName) {
+                select.find('.select_input').text(selectedName);
+            } else {
+                select.find('.select_input').text(selectInput.data('title'));
+            }
+        },
+        decorateSelect: function() {
+        },
+        decorateInputs: function() {
+            $('input.autocomplete').each(function() {
+                var element = $(this), value = element.val();
+                if(value) {
+                    var description = element.siblings('ul').find('li[data-value="' + value + '"]').text();
+                    element.siblings('div.select_input').text(description);
+                }
+            });
+            $('input').not('.no-decorate').filter(function() {
+                return 0 === $(this).closest('.h--switch-field').length;
+            }).iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green'
+            });
+        },
+        selectNrb: function(event) {
+            var $element = $(event.currentTarget);
+            $($element).prev().select();
+        },
+        renderTooltips: function() {
+            $(".h--submenu [rel=tooltip]").tooltip({
+                placement: 'bottom',
+                delay: {
+                    show: 2e3,
+                    hide: 100
+                }
+            });
+            $('[rel="tooltip-left"]').tooltip({
+                placement: 'left',
+                delay: {
+                    show: 300,
+                    hide: 100
+                }
+            });
+            $("[rel=tooltip]").tooltip({
+                placement: 'top'
+            });
+            $("[rel=tooltip-bottom]").tooltip({
+                placement: 'bottom',
+                delay: {
+                    show: 300,
+                    hide: 100
+                }
+            });
+            $("[rel=tooltip-right]").tooltip({
+                placement: 'right'
+            });
+        },
+        checkUrl: function(event) {
+            var self = $(event.target);
+            if(self.attr('href')) {
+                self = $(event.target).closest('a');
+            }
+            if(self.attr('href') === window.location.hash) {
+                window.App.navigate(window.location.hash);
+                return !1;
+            }
+        },
+        executeEvents: function(eventsName, context) {
+            var view = void 0 !== context ? context : this, _view = this, events = eventsName.split(',');
+            $.each(events, function(key, eventObject) {
+                var params = _view.getEventParams(eventObject);
+                if(void 0 !== view[params.eventName]) {
+                    if(params.runMethod) {
+                        view[params.runMethod] = _.wrap(view[params.runMethod], function(runMethod) {
+                            runMethod.call(view);
+                            view[params.eventName].call(view, view.model.get('event'), params.eventArguments);
+                        });
+                    } else {
+                        view[params.eventName].call(view, view.model.get('event'), params.eventArguments);
+                    }
+                } else {
+                }
+            });
+        },
+        getEventParams: function(eventObject) {
+            var result = {}, pattern = /^([\w|\-]+)(\[.+\])?(\:[\w|\-]+)?$/,
+                eventWithoutParams = eventObject.replace(pattern, '$1$3'),
+                eventParams = eventObject.replace(pattern, '$2');
+            if(-1 !== eventWithoutParams.indexOf(':')) {
+                var splitOnColon = eventWithoutParams.split(':');
+                result.eventName = splitOnColon[0];
+                result.runMethod = splitOnColon[1];
+            } else {
+                result.eventName = eventWithoutParams;
+            }
+            if(eventParams) {
+                result.eventArguments = eventParams.slice(1, eventParams.length - 1).split(';');
+            }
+            return result;
+        },
+        cancelMobileConfirmation: function(event) {
+            var self = $(event.currentTarget), parentMain = self.closest('.prepareConfirmation');
+            this.removeConfirmation();
+            parentMain.find('.sms-confirmation-btns:not(.sms-confirmation-btns-dont-show)').show();
+            parentMain.find('.sms-confirmation-btns .sms-confirmation-btns-dont-show').hide();
+            parentMain.find('.previousActionButtons').hide();
+            parentMain.find('.mobile-confirmation-btns').hide();
+            parentMain.find('.mobile-authorization').hide();
+        },
+        showMobileButtons: function(event) {
+            var parentMain = $(event.currentTarget).closest('.prepareConfirmation');
+
+            parentMain.find('.previousActionButtons').hide();
+            parentMain.find('.mobile-confirmation-btns').show();
+            parentMain.find('.sms-confirmation-btns').hide();
+            parentMain.find('.modern-section-mobile').removeClass('hide');
+            parentMain.find('.modern-buttons-confirmation').addClass('hide');
+        },
+        showSmsButtons: function(event) {
+            var parentMain = $(event.currentTarget).closest('.prepareConfirmation');
+
+            parentMain.find('.mobile-confirmation-btns').hide();
+            parentMain.find('.sms-confirmation-btns').show();
+            parentMain.find('.modern-section-sms').removeClass('hide');
+
+        },
+        mobileShow: function(event) {
+            if(event === undefined || event === false || $(event.currentTarget).closest('.prepareConfirmation:visible').length === 0) {
+                var event = {};
+                event.currentTarget = $('.prepareConfirmation:visible button:first');
+            }
+            var view = this, parentMain = $(event.currentTarget).closest('.prepareConfirmation');
+            if(parentMain.length !== 0) {
+                $('body').find('.prepareConfirmation.mobile-show').removeClass('mobile-show');
+                $('.mobile-confirmation-btns').hide();
+            }
+            $('.sms-confirmation-btns').hide();
+            parentMain.addClass('mobile-show');
+            parentMain.removeClass('sms-show');
+            parentMain.find('.mobile-authorization').show();
+            view.showMobileButtons(event);
+            this.disableMobileConfirmation();
+            view.checkMobileConfirmation(event);
+        },
+
+        confirmationEnd: function(event) {
+            var parentMain = $(event.currentTarget).closest(confirmation.mainContainer.selector);
+
+            if(!parentMain.hasClass(confirmation.activeConfirmation.class)) {
+                var tempParent = $(event.target).closest(confirmation.mainContainer.selector);
+
+                if(tempParent.hasClass(confirmation.activeConfirmation.class)) {
+                    parentMain = tempParent;
+                }
+            }
+
+            confirmation.endConfirmation(parentMain, event, this);
+        },
+        confirmationPrepare: function(event, data) {
+            confirmation.prepareConfirmation(event, this.model.get('responseData'), this);
+        },
+        confirmationPrepareOnSpot: function(event, data) {
+            confirmation.prepareConfirmationOnSpot(event, data, this);
+        },
+        enableConfirmationButtons: function(event) {
+
+        },
+        scrollToConfirmation: function(event, data) {
+            confirmation.scrollToConfirmation(event, data[0]);
+        },
+
+        prepareConfirmation: function(event) {
+            var view = this, self = $(event.currentTarget), data = this.model.get('responseData'),
+                parentMain = self.closest('.prepareConfirmation'), dataType = view.getDataType(data);
+            if('html' === dataType || 'json-string' === dataType) {
+                try {
+                    data = JSON.parse(data);
+                } catch(e) {
+                    return;
+                }
+            }
+            if(true === data.show_modal) {
+                var config = {
+                    type: data.modal_type,
+                    text: data.modal_text
+                };
+                uiKit.modal.show(null, config);
+            } else if(data.allow === !0) {
+                if(7 === data.confirmation_type) {
+                    $('.prepareConfirmation.mobile-show').removeClass('mobile-show');
+                    parentMain.addClass('mobile-show');
+                    $('.prepareConfirmation:not(.mobile-show) .closeDetails ').click();
+                    view.mobileShow(event);
+                } else {
+                    parentMain.removeClass('mobile-show');
+                    parentMain.addClass('sms-show');
+                    view.showSmsButtons(event);
+                    if(true === data.is_last_try) {
+                        view.showConfirmationLastTryInfo(parentMain);
+                    }
+                }
+                switch(data.confirmation_type) {
+                    case 1:
+                        parentMain.find('.sendSMS').css('display', 'inline-block');
+                        break;
+
+                    case 3:
+                        parentMain.find('.sendSMS').not('.recipient').hide();
+                }
+                $('.item-details-sms').slideDown(200, function() {
+                    $(this).css({
+                        overflow: ''
+                    });
+                });
+                $('.previousActionButtons').slideUp(200, function() {
+                    $(this).css({
+                        overflow: ''
+                    });
+                });
+                $('.item-details-sms2').show();
+                $('.previousActionButtons2').hide();
+                parentMain.find('.saveSettingsContent').hide();
+                parentMain.find('.trustedTransferConfirmationRequired').hide();
+                parentMain.find('.disableSMS, .smsSettingsValid').show();
+                parentMain.find('.todisabled').prop('disabled', !0).addClass('filled').closest('.h--form--field').addClass('js-disabled');
+                parentMain.find('.todisabled').closest('.jsValidateField ').addClass('jsDisabled').addClass('disabled');
+                parentMain.find('input[name="token"], input[name="code_confirmation"]').prop('disabled', !1);
+
+                if(parentMain.find('.sms-code').hasClass('modern-sms')) {
+                    this.setConfirmationTypeTextModern(data.confirmation_type, parentMain.find('input[name="token"]'), data.sms_no);
+                } else if(parentMain.find('.sms-code').hasClass('mc-sms')) {
+                    this.setConfirmationTypeTextMC(data.confirmation_type, parentMain.find('input[name="token"]'), data.sms_no);
+                } else if(parentMain.find('.jsConfirmationSMS').length > 0) {
+                    parentMain.find('.jsConfirmationSMS').html('SMS nr <b class="sms-no" >' + data.sms_no + '</b> z dnia ' + this.dateToday());
+                } else {
+                    this.setConfirmationTypeText(data.confirmation_type, parentMain.find('input[name="token"]'), data.sms_no);
+                }
+
+                if(data.additional === !0) {
+                    parentMain.find('input[name="token_additional"], input[name="code_confirmation_additional"]').prop('disabled', !1);
+                    parentMain.find('input[name="code_confirmation_additional"]').attr('value', data.code_confirmation_additional);
+                    this.setConfirmationTypeText(data.confirmation_type_additional, parentMain.find('input[name="token_additional"]'), data.sms_no);
+                }
+                if(data.additional2 === !0) {
+                    parentMain.find('input[name="token_additional2"]').closest('.tokenCode').show();
+                    parentMain.find('input[name="token_additional2"], input[name="code_confirmation_additional2"]').prop('disabled', !1);
+                    parentMain.find('input[name="code_confirmation_additional2"]').attr('value', data.code_confirmation_additional2);
+                    this.setConfirmationTypeText(data.confirmation_type_additional2, parentMain.find('input[name="token_additional2"]'), data.sms_no);
+                }
+                if(data.code_confirmation_additional === null) {
+                    parentMain.find('input[name="token_additional"]').closest('.h--form--field').remove();
+                }
+                parentMain.find('input[name="code_confirmation"]').attr('value', data.code_confirmation);
+                if('' !== data.step && void 0 !== data.step && null !== data.step) {
+                    parentMain.find('input[name="step"]').attr('value', data.step);
+                } else {
+                    parentMain.find('input[name="step"]').attr('value', 'confirm');
+                }
+                parentMain.find('.h--select.todisabled').addClass('disabled');
+                this.model.resetResponse();
+            } else {
+                $.fn.setFormErrors(data);
+            }
+        },
+        setConfirmationTypeTextModern: function(confirmation_type, element, sms_no) {
+            switch(confirmation_type) {
+                case 1:
+                    element.closest('.modern-section-sms').find('.sms-info').find(".sms-no").html(sms_no);
+                    element.closest('.modern-sms').find('.sms-actions').find(".sms-no").html(sms_no);
+                    break;
+                case 3:
+                    break;
+            }
+            element.focus();
+        },
+        setConfirmationTypeTextMC: function(confirmation_type, element, sms_no) {
+            var placeholder, smsTitle = element.closest('.sms-code').find('.smsTitle');
+            switch(confirmation_type) {
+                case 1:
+                    placeholder = '<h3>Wpisz kod <span class="type">SMS</span></h3>';
+                    if(sms_no > 0) {
+                        placeholder += ' <span class="sms-info-box">nr <b class="sms_no">' + sms_no + '</b> z dnia ' + this.dateToday() + '</span>';
+                    }
+                    break;
+                case 3:
+                    placeholder = '<h3>Wpisz kod <span class="type">TOKEN</span></h3>';
+                    break;
+            }
+            smsTitle.html(placeholder);
+            element.focus();
+        },
+        setConfirmationTypeText: function(confirmation_type, element, sms_no) {
+            var placeholder, smsTitle = element.closest('.sms-code').find('.smsTitle');
+            switch(confirmation_type) {
+                case 1:
+                    placeholder = '<span class="type">SMS</span>';
+                    if(sms_no > 0) {
+                        placeholder += ' <span class="smsInfo">nr: <b class="sms_no">' + sms_no + '</b> z dnia ' + this.dateToday() + '</span>';
+                    }
+                    break;
+                case 3:
+                    placeholder = 'Wpisz kod <span class="type">TOKEN</span>';
+                    break;
+            }
+            smsTitle.html(placeholder);
+            element.focus();
+        },
+        dateToday: function() {
+            var fullDate = new Date();
+            var twoDigitMonth = (fullDate.getMonth() + 1) + "";
+            if(twoDigitMonth.length == 1) twoDigitMonth = "0" + twoDigitMonth;
+            var twoDigitDate = fullDate.getDate() + "";
+            if(twoDigitDate.length == 1) twoDigitDate = "0" + twoDigitDate;
+            var currentDate = twoDigitDate + "." + twoDigitMonth + "." + fullDate.getFullYear();
+            return currentDate;
+        },
+        cancelConfirmation: function(event) {
+            var self = $(event.currentTarget), parentMain = self.closest('.prepareConfirmation'), step = 'make';
+            parentMain.removeClass('sms-show');
+
+            parentMain.find('.iradio_square-green').removeClass('disabled');
+            parentMain.find('.todisabled:not(.disabledAlways)').prop('disabled', !1).removeClass('filled').closest('.h--form--field').removeClass('js-disabled');
+            parentMain.find('.todisabled:not(.disabledAlways)').closest('.jsValidateField').removeClass('jsDisabled').removeClass('disabled');
+            $('.h--select.disabled').each(function(k, v) {
+                if(!$(v).hasClass('disabledAlways')) {
+                    $(v).removeClass('disabled');
+                }
+            });
+            $('.item-details-sms').slideUp(200, function() {
+                $(this).css({
+                    overflow: ''
+                });
+            });
+            if(!parentMain.hasClass('mobile-show')) {
+                $('.previousActionButtons').slideDown(200, function() {
+                    $(this).css({
+                        overflow: ''
+                    });
+                });
+            }
+            $('body').find('.prepareConfirmation.mobile-show').removeClass('mobile-show');
+            parentMain.find('.saveChangings').show();
+            $('.item-details-sms2').hide();
+            $('.previousActionButtons2').show();
+            parentMain.find('form.disabled').removeClass('disabled');
+            parentMain.find('.error').removeClass('error');
+            parentMain.find('.js-error-target').hide();
+            parentMain.find('.jsConfirmationLastTryWarning').hide();
+            if(parentMain.find('.dlDispositionBy.disposition').length > 0) {
+                parentMain.find('.dlDispositionBy').find('.js-error-target').show();
+            }
+            parentMain.find('.saveSettingsContent').show();
+            parentMain.find('.disableSMS, .smsSettingsValid, .sendSMS').hide();
+            parentMain.find('input[name="token"], input[name="code_confirmation"], input[name="token_additional"], input[name="code_confirmation_additional"]').prop('disabled', !0).attr('value', '');
+            if(self.data('step')) {
+                step = self.data('step');
+            }
+            parentMain.find('input[name="step"]').attr('value', step);
+            parentMain.find('.smsTitle').html('ABY POTWIERDŹIĆ OPERACJĘ ');
+            this.reCheck(event, !0);
+        },
+        reCheck: function(event, withActive) {
+            var self = $(event.currentTarget), checkbox = $('body').find(self.data('recheck'));
+            if(self.data('recheck') && !window.App.skipRecheck) {
+                if(withActive) {
+                    if(checkbox.hasClass('active')) {
+                        checkbox.removeClass('active');
+                    } else {
+                        checkbox.addClass('active');
+                    }
+                }
+                if(checkbox.is(':checked')) {
+                    checkbox.removeAttr('checked');
+                } else {
+                    checkbox.attr('checked', 'checked');
+                }
+            } else {
+                if(self.data('recheck') && window.App.skipRecheck) {
+                    var li = self.closest('li');
+                    if(li.length && li.hasClass('off')) {
+                        li.removeClass('off');
+                    }
+                    checkbox.attr('disabled', 'disabled');
+                    window.App.skipRecheck = !1;
+                }
+            }
+        },
+        unCheck: function() {
+            var data = this.model.get('responseData');
+            if(data.unCheck) {
+                var unCheck = data.unCheck.split(',');
+                $.each(unCheck, function(k, v) {
+                    var option = v.split('|||'), self = $(option[0]);
+                    switch(option[1]) {
+                        case 'disable':
+                            window.App.skipRecheck = !0;
+                            self.attr('disabled', 'disabled');
+                            break;
+
+                        default:
+                            if(self.is(':checked')) {
+                                self.removeAttr('checked').attr('disabled', 'disabled');
+                                var li = self.closest('li');
+                                if(li.length && !li.hasClass('off')) {
+                                    li.addClass('off');
+                                }
+                            }
+                    }
+                });
+            }
+        },
+        renewConfirmation: function(event) {
+            event.preventDefault();
+            var view = this, self = $(event.currentTarget), parentMain = self.closest('.prepareConfirmation'),
+                code_confirmation = parentMain.find('input[name="code_confirmation"]').attr('value');
+
+            if(self.hasClass('renewConfirmationBinded')) {
+                return false;
+            }
+            self.addClass('renewConfirmationBinded');
+
+            if(!code_confirmation) {
+                code_confirmation = '';
+            }
+            $.getJSON(self.data('href') + '/' + code_confirmation, function(data) {
+                parentMain.find('.sms-code.error').removeClass('error');
+                if(data.allow === !0) {
+                    if('undefined' != data.sms_no && data.sms_no > 0) {
+                        if(parentMain.find('.sms-code').hasClass('modern-sms') || parentMain.find('.sms-code').hasClass('.mc-sms') || parentMain.find('.jsConfirmationSMS')) {
+                            parentMain.find(".sms-no, .sms_no").html(data.sms_no);
+                        } else {
+                            var smsTitle = parentMain.find('.sms-code').find('.smsTitle'),
+                                placeholder = 'WPISZ KOD SMS',
+                                sms_no_elm = smsTitle.find('.sms_no'), wider;
+                            if(sms_no_elm.length > 0) {
+                                sms_no_elm.text(data.sms_no);
+                            } else {
+                                wider = placeholder + ' NR ' + data.sms_no;
+                                placeholder += ' NR <b class="sms_no">' + data.sms_no + '</b>:';
+                                $('.sms-code').find('.wider').find('input').attr('placeholder', wider);
+                            }
+                        }
+                    }
+                    if('undefined' != data.code_confirmation) {
+                        parentMain.find('input[name="code_confirmation"]').val(data.code_confirmation);
+                    }
+                    parentMain.find('input[name="token"]').val('').closest('.h--form--field').removeClass('error').closest('form').removeClass('disabled');
+                    parentMain.find('.sms-box .h--form--field .js-error-target').remove();
+                    parentMain.find('.sms-box .information.mark').removeClass('error');
+
+                    if(true === data.is_last_try) {
+                        view.showConfirmationLastTryInfo(parentMain);
+                    }
+                } else {
+                    if(data.allow === !1) {
+                        $.fn.setFormErrors(data);
+                    }
+                }
+                self.removeClass('renewConfirmationBinded');
+            });
+        },
+        renewConfirmationAdditional: function(event) {
+            var self = $(event.currentTarget), parentMain = self.closest('.prepareConfirmation');
+            $.getJSON(self.data('href') + '/' + parentMain.find('input[name="code_confirmation_additional"]').attr('value'), function(data) {
+                if(data.allow === !0) {
+                    parentMain.find('input[name="code_confirmation_additional"]').val(data.code_confirmation);
+                    parentMain.find('input[name="token_additional"]').val('').closest('.h--form--field').removeClass('error').closest('form').removeClass('disabled');
+                } else {
+                    if(data.allow === !1) {
+                        $.fn.setFormErrors(data);
+                    }
+                }
+            });
+        },
+        endConfirmation: function(event) {
+            var view = this, _model = view.model, data = _model.get('responseData'), destination = data.destination,
+                self = $(event.currentTarget), parentMain = self.closest('.prepareConfirmation'), animateOptions = {
+                    left: '900px'
+                };
+            if('string' == typeof data) {
+                try {
+                    data = $.parseJSON(data);
+                    destination = data.destination;
+                } catch(_error) {
+                }
+            }
+            if(data.confirmed === !0) {
+                parentMain.closest('form').addClass('disabled');
+                parentMain.find('.disableSMS, .smsSettingsValid, .sendSMS, .saveSettingsContent').hide();
+                parentMain.removeClass('sms-show');
+                if(7 === data.confirmation_type) {
+                    $('.prepareConfirmation.mobile-show').removeClass('mobile-show');
+                }
+
+                if(self.closest('section').hasClass('js-setting-menu')) {
+                    $('.js-top-button.active').removeClass('active').data('status', 'hidden');
+                }
+                if(0 === parentMain.closest('#menuInformationBox').length && !parentMain.hasClass('changePass') && !parentMain.hasClass('inTransferAction')) {
+                    parentMain.animate(animateOptions, 500, 'easeOutQuad', function() {
+                    });
+                }
+
+                _model.set('navigate', !1);
+                _model.set('destination', destination);
+                _model.set('url', data.url);
+                _model.set('event', event);
+                if(data.before) {
+                    _model.set('beforeAnimation', data.before);
+                    _model.set('beforeAnimationEvent', event);
+                }
+                if(data.after) {
+                    _model.set('afterAnimation', data.after);
+                    _model.set('afterAnimationEvent', event);
+                }
+                if(destination && $(destination).length && !view.elementInViewport($(destination)) && !data.no_move) {
+                    $('html, body').animate({
+                        scrollTop: $(destination).offset().top + 'px'
+                    }, 250, 'easeOutQuad');
+                }
+                if(data.animation) {
+                    _model.set('animation', data.animation);
+                }
+                if('' !== data.skipRecheck && void 0 !== data.skipRecheck) {
+                    window.App.skipRecheck = data.skipRecheck;
+                }
+                view.render().promise().done(function() {
+                    parentMain.closest('form').removeClass('disabled');
+                    var destinationChildren = $(destination).children(), childrenLeft = destinationChildren.css('left');
+                    if('auto' != childrenLeft && 0 !== parseInt(childrenLeft)) {
+                        destinationChildren.animate({
+                            left: '0'
+                        }, 500, 'easeOutQuad');
+                    }
+                    if(destinationChildren.hasClass('js-slide-down')) {
+                        destinationChildren.slideDown(500, 'easeOutQuad');
+                    }
+                });
+
+            } else {
+                $('.sms-code').filter(':visible').addClass('error');
+                $.fn.setFormErrors(data);
+
+                if(data.error === 10199 || true === data.is_last_try) {
+                    view.showConfirmationLastTryInfo(parentMain);
+                }
+            }
+        },
+        showConfirmationLastTryInfo: function(parentMain) {
+            parentMain.find('.jsConfirmationRenewContainer').css('display', 'none');
+            uiKit.popover.show(parentMain.find('.jsConfirmationLastTryPopover'), {trigger: 'manual'});
+        },
+        urlRender: function(event) {
+            var view = this, _model = view.model, data = _model.get('responseData'), destination = data.destination;
+            _model.set('navigate', !1);
+            _model.set('destination', destination);
+            _model.set('url', data.url);
+            _model.set('event', event);
+            if(data.before) {
+                _model.set('beforeAnimation', data.before);
+                _model.set('beforeAnimationEvent', event);
+            }
+            if(data.after) {
+                _model.set('afterAnimation', data.after);
+                _model.set('afterAnimationEvent', event);
+            }
+            if(destination && $(destination).length && !view.elementInViewport($(destination))) {
+                $('html, body').animate({
+                    scrollTop: $(destination).offset().top + 'px'
+                }, 250, 'easeOutQuad');
+            }
+            if(data.animation) {
+                _model.set('animation', data.animation);
+            }
+            if('' !== data.skipRecheck && void 0 !== data.skipRecheck) {
+                window.App.skipRecheck = data.skipRecheck;
+            }
+            view.render().promise().done(function() {
+                var destinationChildren = $(destination).children(), childrenLeft = destinationChildren.css('left');
+                if('auto' != childrenLeft && 0 !== parseInt(childrenLeft)) {
+                    destinationChildren.animate({
+                        left: '0'
+                    }, 500, 'easeOutQuad');
+                }
+                if(destinationChildren.hasClass('js-slide-down')) {
+                    destinationChildren.slideDown(500, 'easeOutQuad');
+                }
+            });
+        },
+        checkConfirmation: function() {
+            var data = this.model.get('responseData');
+            if(data.allow !== !0) {
+                $.fn.setFormErrors(data);
+            }
+        },
+        loanRedirectTo: function(event, data) {
+            ferryt.redirectTo(event, data, this);
+        },
+        loanRedirectByTypeAndCode: function(event) {
+            var self = $(event.currentTarget), code = self.data('code'), type = self.data('type') || 'OFFER';
+            if ((typeof code !== 'string' && typeof code !== 'number') || !code.toString().length) {
+                return false;
+            }
+            if (isDemoMode) {
+                this.promptIfDemoMode(event);
+                return false;
+            } else {
+                ferryt.redirectByTypeAndCode('loan', type, code, null, event);
+            }
+        },
+        ferrytRedirectByTypeAndCode: function(event) {
+            event.preventDefault();
+            var self = $(event.currentTarget), code = self.data('code'), type = self.data('type') || 'new';
+            if ((typeof code !== 'string' && typeof code !== 'number') || !code.toString().length) {
+                return false;
+            }
+            if (isDemoMode) {
+                this.promptIfDemoMode(event);
+                return false;
+            } else {
+                ferryt.redirectByTypeAndCode('ferryt', type, code, null, event);
+            }
+        },
+        runDatePicker: function(scope) {
+            var _this = this;
+            //NEW DATAPICKER RUN ONLY ON CREDITS REPAYMENT
+            if($('form#formRepaymentTransfer input.datepicker[name="transaction_date"]').length > 0) {
+                $('form#formRepaymentTransfer').find('input.datepicker[name="transaction_date"]').datepicker2({
+                    format: 'dd.mm.yyyy',
+                    //startDate: '0d',
+                });
+                return;
+            }
+
+            var datepicker = scope ? scope.find('.datepicker:not(.noPick)') : $('.datepicker:not(.noPick)');
+            if(datepicker.length > 0) {
+                var fullDate = new Date(), twoDigitMonth = fullDate.getMonth() + 1,
+                    _today = fullDate.getFullYear() + "/" + twoDigitMonth + "/" + fullDate.getDate();
+                if(!$('.transferToday.datepicker').val()) {
+                    $('.transferToday.datepicker').attr('data-value', _today);
+                }
+                datepicker.each(function() {
+                    var element = $(this), elementParent = element.closest('.h--form--field'),
+                        min_date, max_date, input, picker, allow_today = 1, today, editable;
+                    if(element.data('min-date')) {
+                        min_date = element.data('min-date');
+                    }
+                    if(element.data('max-date')) {
+                        max_date = element.data('max-date');
+                    }
+                    if(element.data('allow-today') != undefined) {
+                        allow_today = element.data('allow-today');
+                    }
+
+                    if(element.attr('readonly') == 'readonly') {
+                        editable = !1;
+                    } else {
+                        editable = !0;
+                    }
+
+                    if(allow_today == 1) {
+                        today = 'DZISIAJ';
+                    } else {
+                        today = '';
+                    }
+                    input = element.pickadate({
+                        editable: editable,
+                        min: min_date,
+                        max: max_date,
+                        today: today,
+                        klass: {
+                            buttonClear: 'picker__button--clear hidden',
+                            buttonClose: 'picker__button--close hidden',
+                            buttonToday: 'picker__button--today h--btn'
+                        }
+                    });
+                    picker = input.pickadate('picker');
+                    element.parent().find('.add-on').on('click', function(_event) {
+                        if(element.is(':disabled') || !elementParent.is(':visible') || elementParent.hasClass('disabled')) {
+                            return;
+                        }
+                        _event.stopPropagation();
+                        _event.preventDefault();
+
+                        // if (element.data('min-date')) {
+                        //     min_date = element.data('min-date');
+                        // }
+                        // if (element.data('max-date')) {
+                        //     max_date = element.data('max-date');
+                        // }
+
+                        // input = element.pickadate({
+                        //     editable: !0,
+                        //     min: min_date,
+                        //     max: max_date,
+                        //     klass: {
+                        //         buttonClear: 'picker__button--clear hidden',
+                        //         buttonClose: 'picker__button--close hidden',
+                        //         buttonToday: 'picker__button--today h--btn'
+                        //     }
+                        // });
+                        // picker = input.pickadate('picker');
+
+                        // picker.on('open', function() {}).on('close', function() {
+                        //     picker.stop();
+                        // });
+                        picker.open();
+                    });
+                });
+            }
+            var calendar = $(".datepicker2, .datepicker3");
+            _this.initCalendar(calendar);
+        },
+        initCalendar: function(calendar) {
+            var _this = this;
+            var isDisabledOn = function(el) {
+                    if(el === undefined || el.length === 0){
+                            return false;
+                    }
+                var isDate = el.data('validatedate') !== undefined,
+                    isDisabled = el.hasClass('jsValDisabled') && isDate;
+                return isDisabled;
+            };
+            if(calendar.length > 0) {
+                calendar.each(function() {
+                    var d = $(this);
+                    var isDisabled = isDisabledOn($(this)),
+                        pattern = /(\d{2})[-|.](\d{2})[-|.](\d{4})/;
+                    if(isDisabled) {
+                        var dates = _this.stringToArray($(this).data('validatedate')),
+                            dateMin = dates['min'] !== undefined ? new Date(dates['min'].replace(pattern, '$3/$2/$1')) : undefined,
+                            dateMax = dates['max'] !== undefined ? new Date(dates['max'].replace(pattern, '$3/$2/$1')) : undefined;
+                    }
+
+                    var isDisabledDate = function(date, el) {
+
+                        if(el !== undefined && el.attr('data-validatedate') !== undefined) {
+                            var dates = _this.stringToArray(el.attr('data-validatedate')),
+                                dateMin = dates['min'] !== undefined ? new Date(dates['min'].replace(pattern, '$3/$2/$1')) : undefined,
+                                dateMax = dates['max'] !== undefined ? new Date(dates['max'].replace(pattern, '$3/$2/$1')) : undefined;
+                        }
+                        var a = isDisabledOn(el) && (dateMin !== undefined && date.valueOf() < dateMin.valueOf() || dateMax !== undefined && date.valueOf() > dateMax.valueOf());
+                        return a;
+                    };
+                    let format = $(this).data('format-date');
+                    if(format === undefined) {
+                        format = 'dd.mm.yyyy';
+                    }
+                    $(this).datepicker2({
+                        format: format,
+                        onRender: function(date) {
+                            return isDisabledDate(date, this.element) ? 'disabled' : '';
+                        }
+                    }).on('changeDate', function(ev) {
+                        if(isDisabledDate(ev.date) || ev.viewMode !== 'days') {
+                            $(ev.currentTarget).datepicker2('setValue', ev.date);
+                        }
+                        if(ev.viewMode === 'days') {
+                            $(ev.currentTarget).datepicker2('hide');
+                        }
+                        uiKit.tools.dataRevalidate(ev);
+                        $.fn.runValidateMethods($(ev.currentTarget));
+                    }).data('datepicker');
+                });
+            }
+        },
+        stringToArray: function(string) {
+            var splitOnSemicolons, arrayFromString = [];
+            if(-1 !== string.indexOf(';')) {
+                splitOnSemicolons = string.split(';');
+                $.map(splitOnSemicolons, function(value) {
+                    if(-1 !== value.indexOf(':')) {
+                        var splitOnColon = value.split(':');
+                        arrayFromString.push({
+                            name: splitOnColon[0],
+                            params: splitOnColon[1]
+                        });
+                    } else {
+                        if('' !== value) {
+                        }
+                    }
+                });
+            }
+            var aMethodParams = [];
+            for(i = 0; i < arrayFromString.length; ++i) {
+                aMethodParams[arrayFromString[i].name] = arrayFromString[i].params;
+            }
+            return aMethodParams;
+        },
+        resetSelect: function(self) {
+            var selectValue = '';
+            self.find('.h--select').each(function(k, v) {
+                var selectInput = $(v).find('div.select_input'), select = $(v).find('select');
+                selectInput.text(selectInput.data('placeholder'));
+                if('undefined' != typeof selectInput.data('value') && selectInput.data('value').length > 0) {
+                    selectValue = selectInput.data('value');
+                }
+                select.val(selectValue);
+            });
+        },
+        prevFormStep: function(event) {
+            var self = $(event.currentTarget), form = self.closest('form');
+            if(self.data('type')) {
+                form.data('type', self.data('type'));
+            }
+            form.removeClass('disabled');
+            $('.toValidate', form).removeClass('toValidate');
+            $('input[name="step"]', form).val(self.data('gotostep'));
+            $('input[name="send"]', form).val('false');
+            $('input[name="nextSubStep"]', form).val('false');
+            form.find('button[type="submit"]').eq(0).removeAttr('disabled').trigger('click');
+        },
+        printPdf: function(event) {
+            var element = $(event.currentTarget), url = '/' + element.attr('href').replace('#', '');
+            if(isDemoMode && $(element).hasClass('attach')) {
+                $(element).attr('data-container', 'body');
+                $(element).popover({
+                    container: "body",
+                    placement: 'top',
+                    html: true,
+                    trigger: 'manual',
+                    title: '<button class="close icon-demo-close"></button>',
+                    content: '<p>' + 'Funkcja niedostępna w wersji demonstracyjnej.' + '</p>'
+                }).popover('show');
+                event.stopImmediatePropagation();
+                return false;
+            }
+            this.makePrintPdf(element, url);
+            event.preventDefault();
+        },
+        makePrintPdf: function(element, url) {
+            url = url.replace('#', '');
+            if(element.hasClass('printPdfBinded')) {
+                return false;
+            }
+            element.addClass('printPdfBinded');
+
+            window.open(url);
+
+            setTimeout(function() {
+                element.removeClass('printPdfBinded');
+            }, 100);
+        },
+        logout: function(event) {
+            if(event) {
+                event.preventDefault();
+            }
+            $.getJSON('/index/logout/do', function() {
+                chat.logout();
+                window.App.navigate('index/logout');
+                window.location.reload();
+            });
+        },
+        hoverContext: function(event) {
+            var li, self = $(event.target);
+            if(self.closest('ul.subcontext').length > 0) {
+                self = self.closest('ul.subcontext').prev();
+            }
+            li = self.closest('li');
+            if(self.data('hover') && self.data('beforeHover')) {
+                self.html(self.data('beforeHover'));
+                self.data('beforeHover', '');
+            } else {
+                if(self.data('hover')) {
+                    self.css('min-width', li.innerWidth() + 'px');
+                    self.data('beforeHover', self.html());
+                    self.html(self.data('hover'));
+                }
+            }
+        },
+        _heartbeat: function () {
+            var _this = this, deferr = $.Deferred();
+            if (!window.heartbeatChecking) {
+                window.heartbeatChecking = !0;
+
+                $.ajax({
+                    dataType: "json",
+                    url: '/index/heartbeat',
+                    type: 'post',
+                    data: {
+                        hash: $('body').data('hash')
+                    },
+                    error: function (xhr, status, error) {
+                        window.clearInterval(window.heartbeatInterval);
+                        $.fn.checkError(xhr, status, error);
+                        deferr.reject(error);
+                    },
+                    success: function (data, status, xhr) {
+                        if (!data.access) {
+                            window.clearInterval(window.heartbeatInterval);
+                        } else {
+                            var alertBox = $('.h--box-alert-top.error.extendSessionWrapper'),
+                                    extendBtn;
+                            if (data.html) {
+                                alertBox.empty().html(data.html);
+                                _this.prepareForm.call(_this, alertBox.find('form'));
+                                extendBtn = alertBox.find('.h--btn.extendSession');
+                                extendBtn.off('.extSession').on('click.extSession', function (event) {
+                                    _this.extendSession.call(_this, event);
+                                });
+                            }
+                            if (data.sessionExpire && window.heartbeatSessionExpire !== !0) {
+                                _this.stopSessionTimer();
+                                window.heartbeatSessionLeft = parseInt(data.sessionLeft);
+                                _this.startSessionTimer(alertBox);
+                                window.heartbeatSessionExpire = !0;
+                            } else if (!data.sessionExpire && window.heartbeatSessionExpire === !0) {
+                                _this.extendSession();
+                            }
+                            window.heartbeatChecking = !1;
+                        }
+                        deferr.resolve(data, status, xhr);
+                    }
+                });
+            }
+            return deferr;
+        },
+        _doheartbeat: function() {
+            var view = this;
+            if(!window.heartbeatInitialized && 'IndexView' != window.App.siteView.currentController) {
+                $.getJSON('/layout/index/do', function(data) {
+                    window.heartbeatInitialized = !0;
+                    $('body').data('hash', data.hash);
+                    view._enableHeartBeat();
+                    $.fn.enableHeartBeat = function() {
+                        view._enableHeartBeat();
+                    };
+                    $.fn.disableHeartBeat = function() {
+                        view._disableHeartBeat();
+                    };
+                });
+                $('.h--box-alert-top.error').find('.h--btn.extendSession').on('click', function() {
+                    view.extendSession();
+                });
+            }
+        },
+        _enableHeartBeat: function (delay) {
+            var view = this, beatDelay = delay || 10000;
+            if (window.heartbeatInterval) {
+                view.extendSession();
+            } else {
+                window.heartbeatInterval = window.setInterval(function () {
+                    view._heartbeat();
+                }, beatDelay);
+            }
+        },
+        stopSessionTimer: function() {
+            window.clearInterval(window.heartbeatSessionInterval);
+        },
+        startSessionTimer: function(alertBox) {
+            var minutes, seconds, view = this, timerBox;
+            window.heartbeatSessionInterval = window.setInterval(function() {
+                timerBox = alertBox.find('.time');
+                window.heartbeatSessionLeft -= 1;
+                if(window.heartbeatSessionLeft <= 0) {
+                    view.stopSessionTimer();
+                    view._disableHeartBeat();
+                    minutes = seconds = 0;
+                } else {
+                    minutes = Math.floor(window.heartbeatSessionLeft / 60);
+                    seconds = Math.floor(window.heartbeatSessionLeft - 60 * minutes);
+                }
+                if(10 > seconds) {
+                    seconds = '0' + seconds;
+                }
+                if(10 > minutes) {
+                    minutes = '0' + minutes;
+                }
+                timerBox.html('za ' + minutes + ':' + seconds + ' min.');
+                if(window.heartbeatSessionLeft <= 0) {
+                    view._heartbeat();
+                }
+            }, 1e3);
+            var search = $('#searchBody');
+            var searchTop = parseInt(search.css('top'));
+
+            $('body').stop(!0, !1).animate({
+                paddingTop: '40px',
+            }, {
+                duration: 500,
+                easing: 'easeOutQuad',
+                step: function() {
+                    if(search.length) {
+                        search.css('top', (searchTop + parseInt($(this).css('paddingTop'))) + 'px');
+                    }
+                }
+            });
+            $('body').addClass('pbl-extend-session-bar');
+            alertBox.css({
+                position: 'fixed',
+                zIndex: '9999999',
+                top: '0',
+                left: '0',
+                right: '0'
+            }).stop(!0, !1).animate({
+                height: '40px'
+            }, 500, 'easeOutQuad');
+            alertBox.addClass('pbl-extend-session-bar-height');
+        },
+        extendSession: function(event) {
+            var view = this,
+                alertBox = $('.h--box-alert-top.error.extendSessionWrapper'),
+                dataInput = alertBox.find('input[type="hidden"]').eq(0),
+                iName = dataInput.attr('name'),
+                iVal = dataInput.attr('value'),
+                data = {},
+                request;
+            if(!dataInput.length) {
+                return true;
+            }
+            alertBox.find('.extendSession').blur();
+            data[iName] = iVal;
+            request = $.ajax({
+                url: "/index/extendSession",
+                method: "POST",
+                data: data,
+                dataType: 'json'
+            });
+            request.done(function(response) {
+                var data = view.model.get('responseData'),
+                    status = view.model.get('responseStatus'),
+                    xhr = view.model.get('responseXhr');
+                if(response.extended) {
+                    view.stopSessionTimer();
+                    window.heartbeatSessionExpire = !1;
+                    var search = $('#searchBody');
+                    var searchTop = parseInt(search.css('top')) - parseInt($('body').css('paddingTop'));
+                    $('body').stop(!0, !1).animate({
+                        paddingTop: '0px'
+                    }, {
+                        duration: 500,
+                        easing: 'easeOutQuad',
+                        step: function() {
+                            if(search.length) {
+                                search.css('top', (searchTop + parseInt($(this).css('paddingTop'))) + 'px');
+                            }
+                        }
+                    });
+                    $('body').removeClass('pbl-extend-session-bar');
+                    alertBox.stop(!0, !1).animate({
+                        height: '0px'
+                    }, 500, 'easeOutQuad', function() {
+                        $(this).css({
+                            position: '',
+                            zIndex: '',
+                            top: '',
+                            left: '',
+                            right: ''
+                        });
+                        $(this).empty();
+                    });
+                    alertBox.removeClass('pbl-extend-session-bar-height');
+                } else {
+                    $.fn.checkError(xhr, status, data.extended);
+                }
+            });
+        },
+        _disableHeartBeat: function() {
+            try {
+                window.clearInterval(window.heartbeatInterval);
+            } catch(error) {
+            }
+        },
+        showDriversBankLogin: function(partialName) {
+            var deferr = $.Deferred();
+
+            $.ajax({
+                url: '/wallet/showBKLogin',
+                type: 'POST',
+                data: {
+                    'partial_name': partialName
+                },
+                success: function(data) {
+                    deferr.resolve(data);
+                },
+                error: function() {
+                    deferr.reject();
+                }
+            });
+
+            return deferr;
+        },
+        goToDriversBank: function(event) {
+            var view = this;
+
+            // $(window).trigger('overlay:show');
+            view.BKPopUp.init();
+        },
+        middlePositionElement: function(el) {
+            var elOffset = el.offset().top;
+            var elHeight = el.height();
+            var windowHeight = $(window).height();
+            var offset;
+            if(elHeight < windowHeight) {
+                offset = elOffset - ((windowHeight / 2) - (elHeight / 2));
+            } else {
+                offset = elOffset;
+            }
+            $('html, body').scrollTop(offset);
+        },
+        BKPopUp: {
+            defaults: {
+                popUpID: 'bkPopUp'
+            },
+            init: function() {
+                var _base = this,
+                    controller = window.App.siteView.currentController;
+
+                _base.controller = controller.toLowerCase().replace('view', '');
+
+                _base.checkShowPopUp().promise().done(function(data) {
+                    if(data.template) {
+                        _base.template = data.template;
+                        _base.bkPopUp = _base.getPopUp();
+
+                        _base.bkPopUp.find('[type="checkbox"]').iCheck();
+                        _base.bkPopUp.modal();
+
+                        if(!_base.bkPopUp.hasClass('js-eventsBinded')) {
+                            _base.bkPopUp.addClass('js-eventsBinded');
+                            _base.bindEvents(_base.bkPopUp);
+                        }
+                    } else if(data.loginForm) {
+                        $(window).trigger('loader:show');
+                        $('body').append(data.loginForm);
+                    }
+                });
+            },
+            checkShowPopUp: function() {
+                var _base = this,
+                    deferr = $.Deferred();
+
+                $.ajax({
+                    url: _base.controller + '/showBKModal',
+                    type: 'POST',
+                    success: function(data) {
+                        deferr.resolve(data);
+                    },
+                    error: function() {
+                        deferr.reject();
+                    }
+                });
+
+                return deferr;
+            },
+            getPopUp: function() {
+                var _base = this,
+                    bkPopUp = $('#' + _base.defaults.popUpID);
+                if(bkPopUp.length) {
+                    bkPopUp.remove();
+                }
+                return _base.createPopUpDom();
+            },
+            createPopUpDom: function() {
+                var _base = this,
+                    popUpHTML = _base.template;
+
+                return $(popUpHTML);
+            },
+            bindEvents: function(popUp) {
+                var _base = this,
+                    btn = popUp.find('.h--btn');
+
+                btn.each(function() {
+                    $(this).on('click', function(event) {
+                        var currElem = $(this),
+                            saveChoice = popUp.find('.js-saveChoice').is(':checked'),
+                            resultData = {
+                                'do_auto_login': currElem.data('autologin'),
+                                'save_status': saveChoice
+                            };
+
+                        event.preventDefault();
+
+                        $.ajax({
+                            url: _base.controller + '/doLoginBK',
+                            type: 'POST',
+                            data: resultData,
+                            success: function(data) {
+                                if(data.loginForm) {
+                                    $(window).trigger('loader:show');
+                                    $('body').append(data.loginForm);
+                                }
+                            }
+                        });
+                    });
+                });
+            }
+
+        },
+        checkCredit: function(event, isDataCompleted, creditCode, isCancelOtherCases) {
+            event.stopPropagation();
+            event.preventDefault();
+            var _this = this, self = $(event.currentTarget);
+            if(event.data !== undefined && event.data._this !== undefined) {
+                _this = event.data._this;
+            }
+            if(!isDataCompleted === true) {
+                isDataCompleted = false;
+            }
+            if(!isCancelOtherCases === true) {
+                isCancelOtherCases = false;
+            }
+
+            if(!creditCode) {
+                creditCode = self.data('credit');
+                if(event.codeFromBanner) {
+                    creditCode = event.codeFromBanner;
+                }
+            }
+            var creditPlacement = self.data('credit-placement');
+
+            $('.popover').hide();
+            $(window).trigger('loader:show');
+            this.creditCode = creditCode;
+            this.isDataCompleted = isDataCompleted;
+            $.post("creditpa/checkCreditPa",
+                {
+                    code_credit: creditCode,
+                    isDataCompleted: isDataCompleted ? 1 : 0,
+                    is_cancel_other_cases: isCancelOtherCases ? 1 : 0,
+                    code_credit_placement: creditPlacement
+                }
+            ).done(function(data) {
+                var popup = $('.h--overlay-credit-pa.errorCase');
+                if(data.error !== undefined) {
+                    $(window).trigger('loader:hide');
+                    _this.setBlurry('#topViewWrapper,#siteViewWrapper');
+                    if(data.error === 15016) {
+                        $.getJSON('creditpa/removeOfferForYou', function() {
+                        });
+                        $('.item.creditpa').removeClass('active').next().addClass('active');
+                        $('.item.creditpa').remove();
+                        popup.find('.title').text('Oferta niedostępna');
+                        popup.find('.description').text(data.message);
+                    }
+                    popup.show();
+                    return false;
+                }
+                if(data.unaccessibility_message) {
+                    $(window).trigger('loader:hide');
+                    _this.setBlurry('#topViewWrapper,#siteViewWrapper');
+                    popup.find('.title').text(data.unaccessibility_message);
+                    popup.show();
+                    return false;
+                }
+                var handle = $('.h--overlay-credit-pa');
+                if(data.is_other_cases) {
+                    $(window).trigger('loader:hide');
+                    _this.setBlurry('#topViewWrapper,#siteViewWrapper');
+                    if(data.title) {
+                        handle.find('.title').text(data.title);
+                    }
+                    if(data.is_fino_cases) {
+                        handle.find('.text-left').text('Kontynuowanie wnioskowania spowoduje anulowanie poprzednio zainicjowanego wniosku.');
+                    }
+                    if(data.is_process_std) {
+                        handle.find('.button-continue').attr('href', '#creditStandard/unfinishedCases/' + data.code_process_std);
+                    }
+                    $('.h--overlay-credit-pa.otherCase').show();
+                } else {
+                    window.App.navigate('creditpa/index');
+                    window.location.reload();
+                }
+            });
+        },
+        closePopupCreditPa: function(event) {
+            var self = $(event.currentTarget), _this = event.data._this;
+            $.post("creditpa/resignCreditPaWithFino",
+                {
+                    isUpdateData: parseInt($('.updateData').length > 0)
+                }
+            ).done(function(data) {
+                self.closest('.popup-overlay').hide();
+                _this.removeBlurry();
+                if($('.updateData').length !== 0) {
+                    window.App.navigate('wallet/index');
+                    window.location.reload();
+                }
+            });
+        },
+        closeAndNewCreditPa: function(event) {
+            var self = $(event.currentTarget), _this = event.data._this;
+            _this.closePopupCreditPa(event);
+            _this.checkCredit(event, this.isDataCompleted, this.creditCode, true);
+        },
+        continueCreditPa: function(event) {
+            var self = $(event.currentTarget), _this = event.data._this;
+            self.closest('.popup-overlay').hide();
+            _this.removeBlurry();
+            if($('.updateData').length !== 0) {
+                $('#siteViewWrapper').hide();
+                $('.overlay:first').show().find('.info-slider').text('Wczytujemy rozpoczęty wniosek');
+            }
+
+        },
+
+        checkCreditStd: function(event) {
+            event.stopPropagation();
+            event.preventDefault();
+            var _this = this, self = $(event.currentTarget), creditCode;
+            if(event.data !== undefined && event.data._this !== undefined) {
+                _this = event.data._this;
+            }
+
+            creditCode = self.data('credit');
+
+            $('.popover').hide();
+            $(window).trigger('loader:show');
+            this.creditCode = creditCode;
+            $.post("creditStandard/checkCredit",
+                {
+                    code_credit: creditCode
+                }
+            ).done(function(data) {
+                var handle = $('.h--overlay-credit-pa');
+                if(!data.is_new) {
+                    $(window).trigger('loader:hide');
+                    _this.setBlurry('#topViewWrapper,#siteViewWrapper');
+                    if(data.title) {
+                        handle.find('.title').text(data.title);
+                    }
+                    handle.find('.button-close-and-new').attr('href', '#creditStandard/index/' + creditCode + '/1').off('click').on("click", function(event) {
+                        var current = $(event.currentTarget);
+                        window.App.navigate(current.attr(('href')), !0);
+                    });
+                    handle.find('.button-continue').attr('href', '#creditStandard/index/' + creditCode + '/0/' + data.code_process);
+                    $('.h--overlay-credit-pa.otherCase').show();
+                } else {
+                    window.App.navigate('creditStandard/index/' + creditCode);
+                    window.location.reload();
+                }
+            });
+        },
+        hideErrorCreditCase: function(event) {
+            var _this = event.data._this, self = $(event.currentTarget);
+            self.closest('.popup-overlay').hide();
+            _this.removeBlurry();
+        },
+        setBlurry: function(path) {
+            if($('.blurry').length === 0) {
+                $(path).addClass('blurry');
+            }
+        },
+        removeBlurry: function() {
+            if($('.h--overlay-credit-pa:visible').length === 0) {
+                $('.blurry').removeClass('blurry');
+            }
+        },
+        dateTimeNow: function() {
+            var fullDate = new Date();
+            var twoDigitMonth = (fullDate.getMonth() + 1) + "";
+            if(twoDigitMonth.length == 1) twoDigitMonth = "0" + twoDigitMonth;
+            var twoDigitDate = fullDate.getDate() + "";
+            if(twoDigitDate.length == 1) twoDigitDate = "0" + twoDigitDate;
+            var currentDate = fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitDate + " " + fullDate.getHours() + ":" + fullDate.getMinutes() + ":" + fullDate.getSeconds() + "." + fullDate.getMilliseconds();
+            return currentDate;
+        },
+        notificationBarsCheck: function() {
+            $.getJSON('notifications/index', function(data) {
+                $.each(data, function(index, element) {
+                    if(element.visible) {
+                        window.notifications.addBar(element.message, element.button, element.identifier, element.group, element.global, '#topViewWrapper');
+                    } else {
+                        window.notifications.removeBar(element.identifier, '#topViewWrapper');
+                    }
+                });
+            });
+        },
+        checkMobileConfirmation: function(event) {
+            if(event === undefined || event === false || $(event.currentTarget).closest('.prepareConfirmation.mobile-show').length === 0) {
+                var event = {};
+                event.currentTarget = $('.prepareConfirmation.mobile-show button:first');
+            }
+            var _this = this, _event = event, view = _this, _model = view.model,
+                action = $('input[name="actionConfirmation"]').val(),
+                parentMain = $(_event.currentTarget).closest('.prepareConfirmation');
+            if(undefined === window.mobileConfirmationInterval) {
+                window.mobileConfirmationInterval = window.setInterval(function() {
+                    _this.checkMobileConfirmation(_event);
+                }, 5000);
+                this.showMobileConfirmationResponse(1, parentMain);
+            }
+
+            $.post('index/checkConfirmation',
+                {
+                    action: action
+                }).done(function(data) {
+                _model.set('responseData', data);
+
+                if(data.events) {
+                    _this.executeEvents(data.events);
+                }
+                if(data.status != 1) {
+                    _this.showMobileConfirmationResponse(data.status, parentMain, data.error);
+
+                    _this.disableMobileConfirmation();
+                    if(data.method) {
+                        _this[data.method](event, data.confirmation_type);
+                    } else {
+                        if($('body .mobile-show').length > 0) {
+                            _this.endConfirmation(_event, data);
+                        }
+                    }
+                }
+            });
+        },
+        showMobileConfirmationResponse: function(status, target, error) {
+            var handle = $(target).find('.info-right-box-confirmation');
+
+            if(3 === status) {
+                this.mobileConfirmationMessage(handle,
+                    'confirmation-reject',
+                    'Operacja została odrzucona',
+                    '');
+            } else if(4 === status) {
+                this.mobileConfirmationMessage(handle,
+                    'confirmation-timeout',
+                    'Przekroczono czas na zaakceptowanie operacji.',
+                    'Wykonaj ją ponownie.');
+            } else if(5 === status) {
+                this.mobileConfirmationMessage(handle,
+                    'confirmation-error',
+                    'Nie można wykonać operacji.',
+                    'Spróbuj ponownie później.');
+            } else {
+                this.mobileConfirmationMessage(handle,
+                    'confirmation-info',
+                    'Potwierdź operację na urządzeniu mobilnym',
+                    'Powiadomienie zostało wysłane na Twoje urządzenie');
+            }
+
+        },
+        mobileConfirmationMessage: function(handle, className, title, content) {
+            handle.removeClass(function(index, className) {
+                return (className.match(/(^|\s)confirmation-\S+/g) || []).join(' ');
+            });
+
+            handle.addClass(className);
+            handle.find('.info-title').text(title);
+            handle.find('.info-content').text(content);
+        },
+        disableMobileConfirmation: function() {
+            try {
+                window.clearInterval(window.mobileConfirmationInterval);
+                delete window.mobileConfirmationInterval;
+            } catch(error) {
+
+            }
+        },
+        removeConfirmation: function(event) {
+            $('body').find('.prepareConfirmation.mobile-show').removeClass('mobile-show');
+            if(window.mobileConfirmationInterval !== undefined) {
+                this.disableMobileConfirmation();
+                $.post('index/cancelConfirmation');
+            }
+        },
+        modernCheckbox: function(event) {
+            var element = $(event.currentTarget), input = element.find('input');
+
+            if(input.is(':checked')) {
+                element.addClass('checked');
+            } else {
+                element.removeClass('checked');
+            }
+        },
+        beamsNotifications: function() {
+            var self = this;
+            $.post("layout/beamsNotifications").done(function(data) {
+                $('.noticeBeams').find('.notice').html(data);
+            }).done(function() {
+                self.beamsPresentation();
+            });
+        },
+        beamsPresentation: function() {
+            if($('.noticeBeams .notice .h--box-alert-top').length >= 1) {
+                this.beamsCountNotificationContent();
+                $('.noticeBeams .notice').slideUp();
+                $('#showNoticeBeams').slideDown();
+                $('.noticeBeams').addClass('m-b-t-18');
+            }
+        },
+        beamsCountNotificationContent: function() {
+            var count = $('.noticeBeams .notice .h--box-alert-top').length;
+            $('#showNoticeBeams .beams-info span.counter').html(count);
+            $('#showNoticeBeams .beams-info span.notifications').html(this.polishPlurals('powiadomienie', 'powiadomienia', 'powiadomień', count));
+            $('#showNoticeBeams .beams-info span.important').html(this.polishPlurals('ważne', 'ważne', 'ważnych', count));
+        },
+        polishPlurals: function(singularNominativ, pluralNominativ, pluralGenitive, value) {
+            if(value === 1) {
+                return singularNominativ;
+            } else if(value % 10 >= 2 && value % 10 <= 4 && (value % 100 < 10 || value % 100 >= 20)) {
+                return pluralNominativ;
+            } else {
+                return pluralGenitive;
+            }
+        },
+        addClassName: function(event) {
+            var element = $(event.currentTarget);
+            $(element.data('class-destination')).addClass(element.data('class-name'));
+        },
+        setScroll: function(event) {
+            var element = $(event.currentTarget);
+            window.gotoElement = element.data('scrollto');
+        },
+        promptIfDemoMode: function(event) {
+            var button = $(event.currentTarget);
+            if(isDemoMode && button.hasClass('prevent-in-demo-mode')) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                $(button).attr('data-container', 'body');
+                $(button).popover({
+                    container: "body",
+                    placement: 'top',
+                    html: true,
+                    title: '<button class="close icon-demo-close"></button>',
+                    content: '<p>' + 'Funkcja niedostępna w wersji demonstracyjnej.' + '</p>',
+                    trigger: 'focus'
+                }).popover('show');
+                return true;
+            }
+            return false;
+        },
+        promptIfDemoWithOut: function(event) {
+            this.promptIfDemoMode(event);
+        },
+        changeBanner: function(event, location) {
+            var deferr = $.Deferred();
+            $('.banner').html('');
+            $.ajax({
+                url: '/index/changeBanner',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    'location': parseInt(location)
+                },
+                success: function(data) {
+                    if(data.body) {
+                        $('.banner').html(data.body);
+                        deferr.resolve(data);
+                    } else {
+                        deferr.reject();
+                    }
+                },
+                error: function() {
+                    deferr.reject();
+                }
+            });
+
+            return deferr;
+        },
+        selectCopyElement: function(selector) {
+            var element = selector[0];
+            if(document.body.createTextRange) {
+                var range = document.body.createTextRange();
+                range.moveToElementText(element);
+                range.select();
+            } else if(window.getSelection) {
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents(element);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            document.execCommand("copy");
+        },
+        toogleSelectList: function(event) {
+            var self = $(event.currentTarget);
+            if(self.closest('.select-input').hasClass('disabled') || self.hasClass('disabled')) {
+                return;
+            }
+            this.hideList(event);
+            if(self.hasClass('outspread')) {
+                self.removeClass('outspread');
+                if(parseInt(self.parent().data('hasscrollbar')) === 1) {
+                    self.parent().removeClass('opened');
+                    self.find('.nano').nanoScroller();
+                }
+            } else {
+                self.addClass('outspread');
+                if(parseInt(self.parent().data('hasscrollbar')) === 1) {
+                    self.parent().addClass('opened');
+                    self.find('.nano').nanoScroller();
+                }
+            }
+        },
+        selectElement: function(event) {
+            var self = $(event.currentTarget), selected = self.closest('.select').find('.selected').find('.change'),
+                select = self.closest('.list').siblings('select');
+            selected.html(self.html());
+            if(selected.data('placeholder') !== self.text()) {
+                selected.addClass('active');
+            } else {
+                selected.removeClass('active');
+            }
+            self.closest('.list').siblings('select').val(self.data('value'));
+            select.find('option').removeAttr('selected');
+            select.find("option[value='" + self.data('value') + "']").attr("selected", "selected");
+            select.trigger('change');
+
+            $.fn.runValidateMethods(self);
+            $(self.parent('div.select-input')).removeClass('alert');
+            $(self.parent('div.select-input')).find('.cloud').remove();
+        },
+        hideList: function(event) {
+            var self = $(event.currentTarget), menu = $('body').find('.outspread');
+            $('body').on('click', function(e) {
+                if(!self.is(e.target) && 0 === self.has(e.target).length) {
+                    self.removeClass('outspread');
+                }
+            });
+        },
+        calendar: function(event) {
+            var self = $(event.currentTarget), calendar = self.siblings('.datepicker2');
+            if(calendar.attr('disabled') === 'disabled') {
+                return;
+            }
+            calendar.datepicker2('show');
+        },
+        changeSelectValue: function(select) {
+            var containerSelect = select.closest('.select'),
+                value = containerSelect.find('ul.select-list li[data-value=0] div').html();
+            containerSelect.find('.change').removeClass('active').html(value);
+        },
+        clearValue: function(event) {
+            var _this = this, current = $(event.currentTarget), element = current.closest('form'),
+                select = element.find('select');
+            select.each(function() {
+                var sel = $(this);
+                sel.val(0);
+                $.fn.runValidateMethods(sel);
+                _this.changeSelectValue(sel);
+            });
+            element.find('input:not([type="submit"])').each(function() {
+                var field = $(this);
+                field.val('');
+                $.fn.runValidateMethods(field);
+            })
+
+        },
+        toogleOfferSale: function(event) {
+            var _this = this, self = $(event.currentTarget), box = self.closest('.offer-sale'),
+                content = box.find('.elements-offer-sale');
+
+            if(box.hasClass('outspread')) {
+                content.animate({'height': '5px'}, 600, 'swing', function() {
+                    box.removeClass('outspread');
+                    _this.setBookmarkStatus(event, false);
+                });
+            } else {
+                box.addClass('outspread');
+
+                content.animateAuto({type: 'height', offsetH: 0}, 600, function() {
+                    _this.setBookmarkStatus(event, true);
+                });
+            }
+        },
+        toogleOfferRecomended: function(event) {
+            var _this = this, self = $(event.currentTarget), box = self.closest('.offer-recommended'),
+                content = box.find('.elements-offer-recommended .content-offer');
+
+            if(box.hasClass('outspread')) {
+                content.animate({height: "0px"}, 600, "swing", function() {
+                    box.removeClass('outspread');
+                    _this.setBookmarkStatus(event, false);
+                });
+            } else {
+                box.addClass('outspread');
+
+                content.animateAuto({type: 'height', offsetH: 0}, 600, function() {
+                    _this.setBookmarkStatus(event, true);
+                });
+            }
+        },
+        setBookmarkStatus: function(event, expanded) {
+            var bookmark = $(event.currentTarget).closest('.offer-bookmark');
+            bookmark.removeClass('offer-3 offer-2 offer-1');
+            this.callSetBookmarkStatus(bookmark.data('type'), bookmark.data('page'));
+        },
+        callSetBookmarkStatus: function(type, page, expanded, core) {
+            if(core === undefined) {
+                core = false;
+            }
+            $.ajax({
+                dataType: "json",
+                url: '/index/setBookmarkStatus',
+                type: 'post',
+                async: true,
+                data: {
+                    type: type,
+                    page: page,
+                    expanded: expanded,
+                    core: core
+                },
+                error: function(xhr, status, error) {
+                },
+                success: function(data, status, xhr) {
+                }
+            });
+        },
+        popoverShow: function(event) {
+            var self = $(event.currentTarget);
+            self.popover('show');
+        },
+        popoverHide: function(event) {
+            var self = $(event.currentTarget);
+            self.popover('hide');
+        },
+        deactivateMenuForChild: function() {
+            $('ul.topMenu li .js-button').removeClass('active');
+            window.App.siteView.currentController = 'WalletView';
+        },
+        disableBodyScrolling: function() {
+            //remove scrollbar
+            $(document.documentElement).css({'overflow': 'hidden'});
+            //disable scroll move
+            $('body').on('scroll.disabledScroll touchmove.disabledScroll mousewheel.disabledScroll', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+        },
+        enableBodyScrolling: function() {
+            //add scrollbar
+            $(document.documentElement).css({'overflow': 'auto'});
+            //enable scroll move
+            $('body').off('scroll.disabledScroll touchmove.disabledScroll mousewheel.disabledScroll');
+        },
+        disabledClick: function(event) {
+            event.preventDefault();
+        },
+        showAmlIdPopupEvent: function(event) {
+            var _view = this, deferr = $.Deferred();
+
+            if(window.showAml || window.App.siteView.currentController === 'ManagementView') {
+                return;
+            }
+            $(window).trigger('loaderAml:show');
+            if(typeof (window.verifiedAml) == 'undefined') {
+                window.verifiedAml = this.verifiedAml();
+            }
+            window.verifiedAml.promise().done(function(data) {
+                if(data.is_valid) {
+
+                    target = $(event.currentTarget);
+
+                    if(window.rememberAmlOffer) {
+                        var target = $('.rememberAmlOffer');
+                        window.rememberAmlOffer = !1;
+                    }
+
+                    $(target).removeClass('jsDisabledClick').removeClass('jsCheckAml');
+                    banner.click(event);
+                    return;
+                }
+                if(!$('#amlPopupContainer').length || !$('#amlPopupContainer').html().length) {
+                    if($('#siteViewWrapper > .clearfix').length) {
+                        $('#siteViewWrapper > .clearfix').before($('<div/>', {
+                            id: 'amlPopupContainer'
+                        }).height($('#siteViewWrapper').outerHeight()));
+                    } else {
+                        $('#siteViewWrapper').append($('<div/>', {id: 'amlPopupContainer'}));
+                    }
+                }
+
+                $.ajax({
+                    dataType: "html",
+                    url: 'aml/proposalsPopup',
+                    type: 'post',
+                    'data': {
+                        'showed': true
+                    },
+                    error: function(xhr, status, error) {
+
+                    },
+                    success: function(_data, status, xhr) {
+                        $('#amlPopupContainer').html(_data);
+                        $(window).trigger('loaderAml:hide');
+                        // code to do after rendering popup
+                        _view.disableBodyScrolling();
+                        $('button[name="amlClose"]').click(function() {
+                            _view.enableBodyScrolling();
+                            let isShowedPopup = parseInt($('#amlPopupContainer').find('input[name="isShowedPopup"]').val()) === 1;
+                            $('#amlPopupContainer').html('').hide();
+                            if(isShowedPopup) {
+                                window.location.reload();
+                            }
+                        });
+                        $('button[name="amlGoToUpdateId"]').click(function() {
+                            event.currentTarget = $(this);
+                            _view.showTopMenu(event);
+                        });
+                        return deferr.resolve(_data);
+                    }
+                });
+                return deferr.resolve(data);
+            });
+        },
+        showAmlIdPopup: function(event) {
+            var self = $(event.currentTarget), _view = this, deferr = $.Deferred();
+
+            if(window.showAml || window.App.siteView.currentController === 'ManagementView') {
+                return;
+            }
+
+            if(typeof (window.verifiedAml) == 'undefined') {
+                window.verifiedAml = this.verifiedAml();
+            }
+            window.verifiedAml.promise().done(function(data) {
+                if(data.is_valid) {
+                    target = $(event.currentTarget);
+                    if(window.rememberAmlOffer) {
+                        var target = $('.rememberAmlOffer');
+                        window.rememberAmlOffer = !1;
+                    }
+
+                    $(target).removeClass('jsDisabledClick').removeClass('jsCheckAml');
+                    if ($(target).hasClass('otherSubmit')) {
+                        $(target).click();
+                    } else {
+                        banner.click(event);
+                    }
+
+                    return;
+                } else {
+                    self.removeClass('rememberAmlOffer');
+                }
+                if(!$('#amlPopupContainer').length || !$('#amlPopupContainer').html().length) {
+                    if($('#siteViewWrapper > .clearfix').length) {
+                        $('#siteViewWrapper > .clearfix').before($('<div/>', {
+                            id: 'amlPopupContainer'
+                        }).height($('#siteViewWrapper').outerHeight()));
+                    } else {
+                        $('#siteViewWrapper').append($('<div/>', {id: 'amlPopupContainer'}));
+                    }
+                }
+
+                $('.amlPopupOffer').removeClass('amlPopupOffer');
+                $(event.currentTarget).addClass('amlPopupOffer');
+                _view.model.set('destination', '#amlPopupContainer');
+                _view.model.set('method', 'post');
+                _view.model.set('url', 'aml/proposalsPopup');
+                _view.model.set('navigate', !1);
+                _view.model.set('event', event);
+                _view.model.set('data', {
+                    'skip': self.hasClass('skip')
+                });
+                _view.render().promise().done(function(view, _data) {
+                    if($('#announcements .container').is(':visible')) {
+                        _view.closeAnnouncements(!0, true);
+                    }
+                    // code to do after rendering popup
+                    $(".touched").removeClass("touched");
+                    if(self.hasClass('skip')) {
+                        self.addClass('touched');
+                    }
+                    _view.disableBodyScrolling();
+                    $('button[name="amlClose"]').click(function() {
+                        _view.enableBodyScrolling();
+                        let isShowedPopup = parseInt($('#amlPopupContainer').find('input[name="isShowedPopup"]').val()) === 1;
+                        $('#amlPopupContainer').html('').hide();
+                        if(isShowedPopup) {
+                            window.location.reload();
+                        }
+                    });
+                    $('button[name="amlGoToUpdateId"]').click(function() {
+                        event.currentTarget = $(this);
+                        _view.showTopMenu(event);
+                    });
+                    return deferr.resolve(_data);
+                });
+                return deferr.resolve(data);
+            });
+            // _view.disabledClick(event);
+        },
+        verifiedAml: function() {
+            var _this = this, deferr = $.Deferred();
+            $.ajax({
+                dataType: "json",
+                url: 'aml/isUserIdVerified',
+                type: 'post',
+                data: {},
+                error: function(xhr, status, error) {
+                    deferr.reject(error);
+                },
+                success: function(data, status, xhr) {
+                    deferr.resolve(data, status, xhr);
+                }
+            });
+            return deferr;
+        },
+        skipAmlVerification: function(event) {
+            var touched = $('.touched');
+            touched.removeClass('jsDisabledClick jsCheckAml skip');
+            touched.trigger('click');
+            return;
+        },
+        showTopMenu: function(event, page) {
+            var _view = this;
+            var element = $(event.currentTarget);
+            var controllerView = 'SettingsView';
+            if(typeof element.attr('data-action') == 'undefined' && typeof page === 'undefined') {
+                return;
+            }
+            event.stopPropagation();
+            event.preventDefault();
+            if(typeof page !== 'undefined') {
+                var action = page[0];
+            } else {
+                var action = element.data('action');
+                var inner = element.data('inner');
+                var queryString = element.data('querystring');
+            }
+            var directUrl = 'settings/' + (inner && inner !== '' ? inner : action) + '/load' + (queryString ? '/' + queryString : '');
+            if(action == 'recipients') {
+                directUrl = action + '/index';
+                controllerView = 'RecipientsView';
+                $('.banner-button-close').click();
+            }
+            var data = {
+                view: window.App.topView.view,
+                element: $('#topViewWrapper').find('[data-name="settings"]'),
+                'event': event,
+                controller: controllerView,
+                action: 'add',
+                directUrl: directUrl
+            };
+
+            $('body, html').animate({
+                scrollTop: 0
+            }, 250, 'easeOutQuad');
+            if(action == 'recipients') {
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="recipients"]'), !0);
+            } else {
+                window.App.topView.view.updateMenuElement.init(window.App.topView.view, $('#topViewWrapper').find('[data-name="settings"]'), !0);
+            }
+            window.App.topView.view.updateSlideBoxContent.init(data).promise().done(function() {
+                var menu = $('.js-settings-menu-wrapper .js-setting-menu');
+                var activeButton = menu.find('[data-href="settings/' + action + '"]');
+                if(!activeButton.length) {
+                    activeButton = menu.find('[data-href="settings/' + action.split('_')[0] + '"]');
+
+                    if(!activeButton.length) {
+                        activeButton = menu.find('[data-href="settings/' + action + '/' + queryString + '"]');
+                    }
+                }
+                activeButton.addClass('active');
+                activeButton.closest('.js-setting-menu').siblings('.js-setting-menu').addClass('js-size-cached no-transitions not-active').attr('data-prev-width', '280').attr('data-prev-margin', '20px').css({
+                    overflow: 'hidden',
+                    width: '0px',
+                    margin: '0px'
+                });
+                activeButton.siblings('.closeSettingsContent').show();
+
+                // execute when amlPopupContainer exists
+                if($('#amlPopupContainer').length && $('#amlPopupContainer').html().length) {
+                    _view.enableBodyScrolling();
+                    $('#amlPopupContainer').html('').hide();
+                    $('.amlPopupOffer').addClass('rememberAmlOffer').removeClass('amlPopupOffer');
+                    window.rememberAmlOffer = !0;
+                    $.post('aml/setSessionAmlReturn', '', function() {
+                    });
+                }
+
+                if(action == 'recipients') {
+                    $(".doRender")[0].click();
+                }
+            });
+//            this.closeSection(event);
+
+        },
+        closeAnnouncements: function(noDelegate, noReload) {
+            var data = {
+                globalObject: window.App,
+                viewName: 'popupView'
+            };
+            window.App.destroyView(data);
+            if(!noDelegate) {
+                window.App.siteView.view.delegateEvents();
+                window.App.topView.view.delegateEvents();
+            }
+            $('body').find('[href]').filter(function() {
+                return 0 === $(this).closest('#announcements').length;
+            }).off('click.announcements');
+
+            delete window.showAnnouncements;
+            $('#topViewWrapper, #siteViewWrapper').removeClass('blurry');
+            if(noReload !== true) {
+                window.location.reload();
+            }
+        },
+        removeKeyboardLinkClass: function() {
+            $(".link-keyboard").removeClass("link-keyboard-last-login-attempt");
+        },
+        clickSelectOption: function(event) {
+            $('.selectOption-content').addClass('hide');
+            $(event.currentTarget).next().removeClass('hide');
+        },
+        sortTable: function(event) {
+            var currentTarget = $(event.currentTarget),
+                sort_by = currentTarget.data('sort_table_by'),
+                order = currentTarget.data('sort_table_order'),
+                table = $('.tableToSort'),
+                elements = $('.contentTablePage').data('elements');
+
+            currentTarget.parent('div').addClass('hide');
+
+            $('.selectOption').removeClass('selectOption-active');
+            $('.selectOption').find('.selectOption-name').removeClass('hide');
+            $('.selectOption').find('.selectOption-selected').addClass('hide');
+
+            currentTarget.parent('div').prev().addClass('selectOption-active');
+            currentTarget.parent('div').prev().find('.selectOption-name').addClass('hide');
+            currentTarget.parent('div').prev().find('.selectOption-selected').removeClass('hide').html(currentTarget.html());
+
+            if('undefined' == order) {
+                currentTarget.data('sort_table_order', 'desc');
+                var order = 'asc';
+            }
+
+            table.find('tr').sort(function(a, b) {
+                if(order == 'asc') {
+                    return $(a).data(sort_by) > $(b).data(sort_by);
+                } else {
+                    return $(b).data(sort_by) > $(a).data(sort_by);
+                }
+            }).appendTo(table);
+
+            $('.tablePage').removeClass('active');
+            $('.tablePage:first').addClass('active');
+
+            this.tableSortChangeRowShow('1', elements);
+        },
+        setTablePage: function(event) {
+            var currentTarget = $(event.currentTarget), page = currentTarget.html(),
+                elements = $('.contentTablePage').data('elements'),
+                noFirstElement = (page - 1) * elements + 1, noLastElement = page * elements;
+
+
+            $('.tablePage').removeClass('active');
+            currentTarget.addClass('active');
+
+            this.tableSortChangeRowShow(noFirstElement, noLastElement);
+        },
+        tableSortChangeRowShow: function(noFirstElement, noLastElement) {
+
+            $('.tableToSort tr').addClass('hide');
+            $('.tableToSort tr').each(function(index, element) {
+                if(((index + 1) >= noFirstElement) && ((index + 1) <= noLastElement)) {
+                    $(this).removeClass('hide');
+                }
+                ;
+            });
+        },
+        returnIfNotEmpty: function(value) {
+            if(value) {
+                return value;
+            }
+            return '';
+        },
+        closeConversionOffer: function(event) {
+            var that = $(event.currentTarget);
+            event.preventDefault();
+            event.stopPropagation();
+            that.closest('.conversion-offer').remove();
+
+            $.getJSON(that.attr('href'), function(result) {
+            });
+        },
+        hideOverlay: function() {
+            $(window).trigger('overlay:hide');
+        },
+        loader: function(action) {
+            var loaderbg = $('div[class="loaderBackground"]'), loader = $('div[id="hide_loader"]');
+
+            if(action === 'show') {
+                loaderbg.show();
+                loader.show();
+            } else {
+                loaderbg.hide();
+                loader.hide();
+            }
+        },
+        setBannerStatus: function(event) {
+            this.showTopMenu(event);
+            $.post("banner/setBannerStatus");
+        },
+        showStrongAuthPopup: function (event) {
+            var el = $(event.target),
+                type = el.attr('data-type'),
+                authId = el.attr('data-id')
+            ;
+
+            this.model.set('destination', '.strong-auth-popup-container');
+            this.model.set('url', 'index/strongAuthConfirmation');
+            this.model.set('navigate', 0);
+            this.model.set('dataType', 'json');
+            this.model.set('data', {type: type, authId: authId});
+            this.model.set('event', event);
+            this.model.set('reload', 0);
+            this.model.set('method', 'post');
+
+            this.render().promise().done(function(view, response) {
+                if (typeof response.html === 'string' && response.html.length > 0) {
+                    uiKit.popup.show({
+                        content: response.html,
+                        destination: '.strong-auth-popup-container'
+                    });
+                }
+            });
+        },
+        strongAuthRemainingData: function (event, data){},
+        postRedirect: function() {
+            $(window).trigger('loader:show');
+            $('form').submit();
+        },
+        eventLoader: function(event, hide) {
+            var _this = this;
+            if(hide[0] == 'true') {
+                _this.isForceLoader = false;
+            } else {
+                _this.isForceLoader = true;
+            }
+        },
+    });
+    DefaultActions.extend = function(child) {
+        var view = Backbone.View.extend.apply(this, arguments);
+        view.prototype.events = _.extend({}, this.prototype.events, child.events);
+        return view;
+    };
+
+    function splitStringOnHash(string) {
+        try {
+            return string.split("#")[1].split("/")[0];
+        } catch(e) {
+            return null;
+        }
+    }
+
+    window.addEventListener('hashchange', function(e) {
+        if(e.newURL && e.oldURL && splitStringOnHash(e.newURL) !== splitStringOnHash(e.oldURL)) {
+            $('.footer-wrapper').hide();
+        }
+    }, false);
+    return DefaultActions;
+});

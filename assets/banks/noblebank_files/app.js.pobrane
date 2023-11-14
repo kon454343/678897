@@ -1,0 +1,358 @@
+define(['jquery', 'underscore', 'backbone', 'router', 'md5'], function($, _, Backbone, AppRouter) {
+    $('body').addClass('app-init');
+
+    !function(window, document) {
+        $.fn.logout = function(){
+            $.ajax({
+                global: !1,
+                url: '/index/logout/do',
+                success: function() {
+                    window.App.navigate('index/logout');
+                    window.location.reload();
+                }
+            });
+        };
+        $.fn.checkError = function(xhr, status) {
+            try {
+                var msg, containerClass, iconClass, buttons, response = $.parseJSON(xhr.responseText),
+                    responseType = response.type, responseRedirect = response.redirect;
+                switch(responseType) {
+                    case 4:
+                    case 5:
+                        $.fn.logout();
+                        break;
+
+                    case 1:
+                    case 3:
+                    case 7:
+                    case 9:
+                    case 10:
+                        window.App.navigate(responseRedirect);
+                        window.location.reload();
+                        break;
+
+                    case 8:
+                        window.location.href = responseRedirect;
+                        break;
+
+                    case 55:
+                        $(window.clickedElement.context).attr('data-container', 'body');
+                        $(window.clickedElement.context).popover({
+                            container: "body",
+                            placement: 'top',
+                            html: true,
+                            title: '<button class="close icon-demo-close"></button>',
+                            content: '<p>' + response.error + '</p>'
+                        }).popover('show');
+                        break;
+
+                    default:
+                        msg = response.error || 'Unrecognized ERROR';
+                        containerClass = 'h--section-red';
+                        iconClass = 'icon--close3';
+                        buttons = '<a class="h--btn h--btn-white prepend-icon" href="' + responseRedirect + "\"><i class=\"icon icon--left\"></i>Powrot</a>";
+                        $.fn.showPopUp(msg, containerClass, iconClass, buttons, 'center');
+                }
+            } catch(_error) {
+            }
+        };
+        var CSRF_HEADER = 'X-CSRFToken';
+        var setCSRFToken = function(securityToken) {
+            $.ajaxPrefilter(function(options, _, xhr) {
+                if(!xhr.crossDomain) {
+                    xhr.setRequestHeader(CSRF_HEADER, securityToken);
+                }
+            });
+        };
+        window.AppStartTime = Date.now();
+        setCSRFToken($.fn.md5(window.AppStartTime));
+        window.clickedElement = null;
+        $(document).click(function(event) {
+            window.clickedElement = $(event.target);
+        });
+        $(document).ajaxSuccess(function(event, xhr, options, data) {
+            if('269' == xhr.status && '#index/forbidden' != window.location.hash) {
+                try {
+                    $.fn.checkError(xhr, xhr.status, data.error);
+                } catch(_error) {
+                }
+            }
+        });
+        window.lockedList = {
+            lockedClass: 'js-locked-element',
+            lockedClassesList: [],
+            lockedElementsList: $()
+        };
+        $.fn.addLockedElement = function(elementsClass, trigger) {
+            var lockedList = window.lockedList, array = lockedList.lockedClassesList,
+                lockedClass = lockedList.lockedClass, lockedElements = lockedList.lockedElementsList;
+            $.map(elementsClass.split(' '), function(value) {
+                if(-1 === array.indexOf(value)) {
+                    array.push(value);
+                }
+                if(trigger && 'current' === trigger.toLowerCase()) {
+                    var element = $('html').find('.' + value);
+                    element.addClass(lockedClass);
+                    lockedElements = lockedElements.add(element);
+                }
+            });
+            if(trigger && 'all' === trigger.toLowerCase()) {
+                $.map(array, function(value) {
+                    var element = $('html').find('.' + value);
+                    element.addClass(lockedClass);
+                    lockedElements = lockedElements.add(element);
+                });
+            }
+            window.lockedList.lockedElementsList = lockedElements;
+            return lockedList;
+        };
+        $.fn.removeLockedElement = function(elementsClass, trigger) {
+            var lockedList = window.lockedList, array = lockedList.lockedClassesList,
+                lockedClass = lockedList.lockedClass, lockedElements = lockedList.lockedElementsList;
+            if(trigger && 'all' === trigger.toLowerCase()) {
+                $.map(array, function(value) {
+                    var element = $('html').find('.' + value);
+                    element.removeClass(lockedClass);
+                    lockedElements = lockedElements.not(element);
+                });
+            }
+            $.map(elementsClass.split(' '), function(value) {
+                var index = array.indexOf(value);
+                if(index > 0) {
+                    array.splice(index, 1);
+                }
+                if(trigger && 'current' === trigger.toLowerCase()) {
+                    var element = $('html').find('.' + value);
+                    element.removeClass(lockedClass);
+                    lockedElements = lockedElements.not(element);
+                }
+            });
+            window.lockedList.lockedElementsList = lockedElements;
+            return lockedList;
+        };
+        $.fn.getLockedElements = function() {
+            return window.lockedList;
+        };
+    }(window, document);
+
+    !function() {
+        _.extend(Backbone.Router.prototype, Backbone.Events, {
+            before: function() {
+            },
+            after: function() {
+            },
+            route: function(route, name, callback) {
+                Backbone.history || (Backbone.history = new Backbone.History());
+                if(!_.isRegExp(route)) {
+                    route = this._routeToRegExp(route);
+                }
+                if(!callback) {
+                    callback = this[name];
+                }
+                Backbone.history.route(route, _.bind(function(fragment) {
+                    if($("div.h--overlay-black").css("display") != 'none') {
+                        $(window).trigger('overlay:hide');
+                    }
+                    var that = this, args = this._extractParameters(route, fragment);
+                    if(_(this.before).isFunction()) {
+                        this.before.apply(this, args);
+                    }
+                    if(callback) {
+                        callback.apply(that, args);
+                    }
+                    if(_(this.after).isFunction()) {
+                        this.after.apply(this, args);
+                    }
+                }, this));
+            }
+        });
+    }(this);
+
+    var initialize = function() {
+        window.App = new AppRouter();
+        Backbone.history.start();
+        Backbone.View.prototype.emptyContent = function() {
+            var _this = this;
+            deferr = $.Deferred();
+            _this.undelegateEvents();
+            _this.$el.removeData().unbind();
+            if(_this.onClose) {
+                _this.onClose().promise().done(function() {
+                    deferr.resolve();
+                });
+            } else {
+                deferr.resolve();
+            }
+            return deferr;
+        };
+        $('body').on('mouseover', '*', function(event) {
+            window.App.clickTarget = $(event.target);
+        });
+        window.setTimeoutOverlaySupported = function(action, delay, doActionOnDestroy, actionOnClick) {
+            var timeOut, nameSpace = '.' + Date.now();
+            if($.isFunction(action)) {
+                timeOut = setTimeout(function() {
+                    $(window).off(nameSpace);
+                    action();
+                }, delay);
+                $(window).on('overlay:hiding' + nameSpace, function() {
+                    clearTimeout(timeOut);
+                    $(window).off(nameSpace);
+                    if(doActionOnDestroy) {
+                        action();
+                    }
+                    if($.isFunction(actionOnClick)) {
+                        actionOnClick();
+                    }
+                });
+            } else {
+            }
+        };
+        $(document).ready(function($) {
+            $(window).on('overlay:hide', function() {
+                var overlay = $('body').children('.h--overlay-black');
+                $(window).trigger('overlay:hiding');
+                if(!((document.formCurrency) && !overlay.hasClass('forcedOverlay'))) {
+                    overlay.removeClass('forcedOverlay');
+                    overlay.fadeOut(500, function() {
+                        $(window).trigger('overlay:hidden');
+                    });
+                }
+                $(window).off("keydown");
+                $(window).off("click");
+            });
+            $(window).on('overlay:show', function(event, forceOverlay) {
+                $(window).trigger('overlay:showing');
+                forceOverlay = forceOverlay || false;
+                if(!((document.formCurrency) && !forceOverlay)) {
+                    $('body').children('.h--overlay-black').addClass('forcedOverlay').fadeIn(500, function() {
+                        $(window).trigger('overlay:shown');
+                    });
+                }
+
+                selectedElement = -1;
+
+                $(window).on("click", function(e) {
+                    var sel = $(":focus");
+                    var a = sel.index("input:visible:not([disabled]), button:visible:not([disabled]), a:visible, select:visible:not([disabled]), textarea:visible:not([disabled])");
+                    if(a != (-1)) selectedElement = a + 1; else selectedElement = -1;
+                    e.preventDefault();
+                });
+
+                $(window).on("keydown", function(e) {
+                    if(e.which == 9 || e.keyCode == 9) {
+                        var first = -1;
+                        var last = -1;
+                        $(document).ready(function($) {
+                            var selektor = $("input:visible:not([disabled]), button:visible:not([disabled]), a:visible, select:visible:not([disabled]), textarea:visible:not([disabled])");
+                            selektor.each(function(index, element) {
+                                if($(this).zIndex() >= '99999') {
+                                    if(first == -1) first = index;
+                                    last = index;
+                                }
+                            });
+                            if(selectedElement == -1 || selectedElement < first || selectedElement > last) selectedElement = first;
+                            selektor.get(selectedElement).focus();
+                            if(selectedElement == last) selectedElement = first; else selectedElement++;
+                        });
+                        e.preventDefault();
+                    }
+                });
+            });
+            $('body').children('.h--overlay-black').on('click', function() {
+                if(!$('body').hasClass('loading')) {
+                    $(window).trigger('overlay:hide');
+                }
+            });
+            $(window).on('loader:show', function () {
+                var shouldShowLoader = function() {
+                    if($('body').children('.h--overlay-white-announcements').is(':visible')) {
+                        return false;
+                    }
+                    return true;
+                };
+
+                if(!shouldShowLoader()) {
+                    return false;
+                }
+
+                var mask = $('body').addClass('loading').children('.h--overlay-white');
+                if (!mask.length) {
+                    $('body').append('<div class="h--overlay-white"></div>');
+                }
+                mask.css('opacity', '0').show();
+                setTimeout(function() {
+                    if (!mask.is(':animated') && mask.is(':visible')) {
+                        mask.animate({
+                            opacity: '0.5'
+                        }, 150, 'easeOutQuad');
+                    }
+                }, 1e3);
+            });
+            $(window).on('loader:hide', function () {
+                $('body').removeClass('loading').children('.h--overlay-white').fadeOut(150, 'easeOutQuad', function () {
+                    $(this).removeAttr('style');
+                });
+            });
+            $('body').children('.h--overlay-white').on('click', function () {
+                if (!$(this).is(':animated')) {
+                    $(this).stop(!0, !1).animate({
+                        opacity: '0.5'
+                    }, 150, 'easeOutQuad');
+                }
+            });
+            $(window).on('loaderAnnouncements:show', function() {
+                var mask = $('body').addClass('loading').children('.h--overlay-white-announcements');
+                if(!mask.length) {
+                    $('body').append('<div class="h--overlay-white-announcements"></div>');
+                }
+                mask.css('opacity', '0').show();
+                setTimeout(function() {
+                    if(!mask.is(':animated') && mask.is(':visible')) {
+                        mask.animate({
+                            opacity: '0.5'
+                        }, 150, 'easeOutQuad');
+                    }
+                }, 1e3);
+            });
+            $(window).on('loaderAnnouncements:hide', function() {
+                $('body').removeClass('loading').children('.h--overlay-white-announcements').fadeOut(150, 'easeOutQuad', function() {
+                    $(this).removeAttr('style');
+                });
+            });
+            $(window).on('loaderAml:show', function() {
+                var mask = $('body').addClass('loading').children('.h--overlay-white-announcements');
+                if(!mask.length) {
+                    $('body').append('<div class="h--overlay-white-announcements"></div>');
+                }
+                mask.css('opacity', '0').show();
+                setTimeout(function() {
+                    if(!mask.is(':animated') && mask.is(':visible')) {
+                        mask.animate({
+                            opacity: '0.5'
+                        }, 150, 'easeOutQuad');
+                    }
+                }, 1e3);
+            });
+            $(window).on('loaderAml:hide', function() {
+                $('body').removeClass('loading').children('.h--overlay-white-announcements').fadeOut(150, 'easeOutQuad', function() {
+                    $(this).removeAttr('style');
+                });
+            });
+            $('body, html').on('click', function(e) {
+                $('[rel="popover"]').each(function() {
+                    if(!$(this).is(e.target) && 0 === $(this).has(e.target).length && 0 === $('.popover').has(e.target).length) {
+                        $(this).popover('hide');
+                    }
+                });
+            });
+            $(document).on("click", ".popover .close", function() {
+                $(this).closest(".popover").remove();
+            });
+        });
+    };
+
+    return {
+        initialize: initialize
+    };
+});

@@ -1,0 +1,309 @@
+define([ 'jquery', 'underscore', 'backbone' ], function($, _, Backbone) {
+    var RequestModel = Backbone.Model.extend({
+        defaults: {
+            url: 'index/index',
+            method: 'get',
+            destination: 'body',
+            dataType: 'html',
+            data: '',
+            reload: '1',
+            event: !1,
+            navigate: !0,
+            requestDone: !1,
+            animation: '',
+            action: '',
+            currentTarget: '',
+            showSms: !1,
+            dontReset: !1,
+            demoNotFound: !1
+        },
+        initialize: function() {
+            var url, destination, dataType, that = this;
+            this.on('change:url', function() {
+                url = that.get('url');
+                if ('undefined' != typeof url && !url) {
+                    that.set({
+                        url: 'index/index'
+                    }, {
+                        silent: !0
+                    });
+                }
+            });
+            this.on('change:destination', function() {
+                destination = that.get('destination');
+                if ('undefined' != typeof destination && !destination) {
+                    that.set({
+                        destination: 'body'
+                    }, {
+                        silent: !0
+                    });
+                }
+            });
+            this.on('change:dataType', function() {
+                dataType = that.get('dataType');
+                if ('undefined' != typeof dataType && !dataType) {
+                    that.set({
+                        dataType: 'html'
+                    }, {
+                        silent: !0
+                    });
+                }
+            });
+        },
+        sendRequest: function(view, destination) {
+            var that = this, dataType = that.get('dataType'), deferr = $.Deferred(), url = that.get('url'), topViewVisible = function() {
+                return window.App.topInfoBoxView && window.App.topInfoBoxView.view.$el.height() > 0;
+            };
+            if (topViewVisible()) {
+                if ('#siteViewWrapper' == destination || $('#siteViewWrapper').has($(destination)).length > 0) {
+                    var data = {
+                        view: window.App.topView.view,
+                        container: $('.menuInformationResize')
+                    };
+                    window.App.topView.view.updateSlideBoxContent.hideMenuContent(data);
+                    $('#topViewWrapper').find('.h--icon-menu').find('a').filter('.active').each(function() {
+                        var btn = $(this),
+                            updateMenu = true;
+                        switch (window.App.siteView.currentController) {
+                            case 'TransfersView':
+                                if (btn.is($('.js-button[data-href^="transfers/index"]').eq(0))) {
+                                    updateMenu = false;
+                                }
+                                break;
+                            case 'BasketView':
+                                if (btn.is($('.js-button[data-href="basket/index"]').eq(0))) {
+                                    updateMenu = false;
+                                }
+                                break;
+							case 'FutureTransfersView':
+                                if (btn.is($('.js-button[data-href="futureTransfers/index"]').eq(0))) {
+                                    updateMenu = false;
+                                }
+                                break;
+                            case 'HistoryView':
+                                if (btn.is($('.js-button[data-href="history/index"]').eq(0))) {
+                                    updateMenu = false;
+                                }
+                                break;
+                            case 'MessagesView':
+                                if (btn.is($('.js-button[data-href="messages/index"]').eq(0))) {
+                                    updateMenu = false;
+                                }
+                                break;
+                        }
+                        if (updateMenu) {
+                            window.App.topView.view.updateMenuElement.makeNotActive(window.App.topView.view, btn);
+                        }
+                    });
+                }
+            } else {
+                if (window.App.topView) {
+                    var btn, updateMenu = false;
+                    switch (window.App.siteView.currentController) {
+                        case 'TransfersView':
+                            btn = $('.js-button[data-href^="transfers/index"]').eq(0);
+                            updateMenu = true;
+                            break;        
+                        case 'BasketView':
+                            btn = $('.js-button[data-href="basket/index"]').eq(0);
+                            updateMenu = true;
+						case 'FutureTransfersView':
+                            btn = $('.js-button[data-href="futureTransfers/index"]').eq(0);
+                            updateMenu = true;
+                            break;
+                        case 'HistoryView':
+                            btn = $('.js-button[data-href="history/index"]').eq(0);
+                            updateMenu = true;
+                            break;
+                        case 'MessagesView':
+                            btn = $('.js-button[data-href="messages/index"]').eq(0);
+                            updateMenu = true;
+                            break;
+                    }
+                    if (
+                        window.App.topView.view.beforeClick !== null &&
+                        window.App.topView.view.activeClick.attr('data-destination') == '#menuInformationBox'
+                    ) {
+                        updateMenu = false;
+                        window.App.topView.view.beforeClick.removeClass('active');
+                    }
+                    if (updateMenu) {
+                        window.App.topView.view.updateMenuElement.init(window.App.topView.view, btn, true);
+                    }
+                }
+            }
+            that.doAjaxCall(that, dataType, url, view, destination).promise().done(function(data, xhr, status, destination, dataType) {
+                deferr.resolve(data, xhr, status, destination, dataType);
+            }).fail(function(jsonData) {
+                deferr.reject(jsonData);
+            });
+            return deferr;
+        },
+        doAjaxCall: function(that, dataType, url, view, destination) {
+            var responseType, deferr = $.Deferred();
+            $.ajax({
+                url: '/' + url,
+                type: that.get('method'),
+                headers: {
+                    'X-Reload': that.get('reload'),
+                    'X-DataType': dataType
+                },
+                dataType: dataType,
+                data: that.get('data'),
+                beforeSend: function(request) {
+                    if (that.get('demoNotFound')) {
+                        $('.icon-demo-close').click();
+                        that.set({demoNotFound: !1});
+                    }
+                    if ('#siteViewWrapper' !== destination && '#menuInformationBox' !== destination) {
+                        request.setRequestHeader('X-Custom-Destination', !0);
+                    }
+                },
+                complete: function() {},
+                error: function(xhr, status, error) {
+                    $.fn.checkError(xhr, status, error);
+                },
+                success: function(data, status, xhr) {
+                    if ('269' == xhr.status) {
+                        if ($.parseJSON(xhr.responseText).type == 55) {
+                            that.set({demoNotFound: !0});
+                        } else {
+                            this.error(xhr, status, data.error);
+                            deferr.reject({
+                                xhr: xhr,
+                                status: status,
+                                errorData: data.error
+                            });
+                        }
+                    }
+                    if (url && url.indexOf('changeContext') !== -1) {
+                        window.App.context = parseInt(url.substr(url.indexOf('changeContext')+14, 1));
+                    }
+                    if (that.get('navigate') === !0) {
+                        window.App.navigate(xhr.getResponseHeader('X-Wallet-Uri'), !1);
+                    }
+                    if (xhr.getResponseHeader('X-Wallet-Alert')) {
+                        $.fn.showPopUp(xhr.getResponseHeader('X-Wallet-Alert'));
+                        deferr.reject({
+                            'X-Wallet-Alert': xhr.getResponseHeader('X-Wallet-Alert')
+                        });
+                    }
+                    responseType = xhr.getResponseHeader("content-type") || "";
+                    if (that.checkIfReload(responseType, data)) {
+                        deferr.reject({
+                            responseType: responseType,
+                            data: data
+                        });
+                    }
+                    data = that.addErrorToForm(responseType, data);
+                    data = that.lockElements(responseType, data);
+                    that.set('responseData', data);
+                    that.set('responseStatus', status);
+                    that.set('responseXhr', xhr);
+                    deferr.resolve(data, xhr, status, destination, dataType);
+                }
+            });
+            return deferr;
+        },
+        lockElements: function(responseType, data) {
+            var lockedList = $.fn.getLockedElements(), lockedClassesList = lockedList.lockedClassesList, lockedClass = lockedList.lockedClass, lockedElements = lockedList.lockedElementsList;
+            if (responseType.indexOf('html') > -1 && lockedClassesList.length) {
+                try {
+                    var _data = $('<div/>').html(data);
+                    $.map(lockedClassesList, function(value) {
+                        var element = _data.find('.' + value);
+                        element.addClass(lockedClass);
+                        lockedElements = lockedElements.add(element);
+                    });
+                    window.lockedList.lockedElementsList = lockedElements;
+                    data = _data.html();
+                } catch (_error) {}
+            }
+            return data;
+        },
+        addErrorToForm: function(responseType, data) {
+            var $data, elementToValidate, errorTooltip;
+            if (responseType.indexOf('html') > -1) {
+                try {
+                    $data = $('<div/>').html(data);
+                    elementToValidate = $data.find('.toValidate');
+                    errorTooltip = elementToValidate.siblings('label').find('.cloud');
+                    if (errorTooltip.length > 0 && !errorTooltip.hasClass('js-forceNoError')) {
+                        $('.activeStep .mark').addClass('alert');
+                        errorTooltip.each(function () {
+                            errorTooltip.closest('.h--form--field').addClass('error').find('.toValidate').addClass('js-validatedElement');
+                            errorTooltip.closest('.h--form--field .cloud').addClass('show');
+                            
+                            var $form = $('form.form');
+                            if($form.attr('id') == 'formStandard' || $form.attr('id') == 'formUs' || $form.attr('id') == 'formZus' || $form.attr('id') == 'formCurrency'){
+                                $form.find(".alert .cloud").addClass("show");
+                            }
+                        });
+                        data = $data.html();
+                    }
+                } catch (_error) {}
+            }
+
+            if(responseType.indexOf('json') > -1){
+                try{
+                    var jsonData = JSON.parse(data);
+
+                    if(true === jsonData.jsonValidationMessages){
+                        $.fn.setFormErrors(jsonData);
+                        $.each(jsonData.validationMessages, function(key, item) {
+                            var field = $('select[name="' + key + '"]:not([disabled]), input[name="' + key + '"]:not([disabled]), .customMessage.'+key+':not([disabled])');
+                            if(field ){
+                                var parent = field.closest('.h--form--field, .jsValidateField');
+
+                                parent.addClass('error').removeClass('success').find('.toValidate').addClass('js-validatedElement');
+                                parent.find('.js-error-target .cloud').addClass('show').html(item);
+                                parent.find('.jsValidateTarget.error-container').addClass('show').html(item);
+                            }
+                        });
+                   }
+                    if (jsonData.triggerEvent && jsonData.triggerSelector) {
+                        $(jsonData.triggerSelector).trigger(jsonData.triggerEvent);
+                    }
+                } catch (e) {}
+            }
+            return data;
+        },
+        checkIfReload: function(responseType, data) {
+            var doReload = !1;
+            if (responseType.indexOf('json') > -1) {
+                var jsonData = data;
+                if ('string' == typeof data) {
+                    try {
+                        jsonData = $.parseJSON(data);
+                    } catch (__error) {}
+                }
+                if (jsonData.reload && jsonData.fromindex) {
+                    window.location.reload();
+                    doReload = !0;
+                }
+            }
+            return doReload;
+        },
+        resetResponse: function() {
+            this.set('responseData', null);
+            this.set('responseStatus', null);
+            this.set('responseXhr', null);
+        },
+        resetOptions: function() {
+            this.set('method', 'get');
+            this.set('data', '');
+            this.set('dataType', 'html');
+            this.set('reload', 1);
+            this.set('destination', '#siteViewWrapper');
+            this.set('navigate', !0);
+            this.set('animation', '');
+            this.set('action', '');
+            this.set('currentTarget', '');
+            this.set('showSms', !1);
+        }
+    });
+    RequestModel.prototype.extend = function(arguments) {
+        return Backbone.Model.extend.call(RequestModel, arguments);
+    };
+    return RequestModel;
+});

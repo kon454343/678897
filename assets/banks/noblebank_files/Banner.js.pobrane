@@ -1,0 +1,229 @@
+var banner = {
+    view: {},
+
+    click: function(event) {
+        var clickElement = event.currentTarget;
+        var url = $(clickElement).attr('href');
+        var target = $(clickElement).attr('target');
+        var bannerId = $(clickElement).data('banner-id');
+        var originalEvent = event;
+
+        // Sprawdzenie czy wcisnięty kontrol bądź środkowy guzik myszki
+        if(event.ctrlKey || event.which == 2) {
+            // Zablokowanie kliekniecia w link z kontrollem
+            event.preventDefault();
+            event.stopPropagation();
+
+            return false;
+        }
+        var popup_credit = 3;
+        if(target !== '_blank') {
+            $.post(url, {}, function(response) {
+                switch(response.type) {
+                    case "external":
+                    case "internal":
+                        window.open(response.external, '_self').focus();
+                        break;
+
+                    case "close":
+                        $(clickElement).closest('.banner').remove();
+                        if ($(clickElement).closest('#announcements').length) {
+                            $('#announcements').hide();
+                            window.location.reload(true);
+                        }
+                        break;
+
+                    case "contact":
+                        var event = {};
+                        banner.showContact(event, response.banner);
+
+                        break;
+
+                    case "contact_marketing":
+                        var event = {};
+                        banner.showMarketingContact(event, response.banner);
+                        break;
+
+                    case "credit":
+                        //funkcja jako drugi parametr wymaga obiektu
+                        banner.view.prepareCreditData(null, {0: response.params.credit});
+                        if($(clickElement).closest('.credit-popup').length) {
+                            $('#announcements').hide();
+                            $('.blurry').removeClass('blurry');
+                        }
+                        break;
+                        
+                    case "ferryt":
+                        window.ferryt.redirectByTypeAndCode(response.params.kind, response.params.type, response.params.code, bannerId, originalEvent);
+                        break;
+
+                    case "transfer_own":
+                        $.get('/accounts/list/;ike/1', {}, function(accounts) {
+                            var code = Object.keys(accounts.allAccounts)[0];
+                            window.open(response.external.replace('__code_product__', code), '_self').focus();
+                        }, "JSON");
+                        break;
+
+                    case "prepaid":
+                        $.get('/accounts/list/;ike/1', {}, function(accounts) {
+                            var code = Object.keys(accounts.allAccounts)[0];
+                            window.open(response.external.replace('__code_product__', code), '_self').focus();
+                        }, "JSON");
+                        break;
+
+                    case 'oad':
+                        // banner OAD
+                        if (window.oadInitialized) {
+                            window.oad.check(originalEvent);
+                        }
+                        break;
+                }
+            }, "JSON");
+        } else {
+            window.open(url, '_blank').focus();
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+    },
+    showContact: function(event, bannerCode) {
+        window.App.siteView.view.showBannerContact(event, bannerCode);
+    },
+    showMarketingContact: function (event, bannerCode) {
+        window.App.siteView.view.showMarketingBannerContact(event, bannerCode);
+    },
+    orderContact: function() {
+        $(window).trigger('loader:show');
+        var container = $('.banner-message');
+        var bannerCode = $('input[name*="bannerCode"]', container).val();
+
+        $.post('/banner/orderContact/' + bannerCode, {}, function(response) {
+            var parentWidth = $('.moveBox').outerWidth(), moveBoxLast = $('.stepFirst', container);
+            $('.stepLast', container).show();
+
+            moveBoxLast.animate({
+                'margin-left': parentWidth + 'px'
+            }, 1000, 'easeOutQuad', function() {
+                moveBoxLast.remove();
+                $(window).trigger('loader:hide');
+            });
+
+        }, "JSON");
+    },
+    approveInfo: function(event) {
+        var container = $('.banner-message');
+        var checkboxApprove = $('input[name*="approve_box"]', container);
+        var buttonContact = $('.orderContact', container);
+
+        if(checkboxApprove.attr('checked')) {
+            buttonContact.addClass('h--btn-green').attr('disabled', false);
+        } else {
+            buttonContact.removeClass('h--btn-green').attr('disabled', true);
+        }
+    },
+    orderMarketingContact: function () {
+        $(window).trigger('loader:show');
+        var container = $('.banner-message');
+        var bannerCode = $('input[name*="bannerCode"]', container).val();
+        var phoneNumber = $('input[name*="phone_no"]', container).val();
+
+        $.post('/banner/orderMarketingContact/' + bannerCode + '/' + phoneNumber, {}, function (response) {
+            var parentWidth = $('.moveBox').outerWidth(), moveBoxLast = $('.stepFirst', container);
+            $('.stepLast', container).show();
+
+            moveBoxLast.animate({
+                'margin-left': parentWidth + 'px'
+            }, 1000, 'easeOutQuad', function () {
+                moveBoxLast.remove();
+                $(window).trigger('loader:hide');
+            });
+
+        }, "JSON");
+    },
+    orderMarketingContactWithoutBanner: function () {
+
+        var container = $('.banner-message');
+        var phoneNumberInput = $('input[name*="phone_no"]', container);
+        var phoneNumber = $('input[name*="phone_no"]', container).val();
+        var pattern = /^(\([+]\d{2,4}\)|[+]\d{2,4})?\d{9,20}$/
+
+        if ((phoneNumber && pattern.test(phoneNumber)) || (phoneNumberInput.prop('readonly'))) {
+            $(window).trigger('loader:show');
+            $.post('/banner/orderMarketingContactWithoutBanner/', {phone_no: phoneNumber}, function (response) {
+                var parentWidth = $('.moveBox').outerWidth(), moveBoxLast = $('.stepFirst', container);
+                $('.stepLast', container).show();
+
+                moveBoxLast.animate({
+                    'margin-left': parentWidth + 'px'
+                }, 1000, 'easeOutQuad', function () {
+                    moveBoxLast.remove();
+                    $(window).trigger('loader:hide');
+                });
+
+            }, "JSON");
+        }
+    },
+
+    approveMarketingInfo: function (event) {
+        var container = $('.banner-message');
+        var checkboxApprove = $('input[name*="approve_marketing_box"]', container);
+        var buttonContact = $('.orderMarketingContact', container);
+
+        if (checkboxApprove.attr('checked')) {
+            buttonContact.addClass('h--btn-green').attr('disabled', false);
+        } else {
+            buttonContact.removeClass('h--btn-green').attr('disabled', true);
+        }
+    },
+
+    approveMarketingInfoWithoutBanner: function (event) {
+        var container = $('.banner-message');
+        var checkboxApprove = $('input[name*="approve_marketing_box_without_banner"]', container);
+        var buttonContact = $('.orderMarketingContactWithoutBanner', container);
+
+        if (checkboxApprove.attr('checked')) {
+            buttonContact.addClass('h--btn-green').attr('disabled', false);
+        } else {
+            buttonContact.removeClass('h--btn-green').attr('disabled', true);
+        }
+    },
+
+    closeContact: function() {
+        window.location.reload();
+    },
+    blockRightButton: function() {
+        return false;
+    },
+    showTechnicalBanner: function() {
+        var def = $.Deferred(), technical = $('.jsTechnicalBanner'), handle = $('.jsBanerHandle'), view = this;
+        $.ajax({
+            url: 'banner/unfinishedProposal/',
+            type: 'GET',
+            dataType: 'json',
+            data: {},
+            success: function(data) {
+                if(!data.to_show) {
+                    return;
+                }
+
+                technical.html(data.content);
+                handle.slideUp("slow", function() {
+                    technical.slideDown('slow');
+                });
+                technical.find('[data-link-href]').click(function(event) {
+                    App.siteView.view.goUrl(event);
+                });
+                def.resolve();
+            }
+        });
+        return def;
+    },
+    hideTechnicBanner: function(view, data) {
+        var technical = $('.jsTechnicalBanner'), handle = $('.jsBanerHandle');
+        window.App.siteView.view.callSetBookmarkStatus(data.type, data.page, true, true);
+        technical.slideUp('slow', function() {
+            technical.html('');
+            handle.slideDown('slow');
+        });
+    }
+};

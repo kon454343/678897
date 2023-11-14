@@ -1,0 +1,49 @@
+.creditpa .banner {
+  font-family: Roboto;
+  font-size: 12px;
+  line-height: 1.17;
+  text-align: left;
+  color: #4a4a4a; }
+
+.creditpa .banner .title {
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1.29;
+  width: 140px; }
+
+.creditpa .banner .incentive {
+  margin-top: 20px;
+  width: 140px; }
+
+.creditpa .banner .kwota {
+  font-family: Roboto;
+  font-size: 36px;
+  text-align: left;
+  color: #4a4a4a;
+  letter-spacing: normal;
+  position: static;
+  top: inherit;
+  margin-top: 10px; }
+
+.creditpa .banner .footer {
+  width: 195px; }
+
+.creditpa .banner a.h--btn {
+  width: 134px;
+  height: 44px;
+  border-radius: 2px;
+  background-color: #ffffff;
+  border: solid 1px #e7e7e7;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  position: static;
+  bottom: inherit;
+  padding: 12px 26px; }
+
+.creditpa .banner a.h--gray-hover:hover {
+  background-color: #2a2c31; }
+
+.creditpa .banner a.h--btn:hover {
+  border-color: #2a2c31;
+  color: #fff; }

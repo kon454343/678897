@@ -1,0 +1,103 @@
+!function($) {
+    var PopUp = {
+        init: function() {
+            _base = this;
+        },
+        isCreated: function() {
+            var isVisible = !1;
+            if ($('#PopUpWrapper').length > 0) {
+                isVisible = !0;
+            }
+            return isVisible;
+        },
+        isPopUpVisible: function() {
+            var isVisible = !1;
+            if ($('#PopUpWrapper').is(':visible')) {
+                isVisible = !0;
+            }
+            return isVisible;
+        },
+        createPopUp: function() {
+            var puWrapper, puContainer, puContent, puIcon, puDescription, puButtons;
+            puWrapper = $('<div/>', {
+                id: 'PopUpWrapper',
+                'class': 'popUp-wrapper',
+                style: 'display: none'
+            });
+            puContainer = $('<section/>', {});
+            puContent = $('<div/>', {
+                'class': 'popUp-content'
+            });
+            puIcon = $('<div/>', {
+                'class': 'h--alert-circle-big',
+                html: '<i class="icon"></i>'
+            });
+            puDescription = $('<p/>', {});
+            puButtons = $('<div/>', {
+                'class': 'buttons'
+            });
+            puWrapper.append(puContainer.append(puContent.append(puIcon).append(puDescription).append(puButtons))).appendTo('body');
+            return puWrapper;
+        },
+        showPopUp: function(_base, msg, containerClass, iconClass, buttons, buttonsAlign) {
+            var timeout, deferr = $.Deferred(), puContainerClass = containerClass ? containerClass : 'h--section-red', puIconClass = iconClass ? iconClass : 'icon--close3', puWrapper = $('#PopUpWrapper'), popUpIsAnimated = !1;
+            if (_base.isCreated(_base) === !1) {
+                _base.createPopUp(_base);
+                puWrapper = $('#PopUpWrapper');
+            } else {
+                if (_base.isPopUpVisible(_base)) {
+                    popUpIsAnimated = !0;
+                    _base.hidePopUp(_base).promise().done(function() {
+                        popUpIsAnimated = !1;
+                    });
+                }
+            }
+            timeout = setInterval(function() {
+                if (!popUpIsAnimated) {
+                    clearInterval(timeout);
+                    puWrapper.children().removeAttr('class').addClass(puContainerClass).find('i.icon').removeAttr('class').addClass('icon ' + puIconClass).end().find('p').html(msg);
+                    if (buttons) {
+                        puWrapper.find('.buttons').empty();
+                        $(buttons).appendTo(puWrapper.find('.buttons').css({
+                            'text-align': buttonsAlign ? buttonsAlign : ''
+                        }));
+                    } else {
+                        puWrapper.find('.buttons').css({
+                            'text-align': buttonsAlign ? buttonsAlign : ''
+                        }).html("<a class=\"h--btn h--btn-white prepend-icon\" href=\"/index/index\"><i class=\"icon icon--power\"></i>Przejdź do strony głównej</a>");
+                    }
+                    puWrapper.show().find('.popUp-content').css({
+                        marginTop: -puWrapper.find('.popUp-content').outerHeight() / 2 + 'px'
+                    });
+                    puWrapper.hide();
+                    puWrapper.fadeIn(150, function() {
+                        deferr.resolve(_base);
+                    });
+                }
+            }, 20);
+            return deferr;
+        },
+        hidePopUp: function(_base) {
+            var deferr = $.Deferred();
+            $('#PopUpWrapper').fadeOut(150, function() {
+                deferr.resolve(_base);
+            });
+            return deferr;
+        }
+    };
+    PopUp.init();
+    $.fn.showPopUp = function(msg, containerClass, iconClass, buttons, buttonsAlign) {
+        var deferr = $.Deferred();
+        PopUp.showPopUp(PopUp, msg, containerClass, iconClass, buttons, buttonsAlign).promise().done(function(popup) {
+            deferr.resolve(popup);
+        });
+        return deferr;
+    };
+    $.fn.hidePopUp = function() {
+        var deferr = $.Deferred();
+        PopUp.hidePopUp().promise().done(function(popup) {
+            deferr.resolve(popup);
+        });
+        return deferr;
+    };
+}(jQuery, window, document);

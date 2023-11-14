@@ -1,0 +1,464 @@
+var confirmation = {
+    confirmationContainer: { //target container for confirmation html
+        selector: '.jsConfirmationContainer'
+    },
+    mainContainer: { //main container with form
+        selector: '.jsPrepareConfirmation'
+    },
+    activeConfirmation: { //active confirmation
+        selector: '.jsActiveConfirmation',
+        class: 'jsActiveConfirmation'
+    },
+    buttons: {//where we can find confirmation buttons
+        selector: '.jsConfirmationButtons',
+        class: 'jsConfirmationButtons'
+    },
+    buttonsOld: {//where we movo old buttons
+        selector: '.jsConfirmationButtonsOld',
+        class: 'jsConfirmationButtonsOld'
+    },
+    confirmationRenew: { //where we can find renew button
+        selector: '.jsConfirmationRenewContainer'
+    },
+    confirmationLastTry: { //where we put info about user last try
+        selector: '.jsConfirmationLastTryWarning'
+    },
+    tokenInput: {
+        selector: 'input[name="token"]'
+    },
+    destinationClass: 'jsSuccessDestination',
+    confirmationCodeName: 'confirmation_code',
+    mobileTries: 0,
+    options: {
+        refreshInterval: 5000, //interval for mobile conf
+        stopMobileWhenActiveElementGone: true,
+        maxMobileCheckTries: 5
+    },
+    init: function() {
+        if(window.confirmationInitialized) {
+            return;
+        }
+
+        $('body')
+            .on('click.confirmation', '.jsConfirmationDisable', function() {
+                confirmation.cancelConfirmation($(confirmation.activeConfirmation.selector), false, $(this));
+            })
+            .on('click.confirmation', '.jsConfirmationDisableLight', function() {
+                confirmation.cancelConfirmation($(confirmation.activeConfirmation.selector), true, $(this));
+            })
+            .on('click.confirmation', '.jsConfirmationRenew:not(.jsDisabledClick)',
+                confirmation.renew
+            )
+            .on('click.confirmation', '.jsConfirmationClickOnButton:not(.jsDisabledClick)',
+                confirmation.clickOnButton
+            )
+            .on('click.confirmation', '.jsConfirmationSwitchMethod:not(.jsDisabledClick)', function (event) {
+                confirmation.switchMethod(event, $(this));
+            })
+        ;
+
+        window.confirmationInitialized = true;
+    },
+    clickOnButton: function(event) {
+        var self = $(event.currentTarget),
+            parentMain = self.closest(confirmation.mainContainer.selector)
+        ;
+
+        parentMain.find(self.attr('data-button-to-click')).click();
+    },
+    switchMethod: function(event, el){
+        event.preventDefault();
+        $(window).trigger('loader:show');
+
+        $.getJSON('index/confirmationSwitchMethod', function(data) {
+            var parentMain = el.closest(confirmation.mainContainer.selector),
+                confirmationContainer = parentMain.find(confirmation.confirmationContainer.selector),
+                confirmationButtonsContainer = parentMain.find(confirmation.buttons.selector)
+            ;
+            if(data.confirmation && true === data.allow) {
+                confirmation.removeConfirmation(true);
+
+                confirmationContainer.hide().html(data.confirmation).slideDown(500, 'easeOutQuad');
+
+                confirmationButtonsContainer.html(data.buttons);
+
+                if(true === data.is_last_try){
+                    confirmation.showLastTryInfo(parentMain);
+                }
+            } else if(true === data.show_modal) {
+                $('.jsConfirmationSwitchMethod').addClass('jsDisabledClick disabled')
+                uiKit.modal.show(data.modal_type, data.modal_text, data.modal_close_button);
+            }
+            $(window).trigger('loader:hide');
+        });
+    },
+    renew: function(event) {
+        event.preventDefault();
+
+        var self = $(event.currentTarget),
+            parentMain = self.closest(confirmation.mainContainer.selector),
+            code_confirmation = parentMain.find('input[name="' + confirmation.confirmationCodeName + '"]').attr('value'),
+            bindedClass = 'jsRenewConfirmationBinded',
+            confirmationInfoContainer = parentMain.find('.jsConfirmationInfoContainer'),
+            input = confirmationInfoContainer.find(confirmation.tokenInput.selector),
+            renewConfirmationButton = parentMain.find('.jsConfirmationRenewContainer').find('a')
+        ;
+
+        if(self.hasClass(bindedClass)) {
+            return false;
+        }
+        self.addClass(bindedClass);
+        confirmationInfoContainer.addClass('disabled');
+        input.prop('disabled', true).val('');
+
+
+        if(!code_confirmation) {
+            code_confirmation = '';
+        }
+
+        $.getJSON('index/confirmationRenew/' + code_confirmation, function(data) {
+            parentMain.find('.sms-code.error').removeClass('error');
+            if(data.allow === !0) {
+                if(data.sms_no && data.sms_no > 0) {
+                    parentMain.find('.jsSmsNo').html(data.sms_no);
+                }
+                if(data.code_confirmation) {
+                    parentMain.find('input[name="' + confirmation.confirmationCodeName + '"]').val(data.code_confirmation);
+                }
+                input.closest('form').removeClass('disabled');
+                input.closest('.jsValidateField').removeClass('jsDisabled disabled error');
+            } else {
+                if(data.allow === !1) {
+                    $.fn.setFormErrors(data);
+                }
+            }
+
+            confirmationInfoContainer.removeClass('disabled');
+            input.prop('disabled', false);
+            self.removeClass(bindedClass);
+            renewConfirmationButton.removeClass('jsDisabledClick disabled');
+
+            if(true === data.is_last_try) {
+                confirmation.showLastTryInfo(parentMain);
+            }
+        });
+    },
+    removeConfirmation: function(lightCancel) {
+        if(window.mobileConfirmationInterval !== undefined) {
+            confirmation.disableMobileConfirmation();
+
+            if(!lightCancel) {
+                $.post('index/confirmationCancel');
+            }
+        }
+    },
+    disableMobileConfirmation: function() {
+        try {
+            window.clearInterval(window.mobileConfirmationInterval);
+            delete window.mobileConfirmationInterval;
+        } catch(error) {
+
+        }
+    },
+    showLastTryInfo: function(parentMain) {
+        parentMain.find(confirmation.confirmationRenew.selector).css('display', 'none');
+        uiKit.popover.show(parentMain.find('.jsConfirmationLastTryPopover'), {trigger: 'manual'});
+    },
+    prepareConfirmationOnSpot: function(event, data, _this) {
+        try {
+            var params = data[0].split(/___/);
+
+            $(confirmation.activeConfirmation.selector).each(function() {
+                if(params[1] != $(this).find('input[name="' + confirmation.confirmationCodeName + '"]').val()) {
+                    confirmation.cancelConfirmation($(this), true);
+                }
+            });
+
+            if('mobile' == params[0]) {
+                confirmation.checkMobileConfirmation($(confirmation.activeConfirmation.selector), _this);
+            }
+        } catch(e) {
+        }
+    },
+    prepareConfirmation: function(event, data, _this) {
+        var self = $(event.currentTarget);
+
+        if(document === event.currentTarget){
+            self = $(event.target);
+        }
+
+        var parentMain = self.closest(confirmation.mainContainer.selector),
+            confirmationContainer = parentMain.find(confirmation.confirmationContainer.selector),
+            confirmationButtonsContainer = parentMain.find(confirmation.buttons.selector),
+            dataType = _this.getDataType(data)
+        ;
+
+        if('html' === dataType || 'json-string' === dataType) {
+            try {
+                data = JSON.parse(data);
+            } catch(e) {
+            }
+        }
+
+        if(data.confirmation && true === data.allow) {
+            //first cancel all confirmations...
+            $(confirmation.activeConfirmation.selector).each(function() {
+                confirmation.cancelConfirmation($(this), true);
+            });
+
+            parentMain.addClass(confirmation.activeConfirmation.class);
+
+            confirmationContainer.hide().html(data.confirmation).slideDown(500, 'easeOutQuad');
+
+            var oldButtons = confirmationButtonsContainer.clone().removeClass(confirmation.buttons.class).addClass(confirmation.buttonsOld.class).addClass('display-none');
+
+            confirmationButtonsContainer.html(data.buttons);
+            parentMain.append(oldButtons);
+
+            parentMain.attr('data-confirmation', data.confirmation_code);
+            parentMain.find('input[name="' + confirmation.confirmationCodeName + '"]').attr('value', data.confirmation_code);
+
+            let fieldsToDisabled = parentMain.find('.todisabled:not(:disabled):not(.jsUiSelectInputTarget):not(.disabledAlways)');
+            fieldsToDisabled.prop('disabled', true).addClass('filled').addClass('jsConfirmationDisabled').closest('.h--form--field').addClass('js-disabled');
+            fieldsToDisabled.closest('.jsValidateField').addClass('jsDisabled').addClass('disabled');
+            //dla select
+            let fieldsToDisabledSelect = parentMain.find('.jsUiSelectInputTarget.todisabled:not(.disabledAlways)');
+            fieldsToDisabledSelect.closest('.jsValidateField:not(.disabled)').addClass('jsDisabled').addClass('disabled').addClass('jsConfirmationDisabled');
+
+            parentMain.find('input[name="step"], input[name="' + confirmation.confirmationCodeName + '"]').prop('disabled', false);
+
+            parentMain.find(confirmation.tokenInput.selector).prop('disabled', false);
+            parentMain.find(confirmation.tokenInput.selector).closest('.jsValidateField').removeClass('jsDisabled').removeClass('disabled');
+
+            parentMain.find('input[name="step"]').attr('value', data.step);
+
+            if('mobile' === data.type) {
+                confirmation.checkMobileConfirmation(parentMain, _this);
+            }
+
+            if(true === data.is_last_try) {
+                confirmation.showLastTryInfo(parentMain);
+            }
+
+            if(false === $.isEmptyObject(data.soft_warnings)) {
+                var validationMessages = [];
+
+                $.each(data.soft_warnings, function(field, message) {
+                    validationMessages.push({
+                        selector: '[name="' + field + '"]',
+                        message: message,
+                        is_soft: true
+                    });
+                });
+
+                $.extend(true, data, {validationMessages: validationMessages});
+                $.fn.setFormErrors(data);
+            }
+
+            _this.model.resetResponse();
+        } else if(true === data.show_modal) {
+            var config = {
+                type: data.modal_type,
+                text: data.modal_text,
+                closeButton: data.modal_close_button
+            };
+            uiKit.modal.show(null, config);
+        } else {
+            $.fn.setFormErrors(data);
+        }
+    },
+    endConfirmation: function(parentMain, event, view) {
+        var _model = view.model, data = _model.get('responseData'), destination = data.destination,
+            animateOptions = {
+                left: '900px'
+            };
+
+        if('string' == typeof data) {
+            try {
+                data = $.parseJSON(data);
+                destination = data.destination;
+            } catch(_error) {
+            }
+        }
+
+        if(true === data.confirmed) {
+
+            if(!data.is_without_confirmation) {
+                if(!parentMain.hasClass(confirmation.activeConfirmation.class)) {
+                    return;
+                }
+
+                if(0 === parentMain.find('input[name="confirmation_code"][value="' + data.confirmation_code + '"]').length) {
+                    //in desired destination we don't have given confirmation
+                    return;
+                }
+            }
+
+            parentMain.closest(destination).addClass('jsActiveConfirmationDestination');
+            if(0 !== parentMain.closest(destination).length && '#siteViewWrapper' !== destination) {
+                destination = destination + '.jsActiveConfirmationDestination';
+            }
+
+            parentMain.closest('form').addClass('disabled');
+            parentMain.find(confirmation.buttons.selector).slideUp();
+            parentMain.find(confirmation.confirmationContainer.selector).slideUp();
+
+            _model.set('navigate', false);
+            _model.set('destination', destination);
+            _model.set('url', data.url);
+            _model.set('event', event);
+            if(data.before) {
+                _model.set('beforeAnimation', data.before);
+                _model.set('beforeAnimationEvent', event);
+            }
+            if(data.after) {
+                _model.set('afterAnimation', data.after);
+                _model.set('afterAnimationEvent', event);
+            }
+            if(destination && $(destination).length && !view.elementInViewport($(destination))) {
+                $('html, body').animate({
+                    scrollTop: $(destination).offset().top + 'px'
+                }, 250, 'easeOutQuad');
+            }
+            if(data.animation) {
+                _model.set('animation', data.animation);
+            }
+            if('' !== data.skipRecheck && void 0 !== data.skipRecheck) {
+                window.App.skipRecheck = data.skipRecheck;
+            }
+            view.render().promise().done(function() {
+                parentMain.closest('form').removeClass('disabled');
+                var destinationChildren = $(destination).children(), childrenLeft = destinationChildren.css('left');
+                if('auto' != childrenLeft && 0 !== parseInt(childrenLeft)) {
+                    destinationChildren.animate({
+                        left: '0'
+                    }, 500, 'easeOutQuad');
+                }
+                if(destinationChildren.hasClass('js-slide-down')) {
+                    destinationChildren.slideDown(500, 'easeOutQuad');
+                }
+            });
+
+        } else {
+            $('.sms-code').filter(':visible').addClass('error');
+            $.fn.setFormErrors(data);
+
+            if(data.events) {
+                view.executeEvents(data.events);
+            }
+
+            if(true === data.is_last_try) {
+                confirmation.showLastTryInfo(parentMain);
+            }
+        }
+    },
+    checkMobileConfirmation: function(parentMain, _this) {
+        if(0 === parentMain.length) {
+            parentMain = $(confirmation.activeConfirmation.selector);
+        }
+
+        var _model = _this.model,
+            _event = parentMain.find('button').eq(0)
+        ;
+
+        if(true === confirmation.options.stopMobileWhenActiveElementGone && 0 === $('body').find(confirmation.activeConfirmation.selector).length) {
+            confirmation.mobileTries++;
+            if(confirmation.mobileTries > confirmation.options.maxMobileCheckTries) {
+                confirmation.disableMobileConfirmation();
+                return;
+            }
+        }
+
+        if(undefined === window.mobileConfirmationInterval) {
+            window.mobileConfirmationInterval = window.setInterval(function() {
+                confirmation.checkMobileConfirmation(parentMain, _this);
+            }, confirmation.options.refreshInterval);
+        }
+
+        var formConfirm = parentMain.find('form').first();
+        var formData = {};
+        formConfirm.serializeArray().map(function(inputField) {
+            formData[inputField.name] = inputField.value;
+        });
+        $.post('index/confirmationCheck', formData).done(function(data) {
+            _model.set('responseData', data);
+            if(data.events) {
+                _this.executeEvents(data.events);
+            }
+            if((data.status && data.status != 1) || true == data.confirmed) {
+                confirmation.showMobileConfirmationInfo(parentMain, data);
+                confirmation.disableMobileConfirmation();
+                confirmation.endConfirmation(parentMain, _event, _this);
+            }
+        });
+    },
+    showMobileConfirmationInfo: function(parentMain, data) {
+        var handle = parentMain.find('.jsConfirmationInfoContainer'),
+            className = data.data_type
+        ;
+
+        handle.removeClass(function(index, className) {
+            return (className.match(/(^|\s)confirmation-\S+/g) || []).join(' ');
+        });
+
+        handle.addClass(className);
+        handle.find('.jsMobileConfirmationInfo').text(data.title);
+        handle.find('.jsMobileConfirmationSecondary').text(data.content);
+    },
+    cancelConfirmation: function(parentMain, lightCancel, button) {
+        confirmation.removeConfirmation(lightCancel);
+        if(!parentMain.hasClass(confirmation.activeConfirmation.class)) {
+            return;
+        }
+
+        var step = 'make',
+            confirmationButtonsContainer = parentMain.find(confirmation.buttons.selector),
+            confirmationButtonsOldContainer = parentMain.find(confirmation.buttonsOld.selector),
+            confirmationContainer = parentMain.find(confirmation.confirmationContainer.selector)
+        ;
+
+        uiKit.popover.hide(parentMain.find(confirmation.tokenInput.selector));
+        parentMain.removeClass(confirmation.activeConfirmation.class);
+
+        confirmationButtonsContainer.replaceWith(confirmationButtonsOldContainer.removeClass(confirmation.buttonsOld.class).addClass(confirmation.buttons.class).removeClass('display-none'));
+
+        confirmationContainer.slideUp('normal', function() {
+            $(this).html('');
+        });
+
+        parentMain.find('.iradio_square-green').removeClass('disabled');
+        let fieldToNoDisabled = parentMain.find('.todisabled.jsConfirmationDisabled');
+        fieldToNoDisabled.prop('disabled', false).removeClass('filled').removeClass('jsConfirmationDisabled').closest('.h--form--field').removeClass('js-disabled');
+        fieldToNoDisabled.closest('.jsValidateField').removeClass('jsDisabled').removeClass('disabled').find('.disabled').removeClass('disabled');
+        //dla select
+        let fieldsToDisabledSelect = parentMain.find('.jsConfirmationDisabled.disabled');
+        fieldsToDisabledSelect.removeClass('jsDisabled').removeClass('disabled').removeClass('jsConfirmationDisabled');
+
+        $('.h--select.disabled').each(function(k, v) {
+            if(!$(v).hasClass('disabledAlways')) {
+                $(v).removeClass('disabled');
+            }
+        });
+
+        parentMain.find('form.disabled').removeClass('disabled');
+        parentMain.find('.error').removeClass('error');
+        parentMain.find('.js-error-target').hide();
+        parentMain.find('input[name="' + confirmation.confirmationCodeName + '"]').prop('disabled', !0).attr('value', '');
+        parentMain.find(confirmation.tokenInput.selector).prop('disabled', !0).attr('value', '');
+
+        if(button && button.data('step')) {
+            step = button.data('step');
+        } else {
+            var makeStep = parentMain.find('input[name="make_step"]');
+            if(makeStep.length > 0) {
+                step = makeStep.val();
+            }
+        }
+
+        uiKit.popover.hide(parentMain.find('input[name="token"]'));
+        parentMain.find('input[name="step"]').attr('value', step);
+    },
+    scrollToConfirmation: function(event, el) {
+        $(el).animate({scrollTop: $(el).prop('scrollHeight')}, 1000);
+    },
+};

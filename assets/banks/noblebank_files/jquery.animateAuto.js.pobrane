@@ -1,0 +1,29 @@
+jQuery.fn.animateAuto = function(options, speed, callback) {
+
+    var opts = $.extend({}, $.fn.animateAuto.defaults, options);
+
+    var elem, height, width;
+    return this.each(function(i, el) {
+        el = jQuery(el), elem = el.clone().css({"height":"auto","width":"auto"}).appendTo(el.parent());
+        height = elem.outerHeight(true) + opts.offsetH,
+        width = elem.outerWidth(true) + opts.offsetW,
+        elem.remove();
+
+        var aniOptions = {};
+
+        if (options.type === 'height' || options.type === 'both') {
+            aniOptions.height = height;
+        }
+
+        if (options.type === 'width' || options.type === 'both') {
+            aniOptions.width = width;
+        }
+
+        el.animate(aniOptions, speed, callback);
+    });
+};
+
+$.fn.animateAuto.defaults = {
+    'offsetH': 0,
+    'offsetW': 0
+};

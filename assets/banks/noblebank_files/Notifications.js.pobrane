@@ -1,0 +1,131 @@
+var notifications = {
+    message: '',
+    buttonText: null,
+    buttonLink: null,
+    buttonLinkParams: null,
+    container: null,
+    group: null,
+    global: null,
+    bar: null,
+    addBar: function (message, button, identifier, group, global, container) {
+        this.setMessage(message);
+        this.setButton(button);
+        this.setContainer(container);
+        this.setGroup(group);
+        this.setGlobal(global);
+        this.showBar(identifier);
+    },
+    removeGroupBars: function (group, identifier) {
+        $.each(this.container.find("[data-group='" + group + "']"), function (index, element) {
+            if ($(element).attr("id") != identifier) {
+                $(this).remove();
+            }
+        });
+    },
+    barExists: function (identifier) {
+        return this.container.find("#" + identifier).length;
+    },
+    removeBar: function (identifier, container) {
+        if ($("#" + identifier, container).length) {
+            $("#" + identifier, container).remove();
+        }
+    },
+    createBar: function (identifier, group) {
+        this.bar = $("<div />")
+                .addClass("h--box-alert-top topNotification")
+                .attr({
+                    id: identifier,
+                    'data-group': group,
+                    'data-global': this.isGlobal() ? 1 : 0
+                });
+        this.bar.append(this.createBarContent());
+
+        return this.bar;
+    },
+    appendBar: function (container, bar) {
+        container.prepend(bar);
+    },
+    showBar: function (identifier) {
+        if (!this.barExists(identifier)) {
+            this.appendBar(this.container, this.createBar(identifier, this.group));
+            if ($('.noticeBeams .notice .h--box-alert-top').length > 1) {
+                $('#showNoticeBeams span').html($('.noticeBeams .notice .h--box-alert-top').length);
+                $('.noticeBeams .notice').slideUp();
+                $('#showNoticeBeams').slideDown();
+            }
+        }
+    },
+    createBarContent: function () {
+        var content = $("<div />");
+        var icon = $("<i />")
+                .addClass("icon icon--valid-notice2");
+
+        content.append(icon);
+        content.append(this.message);
+        this.createButton().appendTo(content);
+
+        return content;
+    },
+    createButton: function () {
+        if (this.buttonLink && this.buttonText) {
+            var button = $("<a />")
+                    .addClass("h--btn notRemovable settingsLink")
+                    .html(this.buttonText);
+            if (this.buttonLink !== null) {
+                button.attr("data-action", this.buttonLink);
+                button.on('click', {_this: App.siteView.view}, App.siteView.view.showTopMenu);
+            }
+            if (this.buttonInner !== null) {
+                button.attr("data-inner", this.buttonInner);
+            }
+            if (this.buttonLinkParams !== null) {
+                button.attr("data-querystring", this.buttonLinkParams);
+            }
+
+            return button;
+        }
+
+        return '';
+    },
+    setMessage: function (message) {
+        this.message = message;
+    },
+    setButton: function (button) {
+        if(button) {
+            if (button.text) {
+                this.buttonText = button.text;
+            }
+            if (button.link) {
+                this.buttonLink = button.link;
+            }
+            if (button.inner) {
+                this.buttonInner = button.inner;
+            }
+            var linkParams = button.linkParams ? button.linkParams.join('/') : '';
+            if (linkParams) {
+                this.buttonLinkParams = linkParams;
+            }
+        }
+    },
+    setContainer: function (containerSelector) {
+        if ($(containerSelector).length) {
+            this.container = $(containerSelector);
+        } else {
+            var mainContainer = $("#topViewWrapper .noticeBeams");
+            if (!mainContainer.find(".notice").length) {
+                var subContainer = $("<div />").addClass("notice");
+                mainContainer.append(subContainer);
+            }
+            this.container = $("#topViewWrapper .noticeBeams .notice");
+        }
+    },
+    setGroup: function (group) {
+        this.group = group;
+    },
+    setGlobal: function (global) {
+        this.global = global;
+    },
+    isGlobal: function () {
+        return this.global;
+    }
+};

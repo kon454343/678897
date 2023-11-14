@@ -1,0 +1,468 @@
+$('html').keydown(function (e) {
+    if ($('input').is(":focus")) {
+    } else {
+        if (e.keyCode === 8) {
+            var $form = $('body').find('div.sidebar_main');
+            if (!($form.hasClass('backspace_block'))) {
+                $.getJSON('/transfers/backToTransfers/', function () {
+                });
+            }
+        }
+    }
+});
+
+define([ 'jquery', 'underscore', 'backbone', 'validateForms', 'mainSiteView', 'picker_pl' ], function($, _, Backbone, ValidateForms, mainSiteView) {
+    var SiteView = mainSiteView.extend({
+        transferMenu: function (event) {
+            var self = $(event.currentTarget);
+
+            if (self.hasClass('jsSelectListOpened')) {
+                self.removeClass('jsSelectListOpened ui-select-opened');
+                $('.show-me').remove();
+            } else {
+                self.addClass('jsSelectListOpened ui-select-opened');
+                var sub = self.clone().addClass('show-me').appendTo('body');
+                var parent = self.closest('.list-container');
+
+                sub.find('ul').css({
+                    display: 'block',
+                    top: parent.offset().top + parent.height(),
+                    left: parent.offset().left,
+                    width: parent.width() -1
+                });
+
+                $('body').on('click', function (e) {
+                    if (!self.is(e.target) && 0 === self.has(e.target).length) {
+                        self.removeClass('jsSelectListOpened ui-select-opened');
+                        sub.remove();
+                    }
+                });
+            }
+        },
+        paymentCreditCardMenu: function (event) {
+            var self = $(event.currentTarget), buttonParent = self.closest('.h--box-remove'), siteView = $('#siteViewWrapper');
+            if (!self.hasClass('js-hideOnBlur')) {
+                self.addClass('js-hideOnBlur');
+                $('body').off('click.creditcard');
+                $('body').on('click.creditcard', function (e) {
+                    if (!self.is(e.target) && 0 === self.has(e.target).length) {
+                        siteView.removeClass('overflowV');
+                        self.removeClass('show-me');
+                        buttonParent.removeClass('overflowV');
+                    }
+                });
+            }
+            if (self.hasClass('show-me')) {
+                self.removeClass('show-me');
+                buttonParent.removeClass('overflowV');
+                siteView.removeClass('overflowV');
+            } else {
+                self.addClass('show-me');
+                buttonParent.addClass('overflowV');
+                siteView.addClass('overflowV');
+            }
+        },
+        showHideMoreAccounts: function(event) {
+            var self = $(event.currentTarget), parentDiv = self.closest('.sidebar').find('.mask-visible');
+            parentDiv.toggleClass('show-all');
+            if (parentDiv.hasClass('show-all')) {
+                var clonedParent = parentDiv.clone(),
+                    getHeightAll;
+                parentDiv.data('startheight', parentDiv.outerHeight(true));
+                clonedParent.css({
+                    'position': 'fixed',
+                    'top': '0',
+                    'left': '-500px',
+                    'transition': 'none',
+                    'height': 'auto'
+                });
+                clonedParent.appendTo('body');
+                getHeightAll = clonedParent.css('height');
+                clonedParent.remove();
+                self.text('schowaj');
+
+                parentDiv.stop(!0, !1).animate({
+                    height: getHeightAll
+                }, 350, 'easeOutQuad');
+            } else {
+                self.text('więcej rachunków');
+                parentDiv.stop(!0, !1).animate({
+                    height: parentDiv.data('startheight') + 'px'
+                }, 350, 'easeOutQuad');
+            }
+            self.blur();
+        },
+        makeCarousel: {
+            defaults: {
+                bar: function (carousel) {
+                    return carousel.find('.timer').eq(0);
+                },
+                percent: 0,
+                timer: 5000
+            },
+            getPercentWidth: function (carousel) {
+                var data = carousel.data('bicarousel'),
+                    barWidth = data ? data.bar(carousel).width() : 0,
+                    percentWidth = (100 * barWidth / carousel.width());
+                return percentWidth;
+            },
+            init: function (carousel) {
+                var base = this;
+                carousel.each(function () {
+                    var _carousel = $(this);
+
+                    if (!carousel.find('.item.active').length) {
+                        carousel.find('.item').eq(0).addClass('active');
+                    }
+
+                    _carousel.carousel().carousel('pause');
+                    _carousel.data('bicarousel', $.extend({}, base.defaults));
+                    base.events.init(base, _carousel);
+                    base.startSlide(_carousel);
+                });
+                base.events.initConfirmation(base, carousel);
+
+                return carousel;
+            },
+            startSlide: function (carousel) {
+                var base = this,
+                    data = carousel.data('bicarousel'),
+                    animateTimer = Math.round(5000 * ((100 - data.percent) / 100)),
+                    bar = data.bar(carousel);
+
+                if (carousel.hasClass('confirmVisible')) {
+                    return false;
+                }
+                if (carousel.find('.item').length < 2) {
+                    bar.animate({
+                        width: 0
+                    }, 100, 'easeInOutQuad');
+                    return false;
+                }
+                if (base.getPercentWidth(carousel) !== data.percent) {
+                    bar.css({
+                        width: data.percent + '%'
+                    });
+                }
+                bar.animate({
+                    width: '100%'
+                }, animateTimer, 'linear', function () {
+                    if (base.getPercentWidth(carousel) === 100) {
+                        data.percent = 100;
+                        carousel.data('bicarousel', data);
+                        carousel.trigger('nextslide');
+                    }
+                });
+            },
+            stopSlide: function (base, carousel) {
+                var data = carousel.data('bicarousel'),
+                    bar = data.bar(carousel);
+                bar.stop(true, false);
+                data.percent = base.getPercentWidth(carousel);
+                carousel.data('bicarousel', data);
+            },
+            events: {
+                init: function (base, carousel) {
+                    var _base = this;
+                    _base.nextSlide(base, carousel);
+                    _base.mouseEnter(base, carousel);
+                    _base.mouseLeave(base, carousel);
+                    $('window').on('carousel:destroy', function () {
+                        var data = carousel.data('bicarousel'),
+                            bar = data.bar(carousel),
+                            activeItem = carousel.find('.item.active'),
+                            activeStatus = activeItem.data('status');
+
+                            if (activeStatus === 5) {
+                                _base.sendStatus(activeItem.data('code'), 6).promise().done(function (data) {
+                                    activeItem.data('status', parseInt(data.status_set));
+                                });
+                            }
+                        bar.stop(true, false);
+                    });
+                    return carousel;
+                },
+                initConfirmation: function (base, carousel) {
+                    var _base = this;
+                    carousel.find('[data-showconfirmation="true"]').each(function () {
+                        var btn = $(this),
+                            confirmWrapper = btn.siblings('.confirmation');
+                        if (confirmWrapper.length) {
+                            var confirm = confirmWrapper.children('.confirm'),
+                                success = confirmWrapper.children('.success'),
+                                btnConfirm = confirm.find('[data-confirm="true"]'),
+                                btnReject = confirm.find('[data-reject="true"]'),
+                                btnConfirmAccept = confirm.find('[data-confirm-accept="true"]'),
+                                btnCloseSuccess = success.find('[data-successclose="true"]');
+                            _base.showConfirm(base, btn, confirmWrapper, carousel);
+                            _base.confirmAction(btnConfirm, confirmWrapper, success);
+                            _base.updateStatus(base, btnReject, confirmWrapper, carousel, 10);
+                            _base.updateStatus(base, btnConfirmAccept, confirmWrapper, carousel, 7);
+                            _base.closeSuccess(base, btnCloseSuccess, confirmWrapper, carousel);
+                        }
+                    });
+                },
+                showConfirm: function (base, btn, confirmWrapper, carousel) {
+                    var _base = this;
+                    btn.on('click.carousel', function (event) {
+                        var activeItem = carousel.find('.item.active');
+                        event.preventDefault();
+                        $(window).trigger('loader:show');
+
+                        _base.sendStatus(activeItem.data('code'), 7).promise().done(function (data) {
+                            activeItem.data('status', parseInt(data.status_set));
+                        });
+
+                        carousel.addClass('confirmVisible');
+
+                        confirmWrapper.show().animate({
+                            top: '-100%'
+                        }, 250, 'easeInOutQuad');
+                        $(window).trigger('loader:hide');
+                    });
+                },
+                confirmAction: function (btn, confirmWrapper, success) {
+                    btn.on('click.carousel', function (event) {
+                        var code = btn.closest('.item').data('code');
+                        event.preventDefault();
+                        $(window).trigger('loader:show');
+                        $.ajax({
+                            url: 'wallet/addCampaignContact',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: { code: code },
+                            success: function(data) {
+                                $(window).trigger('loader:hide');
+                                confirmWrapper.animate({
+                                    top: '0'
+                                }, 250, 'easeInOutQuad');
+                            }
+                        });
+                    });
+                },
+                updateStatus: function(base, btn, confirmWrapper, carousel, status) {
+                    var _base = this;
+                    btn.on('click.carousel', function (event) {
+                        var activeItem = carousel.find('.item.active'),
+                            nextItem   = activeItem.next().length ? activeItem.next() : activeItem.siblings().eq(0);
+
+                        event.preventDefault();
+
+                        carousel.removeClass('confirmVisible');
+
+                        _base.sendStatus(activeItem.data('code'), status);
+
+                        activeItem.removeClass('active');
+
+                        if (nextItem.length) {
+                            nextItem.addClass('active');
+                        }
+
+                        confirmWrapper.animate({
+                            top: '-201%'
+                        }, 250, 'easeInOutQuad', function() {
+                            var data = carousel.data('bicarousel');
+
+                            confirmWrapper.hide();
+                            data.percent = 0;
+                            carousel.data('bicarousel', data);
+                            activeItem.remove();
+                            base.startSlide(carousel);
+                        });
+                    });
+                },
+                closeSuccess: function(base, btn, confirmWrapper, carousel) {
+                    btn.on('click.carousel', function (event) {
+                        if (!btn.hasClass('.showTopSection')) {
+                            event.preventDefault();
+                        }
+                        carousel.removeClass('confirmVisible');
+                        confirmWrapper.animate({
+                            opacity: '0'
+                        }, 200, 'easeInOutQuad', function () {
+                            var elmMain = confirmWrapper.closest('div.item');
+                            elmMain.removeClass('active');
+                            elmMain.next().addClass('active');
+                            elmMain.remove();
+                        });
+                    });
+                },
+                mouseEnter: function (base, carousel) {
+                    carousel.on('mouseenter', function() {
+                        base.stopSlide(base, carousel);
+                    });
+                    return carousel;
+                },
+                mouseLeave: function (base, carousel) {
+                    carousel.on('mouseleave', function() {
+                        base.startSlide(carousel);
+                    });
+                    return carousel;
+                },
+                nextSlide: function (base, carousel) {
+                    var _base = this;
+                    carousel.on('nextslide', function () {
+                        var data = carousel.data('bicarousel'),
+                            activeItem = carousel.find('.item.active'),
+                            activeStatus = activeItem.data('status');
+
+                        if (activeStatus === 5) {
+                            _base.sendStatus(activeItem.data('code'), 6).promise().done(function (data) {
+                                activeItem.data('status', parseInt(data.status_set));
+                            });
+                        }
+
+                        data.percent = 0;
+                        carousel.data('bicarousel', data);
+                        carousel.carousel('next');
+                        base.startSlide(carousel);
+                    });
+                    return carousel;
+                },
+                sendStatus: function (code, status) {
+                    var deferr = $.Deferred();
+                    $.ajax({
+                        url: 'wallet/setCampaignStatus',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            code:   code,
+                            status: status
+                        },
+                        success: function(data) {
+
+                            deferr.resolve(data);
+                        },
+                        error: function () {
+                            deferr.reject();
+                        }
+                    });
+
+                    return deferr;
+                }
+            }
+        },
+        incorrectLoginOutsideTheZoneInformation: function() {
+            var bar = $('.errorAccessAttempts');
+            bar.show();
+            var search = $('#searchBody');
+            if(search.length){ 
+                search.css('top',(parseInt(search.css('top')) + parseInt(bar.height())) + 'px');
+            }
+            $('.hideZoneInformation').click( function() {
+               $.ajax({
+                url: 'settings/channels_geolocalization_delAccess',
+                type: "POST",
+                data : 'id=2',
+                success:function(data, textStatus)
+                    {
+                        bar.hide();
+                        var search = $('#searchBody');
+                        if(search.length){ 
+                            search.css('top',(parseInt(search.css('top')) - parseInt(bar.height())) + 'px');
+                        }
+                        return true;
+                    }
+                });
+            });
+        },
+        showRedirectMessage: function (event, code_error) {
+            /*
+             * Funkcjonalność odpowiedzialna za wyświetlanie komunikatu błędu i przekierowanie
+             */
+            if (void 0 !== code_error){
+                if(code_error == 10095) {
+                    $('.redirectMessage h1').html('Posiadasz już maksymalną liczbę lokat tego typu.');
+                } else if(code_error == 10096) {
+                    $('.redirectMessage h1').html('Posiadasz już maksymalną liczbę produktów tego typu.');
+                } 
+            }
+            $('body').find('.redirectPopUp').show();
+            $('body').find('.closeRedirectMessage').click(function () {
+                window.App.navigate($('body').find('.closeRedirectMessage').data('href'));
+                window.location.reload();
+            });
+        },
+        redirectToSettings: function () {
+            if($('body').hasClass('redirect')){
+                $('.settingsButton').click().promise().done();
+            }
+        },
+        slickGenerate: function (slideToShow, slideToScroll) {
+            var that = this;
+            var selector = $(".regular");
+            
+            if(selector.length) {
+                selector.slick({
+                    dots: true,
+                    infinite: false,
+                    slidesToShow: slideToShow,
+                    slidesToScroll: slideToScroll,
+                    variableWidth: true,
+                    prevArrow:"<button type='button' class='slick-prev pull-left'><i class='icon ico-arrowOpen'></i></button>",
+                    nextArrow:"<button type='button' class='slick-next pull-right'><i class='icon ico-arrowClose'></i></button>"
+                }).on('afterChange', function(event, slick, currentSlide) {
+                    that.gkSliderChange(slick, currentSlide);
+                });
+
+                that.gkSliderChange(selector.slick('getSlick'), selector.slick('slickCurrentSlide'));
+            }
+        },
+        gkSliderChange: function(slick, currentSlide) {
+            var slideElement = $(slick.$slides.get(currentSlide));
+            var ko = slideElement.hasClass('ko'), doc = $('.action-btns.for-ko').find('.float-left .rules');
+
+            if(!slideElement.hasClass('slide-seen')) {
+                $.get('specialOffer/notifySeen/' + slideElement.data('slider') + '/' + slideElement.data('offer')).done(function(data){
+                    if(data.success) {
+                        slideElement.addClass('slide-seen');
+                    }
+                });
+            }
+
+            if(ko) {
+                doc.show();
+            } else {
+                doc.hide();
+            }
+        },
+        shaPaste: function() {
+            var elementPaste = $('.pasteBind');
+            elementPaste.each(function() {
+                var input = $(this);
+                input.unbind('paste');
+                input.data('pasteEventBinded', !1);
+                if(!input.data('pasteEventBinded')) {
+                    input.data('pasteEventBinded', !0);
+                    input.on('paste', function(e) {
+                        e.preventDefault();
+                        var element = $(this), textTrim;
+                        if (e.originalEvent.clipboardData !== undefined){
+                            textTrim = e.originalEvent.clipboardData.getData('text').replace(/\s/g, '');
+                        } else {
+                            textTrim = window.clipboardData.getData('text').replace(/\s/g, '');
+                        }
+                        element.val('');
+                        element.val(textTrim);
+                    });
+                }
+            });
+        },
+        incentives: function(location) {
+            $.ajax({
+                url: 'proposals/getIncentives/' + location,
+                type: 'GET',
+                dataType: 'JSON',
+                success:function(data) {
+                    $.each(data.incentives, function(code, incetive){
+                        var incentiveBlock = $(incetive);
+                        incentiveBlock.children('.product-conversion-box').css({display: 'none'});
+                        $('.h--box-big[data-code="'+code+'"]').prepend(incentiveBlock);
+                        incentiveBlock.children('.product-conversion-box').slideDown('slow');
+                    });
+                }
+            });
+        },
+    });
+    return SiteView;
+});

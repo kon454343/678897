@@ -1,0 +1,763 @@
+define([ 'jquery', 'bootstrap', 'bootstrapTour', 'icheck' ], function($) {
+    $.fn.popover.Constructor.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
+        return placement == 'bottom'      ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2 } :
+               placement == 'top'         ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2 } :
+               placement == 'left'        ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
+               placement == 'right'       ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width } :
+               placement == 'topLeft'     ? { top: pos.top - actualHeight,  left: pos.left + pos.width / 2 - (actualWidth * 0.25) } :
+               placement == 'topRight'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - (actualWidth * 0.75) } :
+               placement == 'rightTop'    ? { top: pos.top + /*pos.height / 2 - */(actualHeight * 0.25), left: pos.left + pos.width } :
+               placement == 'rightBottom' ? { top: pos.top + pos.height / 2 - (actualHeight * 0.75), left: pos.left + pos.width } :
+               placement == 'bottomLeft'  ? { top: pos.top + pos.height, left: pos.left + pos.width / 2 - (actualWidth * 0.25) } :
+               placement == 'bottomRight' ? { top: pos.top + pos.height, left: pos.left + pos.width / 2 - (actualWidth * 0.75) } :
+               placement == 'leftTop'     ? { top: pos.top + /*pos.height / 2 - */(actualHeight * 0.25), left: pos.left - actualWidth } :
+            /* placement == 'leftBottom' */ { top: pos.top + pos.height / 2 - (actualHeight * 0.75), left: pos.left - actualWidth }
+               ;
+    };
+
+    var PageTour = {
+        init: function(page, displayClass, data) {
+            if($('.displayTutorial').length && displayClass == 'verifyUserData'){
+                return;
+            }
+            var _base = this;
+            window.pageTour = new Tour({
+                page: page,
+                displayClass: displayClass,
+                debug: !0,
+                name: 'pageTour',
+                steps: _base.getStep(page, data),
+                storage: !1,
+                backdrop: !0,
+                backdropPadding: 0,
+                delay: !1,
+                template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3><div class=\"popover-bullets\"><ul></ul></div></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"></div><div class=\"popover-stopAll\"><input type=\"checkbox\" name=\"hideAll\" id=\"hideAll\"><label for=\"hideAll\" class=\"\">nie pokazuj mi wskazówek</label></div></div>",
+                _data: data,
+                onNext: function(tour) {
+                    _base.checkForEnd(tour);
+                },
+                onPrev: function(tour) {
+                    _base.checkForEnd(tour);
+                },
+                onStart: function(tour) {
+                    _base.getStepsLength(tour);
+                },
+                onShown: function(tour) {
+                    _base.setBullets(tour);
+                    _base.setButtons(tour);
+                    _base.setCurrentStep(tour);
+                    _base.bindRepeat(tour);
+                    $('.popover [data-role="creditpa"]').each(function () {
+                        $(this).on('click', {_this: App.siteView.view}, App.siteView.view.checkCredit);
+                    });
+                    $('.popover [type="checkbox"]').each(function () {
+                        $(this).iCheck();
+                    });
+                    $('.popover [data-role="redirect"]').each(function () {
+                        $(this).on('click', function () {
+                            tour.end();
+                            window.location.href = $(this).data('href');
+                        });
+                    });
+                    $('.popover [data-role="expandMenu"]').each(function() {
+                        $('.tour-backdrop').remove();
+                        $('.tour-step-background').remove();
+                        $(this).on('click', function (event) {
+                            tour.end();
+                            $(this).openSettings('customer');
+                        });
+                    });
+                    $('.popover [data-role="close"]').each(function() {
+                        $('.tour-backdrop').remove();
+                        $('.tour-step-background').remove();
+                        $(this).on('click', function () {
+                            tour.end();
+                            var name = $(this).data("tooltip");
+                            $.ajax({
+                                url: 'settings/removeTooltip',
+                                type: 'POST',
+                                data: { name: name },
+                                success: function() {
+                                    $('.main').removeClass(name);
+                                }
+                            });
+                        });
+                    });
+                },
+                onHidden: function(tour) {
+                    $('.popover [type="checkbox"]').each(function () {
+                        $(this).iCheck('destroy');
+                    });
+                },
+                onEnd: function(tour) {
+                    _base.endTour(tour);
+                    delete window.pageTour;
+                    
+                    //jeżeli jest zamykany tutorial to sprawdzamy czy jest do pokazania weryfikacja danych
+                    //if(tour._options.displayClass == 'displayTutorial' && $('.verifyUserData').length){
+                        //$.fn.initPageTour('data-confirm');
+                    //}
+                   
+//                   Turned off credit offer by #2041530
+//                    if (page === 'home' && typeof($.fn.checkOfferPopup) === 'function') {
+//                        $.fn.checkOfferPopup();
+//                    }
+                }
+            });
+            window.pageTour.init();
+            window.pageTour.start();
+            
+            // zmiana położenia podświetlenia, po zmianie wielkości okna przeglądarki.
+            window.onresize = function(event) {
+                if(window.pageTour !== undefined && window.pageTour.backdrop.$element !== null && window.pageTour.backdrop.$element !== undefined){
+                    var object = window.pageTour.backdrop.$element.selector;
+                    var overlay = '.tour-step-background';
+
+                    $(overlay).css({
+                        'position': 'absolute',
+                        'top': $(object).offset().top,
+                        'left': $(object).offset().left
+                    });
+                }
+            };
+
+            return window.pageTour;
+        },
+        checkForEnd: function(tour) {
+            var options = tour._options, tourContainer = options.container, tourName = options.name, tourTooltip = $(tourContainer).find('.tour-' + tourName).eq(0), stopAllTutorials = tourTooltip.find('input[type="checkbox"][name="hideAll"]');
+            if (stopAllTutorials.is(':checked')) {
+                tour.end();
+            }
+            return tour;
+        },
+        endTour: function(tour) {
+            var _base = this, options = tour._options, page = options.page, displayClass = options.displayClass, id = _base.getDictionaryId(page), tourContainer = options.container, tourName = options.name, tourTooltip = $(tourContainer).find('.tour-' + tourName).eq(0), stopAllTutorials = tourTooltip.find('input[type="checkbox"][name="hideAll"]'), resultData = {};
+            if (null === id) {
+                return !1;
+            }
+            if (false !== id) {
+                if (!stopAllTutorials.is(':checked')) {
+                    resultData = {
+                        'id_dict_tutorial_types-0': id,
+                        'is_visible-0': !1,
+                        'is_displayed-0': !0
+                    };
+                } else {
+                    for (var key = 0; 6 > key; key++) {
+                        resultData['id_dict_tutorial_types-' + key] = key + 1;
+                        resultData['is_visible-' + key] = !1;
+                        resultData['is_displayed-' + key] = id === key + 1 ? !0 : 'auto';
+                    }
+                }
+                _base.setTutorialVisibility(resultData).promise().done(function() {
+                    var tourParts = $('body').children('.tour-backdrop, .tour-step-background, .tour-pageTour');
+                    tourParts.each(function() {
+                        
+                        if ($(this).length) {
+                            $(this).remove();
+                        }
+                    });
+                    $('body').find('.' + displayClass).removeClass(displayClass);
+                    if(displayClass == 'displayTutorial' && $('.incorrectData').length){
+                        $.fn.initPageTour('incorrect-data');
+                    } else if(displayClass == 'displayTutorial' && $('.verifyUserData').length){
+                        $.fn.initPageTour('data-confirm');
+                    } else if(displayClass == 'displayTutorial' && $('.documentExpires').length){
+                        $.fn.initPageTour('document-expires');
+                    }
+                    
+                });
+            }
+            return tour;
+        },
+        setTutorialVisibility: function(resultData) {
+            var deferr = $.Deferred(), controller = window.App.siteView.currentController, data = {}, resultType = $.type(resultData), key;
+
+            controller = controller.toLowerCase().replace('view', '');
+            if ('boolean' === resultType) {
+                for (key = 0; 6 > key; key++) {
+                    data['id_dict_tutorial_types-' + key] = key + 1;
+                    data['is_visible-' + key] = resultData;
+                    data['is_displayed-' + key] = 'auto';
+                }
+                resultData = data;
+            } else {
+                if ('null' === resultType) {
+                    for (key = 0; 6 > key; key++) {
+                        data['id_dict_tutorial_types-' + key] = key + 1;
+                        data['is_visible-' + key] = 'auto';
+                        data['is_displayed-' + key] = 'auto';
+                    }
+                    resultData = data;
+                } else {
+                    if ('undefined' !== $.type(resultData.is_visible) && 'undefined' !== $.type(resultData.is_displayed)) {
+                        for (key = 0; 6 > key; key++) {
+                            data['id_dict_tutorial_types-' + key] = key + 1;
+                            data['is_visible-' + key] = resultData.is_visible;
+                            data['is_displayed-' + key] = resultData.is_displayed;
+                        }
+                        resultData = data;
+                    }
+                }
+            }
+            $.ajax({
+                url: controller + '/updateTutorialStatus',
+                type: 'POST',
+                dataType: 'json',
+                data: resultData,
+                success: function(data) {
+                    deferr.resolve(data);
+                }
+            });
+            return deferr;
+        },
+        setButtons: function(tour) {
+            var tourContainer = tour._options.container, tourName = tour._options.name, tourTooltip = $(tourContainer).find('.tour-' + tourName).eq(0), tourNav = tourTooltip.find('.popover-navigation'), stepsLength = tour._visibleSteps, currentStep = tour._current, stepsVisibility = tour._stepsVisibility, nextStepsVisibility = stepsVisibility.slice(currentStep + 1), isLastStep = !0, result = '';
+            if (tourNav.children().length) {
+                return !1;
+            }
+            $.map(nextStepsVisibility, function(value) {
+                if (value) {
+                    isLastStep = !1;
+                }
+            });
+            if (isLastStep) {
+                if (stepsLength > 1) {
+                    result += "<button style=\"margin-top: 10px;\" class=\"btn btn-default h--btn h--whiteborder h--green-hover prepend-icon introjs-repeatbutton to-l\" data-role=\"repeat\" data-repeatFrom=\"1\"><i class=\"icon icon--refresh\"></i>Powtórz</button>";
+                }
+                result += '<div style="width: 170px; height: 30px; float: right; margin-top: 10px;"><button class="btn btn-default h--btn h--btn-green h--red-hover introjs-skipbutton to-r" data-role="end">Koniec</button>';
+                if (stepsLength > 1) {
+                    result += "<button class=\"btn btn-default h--btn-arrow-left h--btn-green previous-step mr10 to-r\" data-role=\"prev\">Cofnij</button></div>";
+                }
+            }  else {
+                result += "<button class=\"btn btn-default h--btn h--whiteborder h--red-hover to-l\" data-role=\"end\">Pomiń</button><button class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r\" data-role=\"next\">Dalej</button>";
+                if(currentStep > 0){
+                    result += "<button class=\"btn btn-default h--btn-arrow-left h--btn-green previous-step mr10 to-r\" data-role=\"prev\">Cofnij</button>";
+                }
+            }
+            tourNav.html(result);
+            return tour;
+        },
+        setBullets: function(tour) {
+            var tourContainer = tour._options.container, tourName = tour._options.name, tourTooltip = $(tourContainer).find('.tour-' + tourName).eq(0), tourBullets = tourTooltip.find('.popover-bullets').find('ul'), stepsLength = tour._visibleSteps, i = 0, loopEnd = stepsLength, result = '';
+            if ("home" === tour._options.page) {
+                i = 1;
+                loopEnd = stepsLength + 1;
+            }
+            for (i; loopEnd > i; i++) {
+                result += '<li data-stepNumber="' + i + '">' + i + '</li>';
+            }
+            tourBullets.html(result);
+            return tour;
+        },
+        getStepsLength: function(tour) {
+            var stepsList = tour._options.steps, visibleSteps = 0, stepsVisibility = [];
+            $.map(stepsList, function(value) {
+                var element = value.element;
+                if (element && $(element).length) {
+                    visibleSteps++;
+                    stepsVisibility.push(1);
+                } else {
+                    stepsVisibility.push(0);
+                }
+            });
+            tour._visibleSteps = visibleSteps;
+            tour._stepsVisibility = stepsVisibility;
+            return tour;
+        },
+        bindRepeat: function(tour, _startStep) {
+            var startStep = _startStep || "home" === tour._options.page ? 1 : 0, tourContainer = tour._options.container, tourName = tour._options.name, tourTooltip = $(tourContainer).find('.tour-' + tourName).eq(0), tourRepeat = tourTooltip.find('[data-role="repeat"]');
+            tourRepeat.each(function() {
+                $(this).off('click.pageTour').on('click.pageTour', function() {
+                    tour.goTo(startStep);
+                });
+            });
+            return tour;
+        },
+        setCurrentStep: function(tour) {
+            var tourContainer = tour._options.container, tourName = tour._options.name, tourTooltip = $(tourContainer).find('.tour-' + tourName).eq(0), tourBullets = tourTooltip.find('.popover-bullets'), currentStep = tour._current;
+            tourBullets.find('li').filter(function() {
+                return $(this).data('stepnumber') === currentStep;
+            }).eq(0).addClass('active').siblings().removeClass('active');
+            return tour;
+        },
+        getDictionaryId: function(page) {
+            var id;
+            switch (page) {
+              case 'home':
+                id = 1;
+                break;
+
+              case 'credits':
+                id = 2;
+                break;
+
+              case 'deposits':
+                id = 3;
+                break;
+
+              case 'cards':
+                id = 4;
+                break;
+
+              case 'accounts':
+                id = 5;
+                break;
+
+              case 'broker':
+                id = 6;
+                break;
+
+              case 'wallet-offer':
+              case 'data-confirm':
+                id = false;
+                break;
+
+              default:
+                id = null;
+            }
+            return id;
+        },
+        getStep: function(page, data) {
+            var brand = $('body').data('brand'), childTutorial = $('.h--submenu.context-container').hasClass('childTutorial');
+            
+            steps = [];
+            if ('noblebank' === brand.toLowerCase() || 'private' === brand.toLowerCase()) {
+                
+                if (childTutorial) {
+                    var menu_text = "<p>Umożliwia przejście do produktów.</p>",
+                            account_text = "<p>listę swoich wszystkich kont, osobiste i oszczędnościowe. Klikając na&nbsp;&nbsp;<i class='icon icon--pin'></i> mogą Państwo je przypiąć do strony „Mój Bank”.</p>",
+                            card_text = "<p>posiadane karty debetowe. W tym miejscu można aktywować kartę, nadać lub zmienić PIN do karty, a także czasowo zablokować lub zastrzec kartę.</p>"
+                            ;
+                } else {
+                    var menu_text = "<p>Umożliwia przejście do produktów. Sekcja „Zamów produkt” umożliwia wnioskowanie o dodatkowe produkty. W tym miejscu widoczne są również złożone wnioski.</p>",
+                            account_text = "<p>listę swoich wszystkich kont, osobiste, firmowe i&nbsp;oszczędnościowe. Klikając na&nbsp;&nbsp;<i class='icon icon--pin'></i> mogą Państwo je przypiąć do strony „Mój Bank”.</p>",
+                            card_text = "<p>posiadane karty debetowe. W tym miejscu można aktywować kartę, nadać lub zmienić PIN do karty, a także czasowo zablokować lub zastrzec kartę.</p>"
+                            ;
+                }
+                
+                switch (page) {
+                  case 'home':
+                    steps = [ {
+                        title: "Dzień dobry",
+                        content: "<p>Prosimy zapoznać się z krótką serią wskazówek, które pomogą Państwu w korzystaniu z najważniejszych funkcji w Bankowości Internetowej.</p>",
+                        orphan: !0,
+                        placement: 'top',
+                        template: "<div class=\"popover tour welcome\"><div class=\"popover-wrapper\"><h3 class=\"popover-title\"></h3><div class=\"popover-content\"></div></div><div class=\"popover-navigation\"><button class=\"btn btn-default h--btn h--whiteborder h--green-hover append-icon\" data-role=\"next\">ZACZYNAMY <i class=\"icon icon--arrow-right\"></i></button></div></div>"
+                    }, {
+                        element: '.main .column > .h--box-big:eq(0)',
+                        title: "Kafel konta:",
+                        content: "<p>Wyświetla aktualny stan dostępnych środków. Umożliwia wykonanie przelewów, przejście do historii i szczegółów konta.</p>",
+                        placement: 'right'
+                    }, {
+                        element: '.h--menu .wrapper',
+                        title: "Menu:",
+                        content: menu_text,
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu',
+                        title: "Panel Osobisty:",
+                        content: "<p>Szybki dostęp do najważniejszych funkcji: historii, odbiorców zdefiniowanych, przyszłych płatności, pomocy i kontaktu.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu .ui--icon-slice-przyszle-platnosci',
+                        title: "Zlecenia stałe:",
+                        content: "<p>Wybierz opcję Przyszłe płatności i dodaj zlecenie stałe na dowolny rachunek.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu .ui--icon-slice-koperta',
+                        title: "Kontakt:",
+                        content: "<p>Jeśli masz do nas pytanie, wybierz opcję kontakt z bankiem <i class=\"icon icon--arrow-right\"></i> napisz wiadomość i określ temat który Cię interesuje.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu .ui--icon-slice-ustawienia',
+                        title: "Ustawienia:",
+                        content: "<p>W tym miejscu możesz m.in. w każdej chwili: nadać własny login do bankowości, zmienić swoje dane, zmienić hasło i włączyć lub wyłączyć jego maskowanie.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.js-logout',
+                        content: '<p>Przypominamy o&nbsp;każdorazowym wylogowaniu się po zakończonej pracy! <i class="icon icon--power"></i></p> ',
+                        placement: 'bottom'
+                    } ];
+                    break;
+
+                  case 'accounts':
+                      
+                      step_offer = {};
+                        if (!childTutorial) {
+                            step_offer = {
+                                element: '.column.last',
+                                title: "Oferta dla Ciebie:",
+                                content: '<p>wyjątkowe oferty i promocje przygotowane specjalnie dla Państwa.</p> ',
+                                placement: 'left'
+                            };
+                        }
+                      
+                    steps = [ {
+                        element: '.h--menu [href="#accounts/index"]',
+                        title: "Tutaj znajdą Państwo:",
+                        content: account_text,
+                        placement: 'bottom'
+                    }, {
+                        element: '.personal_account:not(.column-4)',
+                        title: "Tutaj znajdą Państwo:",
+                        content: "<p>listę swoich kont osobistych, sprawdzą historię transakcji oraz zrobią przelew.</p>",
+                        placement: 'rightTop'
+                    }, {
+                        element: '.personal_account.column-4',
+                        title: "Tutaj znajdą Państwo:",
+                        content: "<p>listę swoich kont osobistych, sprawdzą historię transakcji oraz zrobią przelew.</p>",
+                        placement: 'top'
+                    }, {
+                        element: '.company_account',
+                        title: "Tutaj znajdą Państwo:",
+                        content: "<p>listę swoich kont firmowych, sprawdzą historię transakcji oraz zrobią przelew.</p>",
+                        placement: 'leftTop'
+                    }, {
+                        element: '.savings_account',
+                        title: "Tutaj znajdą Państwo:",
+                        content: "<p>konta oszczędnościowe, dokonają wpłaty i poznają szczegóły swoich oszczędności.</p>",
+                        placement: 'leftTop'
+                    }, 
+                        step_offer
+                    ];
+                    break;
+
+                  case 'cards':
+                    steps = [ {
+                        element: '.h--menu [href="#cards/index"]',
+                        title: "Tutaj znajdą Państwo:",
+                        content: "<p>posiadane karty debetowe i kredytowe. W tym miejscu można aktywować kartę, nadać lub zmienić PIN do karty, a także czasowo zablokować lub zastrzec kartę.</p>",
+                        placement: 'bottom'
+                    } ];
+                    break;
+
+                  case 'credits':
+                    steps = [ {
+                        element: '.h--menu [href="#credits/index"]',
+                        title: "Tutaj znajdą Państwo",
+                        content: "<p>szczegółowe zestawienie swoich kredytów gotówkowych,  hipotecznych oraz limitu w koncie.</p>",
+                        placement: 'bottom'
+                    } ];
+                    break;
+
+                  case 'deposits':
+                    steps = [ {
+                        element: '.h--menu [href="#deposits/index"]',
+                        title: "Tutaj znajdą Państwo:",
+                        content: "<p>swoje oszczędności, prześledzą plany oszczędzania, założą i zlikwidują lokaty.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--submenu-green',
+                        title: "Państwa oszczędności:",
+                        content: "<p>możliwość zarządzania swoimi oszczędnościami, zakładania nowych lokat oraz zrywania obecnych.</p>",
+                        placement: 'left'
+                    }, {
+                        element: 'button[data-link-href="deposits/offer"]',
+                        title: "Oszczędzanie:",
+                        content: "<p>mają Państwo możliwość założenia lokaty, korzystając z&nbsp;dwóch podglądów – jednego w formie butiku i&nbsp;drugiego w formie listy lokat. Sami decydują Państwo co jest wygodniejsze.</p>",
+                        placement: 'left'
+                    } ];
+                    break;
+
+                  case 'broker':
+                    steps = [ {
+                        element: '.h--menu [href="#broker/index"]',
+                        title: "Inwestycje:",
+                        content: "<p>tu mogą Państwo zarządzać swoimi inwestycjami: kupno&nbsp;i&nbsp;sprzedaż, nowe zlecenie, wpłata&nbsp;i&nbsp;wypłata.</p>",
+                        placement: 'right'
+                    } ];
+                    break;
+
+                  case 'wallet-offer':
+                    if (data['steps']['4-14']) {
+                        steps.push({
+                            element: '.h--menu [href="#proposals/index"]',
+                            title: "Czeka na Ciebie oferta specjalna!",
+                            content: "<p style=\"margin-bottom: 0px\">Nawet "+data['max_amount']+" zł kredytu!<br/>Szybki kredyt gotówkowy to:</p><ul style=\"padding: 0 0 0 18px\"><li>pieniądze nawet w 15 minut</li><li>bez zaświadczeń o zarobkach</li><li>bez wychodzenia z domu</li>",
+                            placement: 'bottomRight',
+                            backdrop: 0,
+//                            template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\" style=\"border-bottom: none; padding-bottom: 0px;\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r\" data-role=\"redirect\" data-href=\"" + data['steps']['4-14'] + "\">Zobacz więcej</button>",
+                                template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"h--btn h--whiteborder h--red-hover close-button introjs-skipbutton to-l\" data-role=\"end\">Zamknij</button><button class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r\" data-role=\"redirect\" data-href=\"" + data['steps']['4-14'] + "\">Zobacz więcej</button>",
+                            });
+                        }
+                        else if (data['steps']['4-18']) {
+                            steps.push({
+                                element: '.h--menu [href="#proposals/index"]',
+                                title: "Czeka na Ciebie oferta specjalna!",
+                                content: "<p style=\"margin-bottom: 0px\">Nawet " + data['max_amount'] + " zł kredytu!<br/>Kredyt Plus to:</p><ul style=\"padding: 0 0 0 18px\">" +
+                                "<li>Spłata dotychczasowego zobowiązania</li>" +
+                                "<li>Kredyt dostępny nawet w kilka minut</li>" +
+                                "<li>Bez zaświadczeń o zarobkach</li>" +
+                                "<li>Bez wychodzenia z domu</li>",
+                                placement: 'bottomRight',
+                                backdrop: 0,
+                                template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"h--btn h--whiteborder h--red-hover close-button introjs-skipbutton to-l\" data-role=\"end\">Zamknij</button><a class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r creditPA\"  data-credit=\"4-18\" data-role=\"creditpa\" >Zobacz więcej</a>",
+                            });
+                        }
+                        else if (data['steps']['4-19']) {
+                            steps.push({
+                                element: '.h--menu [href="#proposals/index"]',
+                                title: "Czeka na Ciebie oferta specjalna!",
+                                content: "<p style=\"margin-bottom: 0px\">Nawet " + data['max_amount'] + " zł kredytu!<br/>Kredyt gotówkowy tylko dla Ciebie to:</p><ul style=\"padding: 0 0 0 18px\">" +
+                                "<li>Kredyt dostępny nawet w kilka minut</li>" +
+                                "<li>Bez zaświadczeń o zarobkach</li>" +
+                                "<li>Bez wychodzenia z domu</li>",
+                                placement: 'bottomRight',
+                                backdrop: 0,
+                                template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"h--btn h--whiteborder h--red-hover close-button introjs-skipbutton to-l\" data-role=\"end\">Zamknij</button><a class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r creditPA\"  data-credit=\"4-19\" data-role=\"creditpa\" >Zobacz więcej</a>",
+                            });
+                        }
+                        break;
+                    case 'incorrect-data':
+                    steps = [{
+                        element: '.h--icon-menu .icon--menu-settings',
+                        content: "<p>Zaktualizuj dane dokumentu tożsamości. Obecne dane są nieprawidłowe.</p>",
+                        placement: 'bottom',
+                        template: "<div class=\"popover tour tour-pageTour tour-pageTour-0 fade bottom in\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"></div><div class=\"popover-content popover-noborder\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn-default h--btn-arrow-right h--btn-green h--red-hover to-r showTopSection goToCategory\" data-role=\"expandMenu\">Dalej</button></div>"
+                    }];
+                    break;                    
+                  case 'data-confirm':
+                    steps = [ {
+                        element: '.h--icon-menu .icon--menu-settings',
+                        content: "<p>Potwierdź lub zaktualizuj swoje dane.</p><p>Aktualne dane poprawiają jakość obsługi.</p>",
+                        placement: 'bottom',
+                        template: "<div class=\"popover tour tour-pageTour tour-pageTour-0 fade bottom in verifyDataPopup\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"></div><div class=\"popover-content popover-noborder\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn-default h--btn-arrow-right h--btn-green h--red-hover to-r showTopSection goToCategory\" data-role=\"expandMenu\">Dalej</button></div>"
+                    }];
+                    break;
+                case 'document-expires':
+                    steps = [ {
+                        element: '.h--icon-menu .icon--menu-settings',
+                        content: "<p>Kończy się ważność dokumentu tożsamości. Pamiętaj o zaktualizowaniu swoich danych.</p>",
+                        placement: 'bottom',
+                        template: "<div class=\"popover tour tour-pageTour tour-pageTour-0 fade bottom in\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"></div><div class=\"popover-content popover-noborder\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn btn-default h--btn h--btn-green h--red-hover to-r showTopSection goToCategory\" data-tooltip=\"documentExpires\" data-role=\"close\">Zamknij</button></div>"
+                    }];
+                    break;
+                }
+            } else {
+                
+                if (childTutorial) {
+                    var menu_text = "<p>Umożliwia przejście do produktów.</p>",
+                            account_text = "<p>listę swoich wszystkich kont, osobiste i oszczędnościowe. Klikając na&nbsp;&nbsp;<i class='icon icon--pin'></i> możesz je przypiąć do strony “mój bank”.</p>",
+                            card_text = "<p>karty debetowe, które posiadasz. Aktywujesz kartę, nadasz lub zmienisz jej PIN, czasowo zablokujesz lub zastrzeżesz kartę.</p>"
+                            ;
+                } else {
+                    var menu_text = "<p>Umożliwia przejście do produktów. Sekcja „Zamów produkt” umożliwia wnioskowanie o dodatkowe produkty. W tym miejscu widoczne są również złożone wnioski.</p>",
+                            account_text = "<p>listę swoich wszystkich kont, osobiste, firmowe i&nbsp;oszczędnościowe. Klikając na&nbsp;&nbsp;<i class='icon icon--pin'></i> możesz je przypiąć do strony “mój bank”.</p>",
+                            card_text = "<p>karty debetowe i kredytowe, które posiadasz. Aktywujesz kartę, nadasz lub zmienisz jej PIN, czasowo zablokujesz lub zastrzeżesz kartę.</p>"
+                            ;
+                }
+                
+                switch (page) {
+                  case 'home':
+                    steps = [ {
+                        title: "Dzień dobry",
+                        content: "<p>Prosimy zapoznać się z krótką serią wskazówek, które pomogą Państwu w korzystaniu z najważniejszych funkcji w Bankowości Internetowej.</p>",
+                        orphan: !0,
+                        placement: 'top',
+                        template: "<div class=\"popover tour welcome\"><div class=\"popover-wrapper\"><h3 class=\"popover-title\"></h3><div class=\"popover-content\"></div></div><div class=\"popover-navigation\"><button class=\"btn btn-default h--btn h--whiteborder h--green-hover append-icon\" data-role=\"next\">ZACZYNAMY <i class=\"icon icon--arrow-right\"></i></button></div></div>"
+                    }, {
+                        element: '.main .column > .h--box-big:eq(0)',
+                        title: "Kafel konta:",
+                        content: "<p>Wyświetla aktualny stan dostępnych środków. Umożliwia wykonanie przelewów, przejście do historii i szczegółów konta.</p>",
+                        placement: 'right'
+                    }, {
+                        element: '.h--menu .wrapper',
+                        title: "Menu:",
+                        content: menu_text,
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu',
+                        title: "Panel Osobisty:",
+                        content: "<p>Szybki dostęp do najważniejszych funkcji: historii, odbiorców zdefiniowanych, przyszłych płatności, pomocy i kontaktu.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu .ui--icon-slice-przyszle-platnosci',
+                        title: "Zlecenia stałe:",
+                        content: "<p>Wybierz opcję Przyszłe płatności i dodaj zlecenie stałe na dowolny rachunek.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu .ui--icon-slice-koperta',
+                        title: "Kontakt:",
+                        content: "<p>Jeśli masz do nas pytanie, wybierz opcję kontakt z bankiem <i class=\"icon icon--arrow-right\"></i> napisz wiadomość i określ temat który Cię interesuje.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--icon-menu .ui--icon-slice-ustawienia',
+                        title: "Ustawienia:",
+                        content: "<p>W tym miejscu możesz m.in. w każdej chwili: nadać własny login do bankowości, zmienić swoje dane, zmienić hasło i włączyć lub wyłączyć jego maskowanie.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.js-logout',
+                        content: '<p>Pamiętaj o&nbsp;każdorazowym wylogowaniu się po zakończonej pracy! <i class="icon icon--power"></i></p> ',
+                        placement: 'bottom'
+                    } ];
+                    break;
+
+                  case 'accounts':
+                      
+                      step_offer = {};
+                        if (!childTutorial) {
+                            step_offer = {
+                                element: '.column.last',
+                                title: "Oferta dla Ciebie:",
+                                content: '<p>wyjątkowe oferty i promocje przygotowane specjalnie dla Ciebie.</p> ',
+                                placement: 'left'
+                            };
+                        }
+                      
+                    steps = [ {
+                        element: '.h--menu [href="#accounts/index"]',
+                        title: "Tutaj znajdziesz:",
+                        content: account_text,
+                        placement: 'bottom'
+                    }, {
+                        element: '.personal_account:not(.column-4)',
+                        title: "Tutaj znajdziesz:",
+                        content: "<p>listę swoich kont osobistych, sprawdzisz historię transakcji oraz zrobisz przelew.</p>",
+                        placement: 'rightTop'
+                    }, {
+                        element: '.personal_account.column-4',
+                        title: "Tutaj znajdziesz:",
+                        content: "<p>listę swoich kont osobistych, sprawdzisz historię transakcji oraz zrobisz przelew.</p>",
+                        placement: 'top'
+                    }, {
+                        element: '.company_account',
+                        title: "Tutaj znajdziesz:",
+                        content: "<p>listę swoich kont firmowych, sprawdzisz historię transakcji oraz zrobisz przelew.</p>",
+                        placement: 'leftTop'
+                    }, {
+                        element: '.savings_account',
+                        title: "Tutaj znajdziesz:",
+                        content: "<p>konta oszczędnościowe, dokonasz wpłaty i&nbsp;poznasz szczegóły swoich oszczędności.</p>",
+                        placement: 'leftTop'
+                    },
+                        step_offer
+                    ];              
+                
+                
+                    break;
+
+                  case 'cards':
+                    steps = [ {
+                        element: '.h--menu [href="#cards/index"]',
+                        title: "Tutaj znajdziesz:",
+                        content: card_text,
+                        placement: 'bottom'
+                    } ];
+                    break;
+
+                  case 'credits':
+                    steps = [ {
+                        element: '.h--menu [href="#credits/index"]',
+                        title: "Tutaj znajdziesz:",
+                        content: "<p>szczegółowe zestawienie Twoich kredytów gotówkowych, hipotecznych oraz limitu w&nbsp;koncie. </p>",
+                        placement: 'bottom'
+                    } ];
+                    break;
+
+                  case 'deposits':
+                    steps = [ {
+                        element: '.h--menu [href="#deposits/index"]',
+                        title: "Tutaj znajdziesz:",
+                        content: "<p>swoje oszczędności, prześledzisz plany oszczędzania, założysz i&nbsp;zlikwidujesz lokaty.</p>",
+                        placement: 'bottom'
+                    }, {
+                        element: '.h--submenu-green',
+                        title: "Twoje oszczędności:",
+                        content: "<p>zarządzaj swoimi oszczędnościami, zakładaj nowe lokaty, przedłużaj i&nbsp;zrywaj obecne.</p>",
+                        placement: 'left'
+                    }, {
+                        element: 'button[data-link-href="deposits/offer"]',
+                        title: "Oszczędzaj:",
+                        content: "<p>masz możliwość założenia lokaty korzystając z&nbsp;dwóch podglądów, jednego w&nbsp;formie butiku i&nbsp;drugiego w&nbsp;formie listy lokat, sam zdecyduj co jest dla Ciebie wygodniejsze.</p>",
+                        placement: 'left'
+                    } ];
+                    break;
+
+                  case 'broker':
+                    steps = [ {
+                        element: '.h--menu [href="#broker/index"]',
+                        title: "Inwestycje:",
+                        content: "<p>Zarządzaj swoimi inwestycjami: kupno i&nbsp;sprzedaż, nowe zlecenie, wpłata i&nbsp;wypłata. </p>",
+                        placement: 'right'
+                    } ];
+                    break;
+
+                  case 'wallet-offer':
+                    if (data['steps']['4-14']) {
+                        steps.push({
+                            element: '.h--menu [href="#proposals/index"]',
+                            title: "Czeka na Ciebie oferta specjalna!",
+                            content: "<p style=\"margin-bottom: 0px\">Nawet "+data['max_amount']+" zł kredytu!<br/>Szybki kredyt gotówkowy to:</p><ul style=\"padding: 0 0 0 18px\"><li>pieniądze nawet w 15 minut</li><li>bez zaświadczeń o zarobkach</li><li>bez wychodzenia z domu</li>",
+                            placement: 'bottomRight',
+                            backdrop: 0,
+//                            template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\" style=\"border-bottom: none; padding-bottom: 0px;\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r\" data-role=\"redirect\" data-href=\"" + data['steps']['4-14'] + "\">Zobacz więcej</button>",
+                            template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"h--btn h--whiteborder h--red-hover close-button introjs-skipbutton to-l\" data-role=\"end\">Zamknij</button><button class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r\" data-role=\"redirect\" data-href=\"" + data['steps']['4-14'] + "\">Zobacz więcej</button>",
+                        });
+                        }
+                        else if (data['steps']['4-18']) {
+                            steps.push({
+                                element: '.h--menu [href="#proposals/index"]',
+                                title: "Czeka na Ciebie oferta specjalna!",
+                                content: "<p style=\"margin-bottom: 0px\">Nawet " + data['max_amount'] + " zł kredytu!<br/>Kredyt Plus to:</p><ul style=\"padding: 0 0 0 18px\">" +
+                                "<li>Spłata dotychczasowego zobowiązania</li>" +
+                                "<li>Kredyt dostępny nawet w kilka minut</li>" +
+                                "<li>Bez zaświadczeń o zarobkach</li>" +
+                                "<li>Bez wychodzenia z domu</li>",
+                                placement: 'bottomRight',
+                                backdrop: 0,
+                                template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"h--btn h--whiteborder h--red-hover close-button introjs-skipbutton to-l\" data-role=\"end\">Zamknij</button><a class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r creditPA\"  data-credit=\"4-18\" data-role=\"creditpa\" >Zobacz więcej</a>",
+                            });
+                        }
+                        else if (data['steps']['4-19']) {
+                            steps.push({
+                                element: '.h--menu [href="#proposals/index"]',
+                                title: "Czeka na Ciebie oferta specjalna!",
+                                content: "<p style=\"margin-bottom: 0px\">Nawet " + data['max_amount'] + " zł kredytu!<br/>Kredyt gotówkowy tylko dla Ciebie to:</p><ul style=\"padding: 0 0 0 18px\">" +
+                                "<li>Kredyt dostępny nawet w kilka minut</li>" +
+                                "<li>Bez zaświadczeń o zarobkach</li>" +
+                                "<li>Bez wychodzenia z domu</li>",
+                                placement: 'bottomRight',
+                                backdrop: 0,
+                                template: "<div class=\"popover tour\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"><h3 class=\"popover-title\"></h3></div><div class=\"popover-content\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"h--btn h--whiteborder h--red-hover close-button introjs-skipbutton to-l\" data-role=\"end\">Zamknij</button><a class=\"btn btn-default h--btn-arrow-right h--btn-green h--green-hover to-r creditPA\"  data-credit=\"4-19\" data-role=\"creditpa\" >Zobacz więcej</a>",
+                            });
+                        }
+                        break;
+
+                    case 'incorrect-data':
+                        steps = [{
+                            element: '.h--icon-menu .icon--menu-settings',
+                            content: "<p>Zaktualizuj dane dokumentu tożsamości. Obecne dane są nieprawidłowe.</p>",
+                            placement: 'bottom',
+                            template: "<div class=\"popover tour tour-pageTour tour-pageTour-0 fade bottom in\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"></div><div class=\"popover-content popover-noborder\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn-default h--btn-arrow-right h--btn-green h--red-hover to-r showTopSection goToCategory\" data-role=\"expandMenu\">Dalej</button></div>"
+                        }];
+                        break;
+
+                    case 'data-confirm':
+                        steps = [{
+                            element: '.h--icon-menu .icon--menu-settings',
+                        content: "<p>Potwierdź lub zaktualizuj swoje dane.</p><p>Aktualne dane poprawiają jakość obsługi.</p>",
+                        placement: 'bottom',
+                        template: "<div class=\"popover tour tour-pageTour tour-pageTour-0 fade bottom in verifyDataPopup\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"></div><div class=\"popover-content popover-noborder\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn-default h--btn-arrow-right h--btn-green h--red-hover to-r showTopSection goToCategory\" data-role=\"expandMenu\">Dalej</button></div>"
+                    }];
+                    break;
+                  case 'document-expires':
+                    steps = [ {
+                        element: '.h--icon-menu .icon--menu-settings',
+                        content: "<p>Kończy się ważność dokumentu tożsamości. Pamiętaj o zaktualizowaniu swoich danych.</p>",
+                        placement: 'bottom',
+                        template: "<div class=\"popover tour tour-pageTour tour-pageTour-0 fade bottom in\"><div class=\"arrow\"></div><div class=\"popover-wrapper\"><div class=\"popover-header clearfix\"></div><div class=\"popover-content popover-noborder\"></div></div><div class=\"popover-navigation clearfix\"><button class=\"btn btn-default h--btn h--btn-green h--red-hover to-r showTopSection goToCategory\" data-tooltip=\"documentExpires\" data-role=\"close\">Zamknij</button></div>"
+                    }];
+                    break;
+                }
+            }
+            return steps;
+        }
+    };
+    $.fn.initPageTour = function(page, displayClass, data) {
+        return PageTour.init(page, displayClass, data);
+    };
+    $.fn.setTutorialVisibility = function(is_visible, is_displayed, id_pages) {
+        return PageTour.setTutorialVisibility(is_visible, is_displayed, id_pages);
+    };
+});

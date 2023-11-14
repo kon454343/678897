@@ -1,0 +1,67 @@
+.popupWindowContainer {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+.popupWindow {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 100px;
+    transform: translate(-50%);
+    font-family: Roboto;
+    font-size: 14px;
+    z-index: 9999;
+}
+.popupWindow-content {
+    background-color: #ffffff;
+    border-radius: 0px;
+    padding: 50px 45px 40px;
+    max-width: 730px;
+    width: auto;
+}
+.popupWindow-title {
+    font-size: 30px;
+    color: #06b942;
+    margin-bottom: 30px;
+}
+.popupWindow-message {
+    font-size: 16px;
+    line-height: 1.38;
+    color: #3b3e44;
+}
+.popupWindow-buttons {
+    border-radius: 0px;
+    width: 100%;
+    text-align: right;
+    border-top: 1px solid #dddddd;
+    margin: 40px 0px 0px;
+    padding: 20px 0px 0px;
+}
+.popupWindow .buttons-area > *.float-left {
+    margin-right: 30px;
+}
+.popupWindow .buttons-area > *.float-right {
+    margin-left: 30px;
+}
+
+.popupWindow-buttons .btn-primary {
+    border: 1px solid #06b942;
+    background-color: #06b942;
+}
+
+.popupWindow-buttons .btn-primary:hover {
+    border: 1px solid #1e1e1e;
+    background-color: #1e1e1e;
+}
+
+.popupWindow-buttons .btn-lg {
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 12px 30px;
+}

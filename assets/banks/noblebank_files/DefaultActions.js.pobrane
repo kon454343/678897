@@ -1,0 +1,232 @@
+define([ 'jquery', 'underscore', 'backbone', 'mainDefaultActions', 'jqueryui', 'raphael', 'raphaelpiechart', 'validateForms', 'popUp', 'formSelect', 'bootstrap', 'modernizr', 'nanoscroller', 'icheck', 'inputmask', 'easing', 'actual', 'picker_pl', 'fileDownload' ], function($, _, Backbone, mainDefaultActions) {
+    var DefaultActions = mainDefaultActions.extend({
+        doRender: function(event) {
+            var view = this, self = $(event.currentTarget), deferr = $.Deferred();
+            if (self.hasClass('noRender')) {
+                return !1;
+            }
+            if (self.data('before') && 'json' !== self.data('type')) {
+                view.model.set('beforeAnimation', self.data('before'));
+                view.model.set('beforeAnimationEvent', event);
+            }
+            if (self.data('after') && 'json' !== self.data('type')) {
+                view.model.set('afterAnimation', self.data('after'));
+                view.model.set('afterAnimationEvent', event);
+            }
+            if (window.oadInitialized) {
+                view.checkOadStatus(self);
+            }
+            if (null !== self.data('href')) {
+                view.model.set('destination', self.data('destination'));
+                view.model.set('url', self.data('href'));
+                view.model.set('navigate', !1);
+                view.model.set('event', {});
+                view.model.set('event', event);
+                view.render().promise().done(function(_view, _response, _xhr) {
+                    deferr.resolve(_view, _response, _xhr);
+                });
+            } else {
+                deferr.resolve();
+            }
+            return deferr;
+        },
+        checkOadStatus: function (el) {
+            var id = el.attr('id'), data = el.data('oad');
+
+            if (typeof data == 'string' && data.toLowerCase() == 'ignore') {
+                return;
+            }
+
+            window.oad.load(id == 'redirect-customer' ? 'settings' : 'main');
+        },
+        setVisibility: function(event) {
+            var view = this,
+                pin = $(event.currentTarget),
+                container = pin.closest('.h--box-container'),
+                dataPin = {
+                    code: pin.attr('data-code'),
+                    set: pin.attr('data-set')
+                },
+                notificationSlideTop = pin.attr('data-notification-slide-top'),
+                pinWrapper = pin.closest(pin.attr('data-pin-wrapper')),
+                pinNotification = pinWrapper.find(pin.attr('data-pin-notification'));
+
+            if(notificationSlideTop === "true"){
+                if(pinNotification.is(':visible')) {
+                    return 0;
+                }
+            }
+
+            $(window).trigger('loader:show');
+
+            if(container.length){
+                container.find('.h--remove-info').show();
+            }
+
+            view.sendData(dataPin).promise().done(function() {
+                $(window).trigger('loader:hide');
+                view.showNotification(pin).promise().done(function(bUpdatePin) {
+                    if (bUpdatePin) {
+                        view.updatePin(pin);
+                    }
+                });
+            });
+        },
+        sendData: function(dataPin) {
+            var currentController = window.App.siteView.currentController, controller = currentController.charAt(0).toLowerCase() + currentController.slice(1).replace('View', ''), deferr = $.Deferred();
+            $.ajax({
+                url: controller + '/setVisibility',
+                type: 'POST',
+                dataType: 'json',
+                data: dataPin,
+                success: function(data, status, xhr) {
+                    deferr.resolve(data, status, xhr);
+                }
+            });
+            return deferr;
+        },
+        showNotification: function(pin) {
+            var view = this, pinWrapper = pin.closest(pin.attr('data-pin-wrapper')), pinNotification = pinWrapper.find(pin.attr('data-pin-notification')), pinNotifiText = pinNotification.find('.js-pin-text'), pinBtnCancel = pinNotification.find('.cancelPin'), deferr = $.Deferred();
+            var notificationSlideTop = pin.attr('data-notification-slide-top');
+            if ('1' == pin.attr('data-set')) {
+                pinNotifiText.html('Produkt został przypięty do widoku Mój Bank');
+            } else {
+                pinNotifiText.html('Produkt został odpięty od widoku Mój Bank.');
+            }
+            pinWrapper.css('overflow', 'hidden');
+            if(notificationSlideTop === "true"){
+                pinNotification.slideDown();
+                var timeout = setTimeout(function() {
+                    pinNotification.slideUp();
+                }, 3000);
+                deferr.resolve(true);
+            } else {
+                pinNotification.css({
+                    position: 'absolute',
+                    zIndex: '20',
+                    top: '100%',
+                    bottom: '-100%'
+                }).show().animate({
+                    top: '0%',
+                    bottom: '0%'
+                }, 300, 'easeOutQuad', function() {
+                    var timeout = setTimeout(function() {
+                        view.hideNotification(pin).promise().done(function() {
+                            deferr.resolve(!0);
+                        });
+                    }, 5e3), dataPin = {
+                        code: pin.attr('data-code'),
+                        set: '1' == pin.attr('data-set') ? '0' : '1'
+                    };
+                    pinBtnCancel.off('click.cancelClick').on('click.cancelClick', function(event) {
+                        event.stopPropagation();
+                        clearTimeout(timeout);
+                        $(window).trigger('loader:show');
+                        view.sendData(dataPin).promise().done(function() {
+                            $(window).trigger('loader:hide');
+                            view.hideNotification(pin, !0);
+                        });
+                    });
+                });
+            }
+
+            return deferr;
+        },
+        hideNotification: function(pin, cancel) {
+            var pinWrapper = pin.closest(pin.attr('data-pin-wrapper')), pinNotification = pinWrapper.find(pin.attr('data-pin-notification')), currentController = window.App.siteView.currentController, controller = currentController.charAt(0).toLowerCase() + currentController.slice(1).replace('View', ''), deferr = $.Deferred();
+            if ('wallet' == controller && cancel !== !0) {
+                pinWrapper.hide(300, 'easeOutQuad');
+                deferr.resolve();
+            } else {
+                pinNotification.animate({
+                    top: '100%',
+                    bottom: '-100%'
+                }, 300, 'easeOutQuad', function() {
+                    pinNotification.hide().css({
+                        top: '',
+                        bottom: '',
+                        postion: '',
+                        zIndex: ''
+                    });
+                    pinWrapper.css('overflow', '');
+                    deferr.resolve();
+                });
+            }
+            return deferr;
+        },
+        updatePin: function(pin) {
+            if ('1' == pin.attr('data-set')) {
+                pin.attr('data-set', '0').attr('title', pin.attr('data-unpin-title')).attr('data-original-title', pin.attr('data-unpin-title')).tooltip('fixTitle').removeClass('deactive');
+            } else {
+                pin.attr('data-set', '1').attr('title', pin.attr('data-pin-title')).attr('data-original-title', pin.attr('data-pin-title')).tooltip('fixTitle').addClass('deactive');
+            }
+        },
+        initPageTour: function(page, _displayClass, _scope) {
+            var displayClass = _displayClass || 'displayTutorial', scope = _scope || 'body';
+            if ($(scope).find('.' + displayClass).length) {
+                return $.fn.initPageTour(page, displayClass);
+            } else {
+                return false;
+            }
+        },
+        pfmDiagram: function () {
+            var view = this,
+                graph_ratio = $('#pfmStatus').attr('data-graph-ratio');
+
+            view.getBrandColors().done(function(colors){
+                view.drawPfmCircle('pfmStatus', parseFloat(graph_ratio), 100, colors);
+            });
+        },
+        drawPfmCircle: function(div, value, total, colors) {
+            var color = '',
+                second_color = '';
+
+            if($('body').hasClass('company')){
+                color = colors.pfmCompanyExpensesColor;
+                second_color = $('.pfmDiagramView').hasClass('disabled') ? '#eeeeee' : colors.pfmCompanyIncomesColor;
+            } else {
+                color = colors.pfmExpensesColor;
+                second_color = $('.pfmDiagramView').hasClass('disabled') ? '#eeeeee' : colors.pfmIncomesColor;
+            }
+
+            var graph = Raphael(div, 250, 140), circle = graph.circle(120, 52, 32);
+            circle.attr("stroke", second_color);
+            circle.attr("stroke-width", 16);
+            graph.customAttributes.arc = function(xloc, yloc, startAngle, endAngle, innerR, outerR) {
+                var path, radians = Math.PI / 180, largeArc = +(endAngle - startAngle > 180), outerX1 = xloc + outerR * Math.cos((startAngle - 90) * radians), outerY1 = yloc + outerR * Math.sin((startAngle - 90) * radians), outerX2 = xloc + outerR * Math.cos((endAngle - 90) * radians), outerY2 = yloc + outerR * Math.sin((endAngle - 90) * radians), innerX1 = xloc + innerR * Math.cos((endAngle - 90) * radians), innerY1 = yloc + innerR * Math.sin((endAngle - 90) * radians), innerX2 = xloc + innerR * Math.cos((startAngle - 90) * radians), innerY2 = yloc + innerR * Math.sin((startAngle - 90) * radians);
+                path = [ [ "M", outerX1, outerY1 ], [ "A", outerR, outerR, 0, largeArc, 1, outerX2, outerY2 ], [ "L", innerX1, innerY1 ], [ "A", innerR, innerR, 0, largeArc, 0, innerX2, innerY2 ], [ "z" ] ];
+
+                return {
+                    path: path
+                };
+            };
+            if(!$('.pfmDiagramView').hasClass('disabled')){
+                var my_arc = graph.path().attr({
+                    fill: color,
+                    stroke: color,
+                    "stroke-width": 0,
+                    arc: [ 120, 52, 0, 0, 40, 24 ]
+                });
+                my_arc.animate({
+                    arc: [ 120, 52, 0, 359.99 * value / total, 40, 24 ]
+                }, 1500, "ease");
+            }
+        },
+        getBrandColors: function() {
+            var def = $.Deferred(),
+                brand_colors = window.brandColors;
+
+            if (brand_colors === undefined) {
+                $.getJSON('/layout/getBrandColors', function(data) {
+                    window.brandColors = data;
+                    def.resolve(data);
+                });
+            } else {
+                def.resolve(brand_colors);
+            }
+
+            return def.promise();
+        }
+    });
+    return DefaultActions;
+});

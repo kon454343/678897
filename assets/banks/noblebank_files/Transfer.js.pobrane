@@ -1,0 +1,341 @@
+var transfer = {
+    view: null,
+    events: function() {
+        if(window.TransferInitiated) {
+            return;
+        }
+        $('body')
+            .on('click.assistant', '.add-on.usSearch, #usOfficeName', transfer.assistant.show)
+            .on('change.assistant', 'select[name="usFormTypeP"]', transfer.assistant.setUsOfficeName)
+            .on('change.assistant', 'select[name="usOfficeP"]', transfer.assistant.setNrb)
+            .on('click.assistant', '.tabPopup .close', transfer.assistant.hideOverlay)
+            .on('change.assistant', 'select[name="identificator_typ"]', transfer.assistant.setIdentyficatorType)
+            .on('change.assistant', 'input[name="identificator"]', transfer.assistant.setIdentyficator)
+            .on('change.assistant', 'select[name="us_id_dict_identificator_types"]', transfer.assistant.setIdentyficatorType)
+            .on('change.assistant', 'input[name="us_identificator"]', transfer.assistant.setIdentyficator)
+            .on('click.assistant', '.tabPopup .save', transfer.assistant.validateNrb)
+        ;
+        window.TransferInitiated = true;
+    },
+    init: function(view) {
+        transfer.view = view;
+        transfer.events();
+    },
+    assistant: {
+        handler: '',
+        varAssistent: {
+            usOffice: null,
+            usOfficeName: null,
+            usFormType: null,
+            usFormTypeName: null,
+            usSelectedNRB: null,
+            usNRB: null,
+            usForms: null,
+            usIdentificatorType: null,
+            usIdentificatorValue: null,
+        },
+        init: function() {
+
+        },
+        show: function(event, idOffice) {
+            $(window).trigger('overlay:show');
+            transfer.assistant.handler.fadeIn(300, 'easeOutQuad');
+            $('#usOfficeName').blur();
+            transfer.assistant.clearUSName();
+            $('#usOffice_content .select_input').val('');
+            transfer.assistant.changeSelectOption('usFormTypeP', '');
+            if(idOffice) {
+                $('.usSearchPop #usOffice_content li.option[data-value="' + idOffice + '"]').trigger('click');
+            }
+            transfer.assistant.setUsFormType(event);
+        },
+        changeSelectOption: function(name, val) {
+            var content = $('#' + name + '_select'), ul = $('#' + name + '_ul'),
+                select = $('select[name="' + name + '"]');
+            select.val(val).prop('disabled', false);
+            select.find('option').removeAttr('selected');
+            select.find('option[value="' + val + '"]').attr('selected', 'selected');
+            ul.find('li').removeAttr('style');
+            let selected = ul.find('li[data-value="' + val + '"]');
+            if(selected.length) {
+                selected.css('display', 'none');
+                content.html(selected.html());
+                return selected.html();
+            } else {
+                content.html(content.data('title'));
+                return;
+            }
+
+        },
+        clearUSName: function() {
+            $('#usOffice_content').addClass('hide');
+            $('#usOffice_contentd').removeClass('hide');
+            $('#usOffice_contentd input').val('');
+            $.fn.resetValidation('usNRB_contentd_form_disabled', !0);
+            transfer.view.alertAccNoHide($('input[name="usNRB_contentd_form_disabled"]'));
+            transfer.assistant.clearUSformType();
+        },
+        clearUSformType: function() {
+            $('#usFormType_content').addClass('hide');
+            $('#usFormType_contentd').removeClass('hide');
+            $('#usOfficeNameP').val('');
+            transfer.assistant.clearUSnrb();
+        },
+        clearUSnrb: function() {
+            $('#usNRB_content').addClass('hide');
+            $('#usNRB_contentd').removeClass('hide');
+            $('#usNRB_contentd').find('input').attr('disabled', 'disabled');
+            $('div[id="usNRB_contentd"]').find('input').val('');
+            $.fn.resetValidation('usNRB_contentd_form_disabled', !0);
+        },
+        setUsFormType: function(event) {
+            var self = $(event.currentTarget), usForms = [];
+            self.parents('.h--input-select').removeClass('opened');
+            $('#usFormType_content').addClass('hide');
+            $('#usFormType_contentd').removeClass('hide');
+            $(window).trigger('loader:show');
+            $.ajax({
+                async: true,
+                global: false,
+                type: "POST",
+                url: 'transfers/getUSForm',
+                data: {
+                    usOffice: this.usOffice
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $(window).trigger('loader:hide');
+                    if(data.allow === !0) {
+                        var select = transfer.assistant.handler.find('select[name="usFormTypeP"]'),
+                            parent = select.parents('.h--select'),
+                            select_input = parent.find('.select_input'), li_content = parent.find('.nano-content');
+                        select.empty();
+                        li_content.empty();
+                        $('<option value=""></option>').appendTo(select);
+                        $.map(data.data, function(value) {
+                            usForms[value.id_dict_us_form_types] = value;
+                            $('<option></option>').attr('value', value.id_dict_us_form_types).html(value.description).appendTo(select);
+                            $('<li></li>').attr('class', 'option').css('display', 'list-item').attr('data-value', value.id_dict_us_form_types).html(value.description).appendTo(li_content);
+                        });
+                        $('#usFormType_content').removeClass('hide');
+                        $('#usFormType_contentd').addClass('hide');
+                        $('#usFormType_contentd input').removeAttr('disabled');
+                        parent.addClass('js-select-changed');
+                    }
+                }
+            });
+            transfer.assistant.varAssistent.usForms = usForms;
+        },
+        setUsOfficeName: function(event) {
+            var self = $(event.currentTarget), usNRB = [];
+            transfer.assistant.varAssistent.usFormType = self.val();
+            transfer.assistant.varAssistent.usFormTypeName = self.find('option:selected').text();
+            self.parents('.h--input-select').removeClass('opened');
+            $('#usOffice_content').addClass('hide');
+            $('#usOffice_contentd').removeClass('hide');
+            transfer.assistant.clearUSnrb();
+
+            if(transfer.assistant.varAssistent.usForms[transfer.assistant.varAssistent.usFormType].is_irp) {
+                transfer.assistant.formTypeIrp();
+            } else {
+                $(window).trigger('loader:show');
+                $.ajax({
+                    async: true,
+                    global: false,
+                    type: "POST",
+                    url: 'transfers/getUSOffice',
+                    data: {
+                        usFormType: transfer.assistant.varAssistent.usFormType
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $(window).trigger('loader:hide');
+                        if(data.allow === !0) {
+                            var select = transfer.assistant.handler.find('select[name="usOfficeP"]'),
+                                parent = select.parents('.h--select'),
+                                select_input = parent.find('.select_input'), li_content = parent.find('.nano-content');
+                            select.empty();
+                            li_content.empty();
+                            $('<option value=""></option>').appendTo(select);
+                            $.map(data.data.accounts, function(value) {
+                                usNRB[value.account] = value;
+                                let display = transfer.assistant.getDisplayOffice(value);
+                                $('<option></option>').attr('value', value.account).html(display).appendTo(select);
+                                $('<li></li>').attr('class', 'option').css('display', 'list-item').attr('data-value', value.account).html(display).appendTo(li_content);
+                            });
+                            $('#usOffice_content').removeClass('hide');
+                            $('#usOffice_contentd').addClass('hide');
+                            parent.addClass('js-select-changed');
+                            $.fn.userClearSelectValue(parent);
+                        }
+                    }
+                });
+            }
+            transfer.assistant.varAssistent.usNRB = usNRB;
+        },
+        setNrb: function(event) {
+            var self = $(event.currentTarget);
+            transfer.assistant.clearUSnrb();
+            transfer.assistant.varAssistent.usSelectedNRB = self.val();
+            transfer.assistant.varAssistent.usOfficeName = self.find('option:selected').text();
+            transfer.assistant.varAssistent.usOffice = transfer.assistant.varAssistent.usNRB[transfer.assistant.varAssistent.usSelectedNRB].office.id_dict_us_offices;
+            $('div[id="usNRB_contentd"]').find('input').val(transfer.assistant.varAssistent.usSelectedNRB);
+        },
+        formTypeIrp: function() {
+            let defaultNameOffice = 'Urząd Skarbowy';
+            $('#usOffice_contentd').find('input').val(defaultNameOffice);
+            $('#usNRB_contentd').find('input').removeAttr('disabled').blur();
+            transfer.view.alertAccNoPaste();
+            transfer.assistant.varAssistent.usOfficeName = defaultNameOffice;
+
+        },
+        validateNrb: function(event) {
+            var nrb = $('#usNRB_contentd').find('input').val();
+            if(nrb.length === 26) {
+                $(window).trigger('loader:show');
+                $.ajax({
+                    async: true,
+                    global: false,
+                    type: "POST",
+                    url: 'transfers/validateUsAccount',
+                    data: {
+                        usFormType: transfer.assistant.varAssistent.usFormType,
+                        nrb: nrb
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        $(window).trigger('loader:hide');
+                        if(data.allow === !0) {
+                            if(data.data.error !== undefined && data.data.error > 0) {
+                                var json = JSON.parse('{"validationMessages": {"usNRB_contentd_form_disabled": "NUMER KONTA NIE JEST POPRAWNY"}}');
+                                $.fn.setFormErrors(json);
+                                return;
+                            }
+                            let varAssistant = data.data;
+                            transfer.assistant.varAssistent.usIdentificatorType = varAssistant.id_dict_identificator_types;
+                            transfer.assistant.varAssistent.usIdentificatorValue = varAssistant.identificator_value;
+                            transfer.assistant.varAssistent.usSelectedNRB = nrb;
+                            transfer.assistant.varAssistent.usOfficeName = transfer.assistant.getDisplayOffice(varAssistant);
+                            transfer.assistant.varAssistent.usOffice = varAssistant.office.id_dict_us_offices;
+                            $('#usOffice_contentd').find('input').val(transfer.assistant.varAssistent.usOfficeName);
+                            transfer.assistant.dataSave();
+                        }
+                    }
+                });
+            }
+        },
+        dataSave: function() {
+            let container = transfer.assistant.handler.parent();
+            transfer.assistant.clearUSName();
+            if(container.hasClass('BasketAssistant') || container.hasClass('TransferAssistant')) {
+                transfer.assistant.save();
+            } else if(container.hasClass('RecipientsAssistant')) {
+                transfer.assistant.saveRecipient();
+            } else {
+                return;
+            }
+        },
+        getDisplayOffice: function(value) {
+            if(value.town.description === undefined || value.office.description === undefined || value.town.description === null || value.office.description === null) {
+                return transfer.assistant.varAssistent.usOfficeName;
+            }
+            return value.town.description + ' - ' + value.office.description;
+        },
+        save: function() {
+            if(null == transfer.assistant.varAssistent.usFormType || $('#usNRB_contentd.alert').length > 0) {
+                return !1;
+            }
+            var simple_nrb = $('div[id="usNRB_contentd"]').find('input').val().replace(/\s+/g, '');
+            if($.isNumeric(simple_nrb)) {
+                transfer.assistant.varAssistent.usSelectedNRB = simple_nrb;
+            }
+            $('#usOffice').val(transfer.assistant.varAssistent.usOffice);
+            $('#usOfficeName').val(transfer.assistant.varAssistent.usOfficeName);
+            $('#usFormType').val(transfer.assistant.varAssistent.usFormType);
+            $('#usFormTypeName').val(transfer.assistant.varAssistent.usFormTypeName);
+            $('#nrb').val(transfer.assistant.varAssistent.usSelectedNRB);
+            $('#nrb_disabled').val(transfer.assistant.varAssistent.usSelectedNRB);
+            $('#symbol_disabled').val(transfer.assistant.varAssistent.usFormTypeName);
+            if(transfer.assistant.varAssistent.usIdentificatorType !== null) {
+                transfer.assistant.setIdentyficatorAdditional();
+            } else {
+                transfer.assistant.clearIdentyficatorAdditional();
+            }
+            $.fn.resetValidation('usNRB_contentd_form_disabled', !0);
+            $.fn.runValidateMethods($('#usOfficeName'));
+            $.fn.runValidateMethods($('#usFormTypeName'));
+            $.fn.runValidateMethods($('#symbol_disabled'));
+            $.fn.runValidateMethods($('#nrb_disabled'));
+            $.fn.runValidateMethods($('#nrb'));
+            transfer.assistant.hideOverlay();
+            return !0;
+        },
+        clearIdentyficatorAdditional: function() {
+            let identificatorTypeSelect = $('#identificator_typ_select').parent();
+            $.fn.userClearSelectValue(identificatorTypeSelect);
+            identificatorTypeSelect.removeAttr('disabled').removeClass('disabled');
+            let elementIdentyficator = $('input[name="identificator"]');
+            elementIdentyficator.attr('type', 'text').val('');
+            $('input[name="identificator_disabled"]').attr('type', 'hidden').val('');
+            $.fn.resetValidation(elementIdentyficator);
+            $.fn.resetValidation(identificatorTypeSelect);
+            $('input[name="is_disabled_identyficator"]').val(0);
+        },
+        setIdentyficatorAdditional: function() {
+            let identificatorTypeSelect = $('#identificator_typ_select').parent();
+            $.fn.optionClick(identificatorTypeSelect, identificatorTypeSelect.find('ul li[data-value=' + transfer.assistant.varAssistent.usIdentificatorType + ']'));
+            identificatorTypeSelect.addClass('disabled');
+            $('input[name="identificator"]').val(transfer.assistant.varAssistent.usIdentificatorValue).trigger('change').attr('type', 'hidden');
+            $('input[name="identificator_disabled"]').attr('type', 'text').attr('disabled', 'disabled');
+            $('input[name="is_disabled_identyficator"]').val(1);
+
+        },
+        setIdentyficatorType: function(event) {
+            var self = $(event.currentTarget), value = self.val();
+            $('input[name="identificator_typ_disabled"]').val(value);
+        }
+        ,
+        setIdentyficator: function(event) {
+            var self = $(event.currentTarget), value = self.val();
+            $('input[name="identificator_disabled"]').val(value);
+        },
+        saveRecipient: function() {
+            if(null === transfer.assistant.varAssistent.usFormType || $('#usNRB_contentd.alert').length > 0) {
+                return !1;
+            }
+
+            var usNRB = $('div[id="usNRB_contentd"]').find('input').val().replace(/\s+/g, '');
+
+            if($.isNumeric(usNRB)) {
+                transfer.assistant.varAssistent.usSelectedNRB = usNRB;
+            }
+
+            $('#usOffice').val(transfer.assistant.varAssistent.usOffice);
+            $('#usOfficeName').val(transfer.assistant.varAssistent.usOfficeName);
+            $('#usFormType').val(transfer.assistant.varAssistent.usFormType);
+            $('#usFormTypeName').val(transfer.assistant.varAssistent.usFormTypeName);
+            $('#recipient_nrb').val(transfer.assistant.varAssistent.usSelectedNRB);
+            $('#recipient_nrb_disabled').val(transfer.assistant.varAssistent.usSelectedNRB);
+            $('#symbol_disabled').val(transfer.assistant.varAssistent.usFormTypeName);
+            if(transfer.assistant.varAssistent.usIdentificatorType !== null) {
+                let identificatorTypeSelect = $('#us_id_dict_identificator_types_select').parent();
+                $.fn.optionClick(identificatorTypeSelect, identificatorTypeSelect.find('ul li[data-value=' + transfer.assistant.varAssistent.usIdentificatorType + ']'));
+                identificatorTypeSelect.addClass('disabled');
+                $('input[name="us_identificator"]').val(transfer.assistant.varAssistent.usIdentificatorValue).trigger('change').attr('type', 'hidden');
+                $('input[name="identificator_disabled"]').attr('type', 'text');
+            }
+            $.fn.resetValidation('recipient_nrb_disabled', !0);
+            $.fn.runValidateMethods($('#usOfficeName'));
+            $.fn.runValidateMethods($('#usFormTypeName'));
+            $.fn.runValidateMethods($('#symbol_disabled'));
+            $.fn.runValidateMethods($('#nrb_disabled'));
+            $.fn.runValidateMethods($('#nrb'));
+            transfer.assistant.hideOverlay();
+            return !0;
+        },
+        hideOverlay: function() {
+            $(window).trigger('overlay:hide');
+        }
+
+    }
+}

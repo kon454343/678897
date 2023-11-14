@@ -1,0 +1,266 @@
+define([ 'jquery', 'underscore', 'backbone', 'RequestModel', 'easing' ], function($, _, Backbone, request) {
+    var AppRouter = Backbone.Router.extend({
+        routes: {
+            ":controller/:action": "site",
+            ":controller/:action/*params": "site",
+            "*nothing": "site"
+        },
+        initialize: function() {
+            this.history = [];
+            this.ignore = !1;
+            _.bindAll(this, 'executeView', 'createView', 'reloadViewContent', 'destroyView', 'setSiteNavigation');
+        },
+        after: function() {
+            this.storeRoute();
+        },
+        storeRoute: function() {
+            if (!window.App.ignore) {
+                if (!this.history.length) {
+                    for (var parts = Backbone.history.fragment.split('/'), len = parts.length, i = 0; len > i; ) {
+                        this.history.push(parts.slice(0, i + 1).join('/'));
+                        i++;
+                    }
+                } else {
+                    this.history.push(Backbone.history.fragment);
+                }
+            } else {
+                window.App.router.ignore = !1;
+            }
+        },
+        previous: function(options) {
+            window.App.ignore = options.ignore || !1;
+            if (this.history.length > 1) {
+                this.navigate(this.history[this.history.length - 2], {
+                    trigger: !0
+                });
+                this.history = this.history.slice(0, -1);
+            }
+        },
+        site: function(controller, action, params) {
+            var module, view = this, data = {}, _data = {}, moduleUrlParams = view.setModule({view: view, controller: controller});
+            if ($.isEmptyObject(moduleUrlParams) === !1) {
+                controller = moduleUrlParams.controller;
+                action = moduleUrlParams.action;
+                params = moduleUrlParams.params;
+                module = moduleUrlParams.module;
+            }
+            data = {
+                controller: controller,
+                action: action,
+                params: params,
+                module: module
+            };
+            this.changeInformationsInHeader(controller, action);
+            view.setWindow(data);
+            view.setSiteNavigation();
+            switch (controller) {
+              case 'credits':
+              case 'transfers':
+              case 'deposits':
+              case 'accounts':
+              case 'cards':
+              case 'basket':
+			  case 'futureTransfers':
+              case 'broker':
+              case 'history':
+              case 'messages':
+              case 'insurance':
+              case 'wallet':
+              case 'index':
+              case 'proposals':
+              case 'management':
+              case 'creditpa':
+              case 'creditStandard':
+              case 'creditShield':
+              case 'subventionPFR':
+              case 'accountTransfer':
+              case 'permanentStorage':
+              case 'events':
+              case 'ModernView':
+              case 'balance':
+              case 'search':
+              case 'applications':
+              case 'support':
+                _data.controller = controller.charAt(0).toUpperCase() + controller.slice(1) + 'View';
+                _data.viewName = 'siteView';
+                break;
+
+              case 'settings':
+              case 'recipients':
+              case 'faq':
+                break;
+
+              default:
+                _data.controller = 'IndexView';
+                _data.viewName = 'siteView';
+            }
+            view.executeView(_data);
+        },
+        executeView: function(data) {
+            var viewUrl, view = this, deferr = $.Deferred();
+            if (void 0 !== data.url) {
+                viewUrl = data.url;
+            } else {
+                viewUrl = null !== data.controller ? window.AppModule + 'views/' + data.controller : null;
+            }
+            if (null !== viewUrl) {
+                var _data = $.extend({}, data, {
+                        requirePath: viewUrl,
+                        globalObject: view,
+                        model: request
+                    });
+                if (void 0 === view[data.viewName]) {
+                    view.createView(_data).promise().done(function(_view) {
+                        deferr.resolve(_view);
+                    });
+                } else {
+                    $.extend(_data, {
+                        forceReload: data.forceReload
+                    });
+                    view.reloadViewContent(_data).promise().done(function(_view) {
+                        deferr.resolve(_view);
+                    });
+                }
+            } else {
+                deferr.reject(null);
+            }
+            return deferr;
+        },
+        createView: function(data) {
+            var deferr = $.Deferred();
+            require([ data.requirePath ], function(view) {
+                if (void 0 !== view) {
+                    if (void 0 === data.globalObject[data.viewName]) {
+                        data.globalObject[data.viewName] = {};
+                    }
+                    data.globalObject[data.viewName].currentController = data.controller;
+                    data.globalObject[data.viewName].view = new view({
+                        model: data.model
+                    });
+                    data.globalObject[data.viewName].view.render().promise().done(function(view) {
+                        deferr.resolve(view);
+                    });
+                } else {
+                    deferr.reject(null);
+                }
+            });
+            return deferr;
+        },
+        reloadViewContent: function(data) {
+            var deferr = $.Deferred();
+            require([ data.requirePath ], function() {
+                if (data.globalObject[data.viewName].currentController === data.controller) {
+                    data.globalObject[data.viewName].view.emptyContent().promise().done(function() {
+                        if (data.forceReload) {
+                            data.model.set('url', data.controller.charAt(0).toLowerCase() + data.controller.replace('View', '').slice(1) + '/index');
+                        }
+                        data.globalObject[data.viewName].view.render().promise().done(function(view) {
+                            deferr.resolve(view);
+                        });
+                    });
+                } else {
+                    data.globalObject.destroyView(data);
+                    data.globalObject.createView(data).promise().done(function(view) {
+                        deferr.resolve(view);
+                    });
+                }
+            });
+            return deferr;
+        },
+        destroyView: function(data) {
+            data.globalObject[data.viewName].view.undelegateEvents();
+            data.globalObject[data.viewName].view.$el.removeData().unbind();
+            data.globalObject[data.viewName].view.remove();
+            Backbone.View.prototype.remove.call(data.globalObject[data.viewName].view);
+        },
+        setModule: function(data) {
+            var pathname = window.location.pathname, pathSplit = pathname.split('/'), moduleUrlParams = {};
+
+            if ('pbl' === data.controller || 'pa' === data.controller || 'eid' === data.controller) {
+                moduleUrlParams.controller = pathSplit[2] ? pathSplit[2] : null;
+                moduleUrlParams.action = pathSplit[3] ? pathSplit[3] : null;
+                moduleUrlParams.params = pathSplit[4] ? pathSplit[4] : null;
+                moduleUrlParams.module = data.controller;
+            }
+            return moduleUrlParams;
+        },
+        setWindow: function(data) {
+            var pathname = window.location.pathname, moduleName = '';
+            if (data.module) {
+                moduleName = data.module;
+                if (pathname === '/' + moduleName) {
+                    window.location.reload('/' + data.module + '/');
+                }
+            }
+            if (!data.controller && !data.action) {
+                if (
+                    '/' != pathname && '/pbl' != pathname && '/pbl/' != pathname &&
+                    '/' != pathname && '/pa' != pathname && '/pa/' != pathname &&
+                    '/eid' != pathname && '/eid/' != pathname                    
+                ) {
+                    window.location = moduleName + '/#' + pathname.substring(1);
+                } else {
+                    if ('/pbl' === pathname) {
+                        window.location = '/pbl/#';
+                    }
+                    
+                    if ('/eid/' === pathname || '/eid' === pathname) {
+                        window.location = '/eid/#';
+                    }
+                }
+                request.set("url", '');
+            } else {
+                if (!data.params) {
+                    request.set("url", data.controller + '/' + data.action);
+                } else {
+                    request.set("url", data.controller + '/' + data.action + '/' + data.params);
+                }
+            }
+        },
+        setSiteNavigation: function() {
+            var windowLocation = window.location.hash, container = $('#siteViewMenu');
+            if (container.length > 0) {
+                container.find('a.active').removeClass('active').end().find('a[href="' + windowLocation + '"]').addClass('active');
+                if (container.find('a.active')) {
+                    window.App.topView.view.beforeClick = null;
+                    window.App.topView.view.activeClick = null;
+                    $('.topMenu').find('a.active').removeClass('active').end();
+                }
+            }
+        },
+        changeInformationsInHeader: function(controller, action) {
+            var brand = $('body').data('brand');
+            switch( controller + '/' + action){
+                case 'index/index':
+                    if( brand == 'noblebank' || brand == 'private'){
+                        $('title').html('Logowanie do Bankowości Internetowej - Noble Bank');
+                        $('meta[name=description]').attr('content', 'Kliknij, aby przejść na stronę logowania do Bankowości Internetowej Noble Banku. Oszczędzaj czas i wygodnie zarządzaj swoimi finansami bez wychodzenia z domu.');
+                    } else if( brand = 'getinbank' ){
+                        $('title').html('Logowanie do Bankowości Internetowej - Getin Bank');
+                        $('meta[name=description]').attr('content', 'Kliknij, aby przejść na stronę logowania do Bankowości Internetowej Getin Banku. Oszczędzaj czas i wygodnie zarządzaj swoimi finansami bez wychodzenia z domu.');
+                    } else {
+                        $('title').html('Logowanie do Bankowości Internetowej - Open Online');
+                        $('meta[name=description]').attr('content', 'Kliknij, aby przejść na stronę logowania do Bankowości Internetowej Open Online. Oszczędzaj czas i wygodnie zarządzaj swoimi finansami bez wychodzenia z domu.');
+                    }
+                    $('meta[name=robots]').attr('content', 'index');
+                    break;
+                case 'index/logout':
+                case 'index/forbidden':
+                default:
+                    if( brand == 'noblebank' || brand == 'private' ){
+                        $('title').html('Bankowość Internetowa - Noble Bank');
+                        $('meta[name=description]').attr('content', 'System Bankowości Internetowej Noble Banku to najwygodniejszy sposób zarządzania swoimi finansami. Możesz z niego korzystać prosto ze swojego komputera wszędzie tam, gdzie masz dostęp do Internetu.');
+                    } else if( brand = 'getinbank' ){
+                        $('title').html('Bankowość Internetowa - Getin Bank');
+                        $('meta[name=description]').attr('content', 'System Bankowości Internetowej Getin Banku to najwygodniejszy sposób zarządzania swoimi finansami. Możesz z niego korzystać prosto ze swojego komputera wszędzie tam, gdzie masz dostęp do Internetu.');
+                    } else {
+                        $('title').html('Bankowość Internetowa - Open Online');
+                        $('meta[name=description]').attr('content', 'System Bankowości Internetowej Open Online to najwygodniejszy sposób zarządzania swoimi finansami. Możesz z niego korzystać prosto ze swojego komputera wszędzie tam, gdzie masz dostęp do Internetu.');
+                    }
+                    $('meta[name=robots]').attr('content', 'noindex');
+                    break;
+            }
+        }
+    });
+    return AppRouter;
+});

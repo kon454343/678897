@@ -1,0 +1,685 @@
+define([ 'jquery', 'jCaret', 'underscore', 'backbone', 'SiteView', 'SmartBanner', 'MobileDetect', 'eventManager', 'banner'], function($, jCaret, _, Backbone, SiteView, SmartBanner, MobileDetect) {
+    var IndexView = SiteView.extend({
+        events: {
+            'click [href="/#wallet/index"]': 'afterlogin',
+            'click [href="/#index/index"]': 'afterForbidden',
+            'keypress [name="login"], [name="password"]': 'fillInput',
+            'change [name="login"], [name="password"]': 'fillInput',
+            'keyup .masked-pass div.cell input': 'keyup',
+            'keydown .masked-pass div.cell input': 'keydown',
+            'click .actionshowkeyboard': 'showKeyboard',
+            'click .keyboard_wrapper ul#keyboard li': 'useKeyboard',
+            'click .showHideHelp': 'showHideHelp',
+            'click .showHideLoginHelp': 'showHideLoginHelp',
+            'click .showLoginHelp': 'showLoginHelp',
+            'click .hideLoginHelp': 'hideLoginHelp',
+            'click #login_help_section .collapsable': 'collapsableLoginHelp',
+            'click .showMgsSection': 'showHideMsgSection',
+            'click .hideMgsSection': 'closeMsgSection',
+            'click .moreMgs': 'moreMgs',
+            'click .returnTo': 'returnTo',
+            'click .gotoPassword': 'updateNavigation',
+            'click #submitChooseService': 'submitChooseService',
+            'keypress [type="password"]': 'isCapslock',
+            'keyup [type="password"]': 'pressCapslock',
+            'click #login_help': 'loginHelp',
+            'click #login_help_mobile': 'loginHelpMobile',
+            'click .mobile-help-list': 'mobileHelpList',
+            'click .show_rules': 'showRules',
+            'click .showMgsSectionMobile': 'showHideMsgSectionMobile',
+            'click #to_login-information': 'loginInformation',
+            'click #close_login-information': 'close_loginInformation',
+            'click .full-window': 'close_loginInformation',
+            'click #close_login-information-error': 'close_loginInformation',
+            'ifClicked #empty_pesel': 'empty_pesel',
+            'click div[id="identificator"] .option': 'change_doc',
+            'click .banner a:not(.jsDisabledClick)': banner.click,
+            'click .fr-highest-btn-close': 'closeFrHighest',
+            'contextmenu .banner a': banner.blockRightButton
+        },
+        _initialize: function() {
+            if (0 !== $('body').children('#topViewWrapper').length) {
+                $('#topViewWrapper').slideUp(300, 'easeOutQuad', function() {
+                    $(this).remove();
+                });
+            }
+
+            banner.view = this;
+        },
+        _viewLoaded: function() {
+            var view = this;
+            $('.login-page').find('input[type="text"]:visible, input[type="password"]:visible').eq(0).focus();
+            $('.carousel').carousel();
+            view.loginErrorCloud();
+
+            var md = new MobileDetect(window.navigator.userAgent);
+            if(md.os() == 'iOS' && (!md.userAgent() || md.userAgent() != 'Safari')) {
+                this.mobileBanner('ios');
+            } else if(md.version('Windows Phone')) {
+                this.mobileBanner('windows');
+            } else if(md.os() == 'AndroidOS' /**&& md.userAgent() != 'Chrome'**/) {
+                this.mobileBanner('android');
+            }
+        },
+        _afterRender: function() {
+            var view = this;
+            view.decorateInputs();
+        },
+        loginErrorCloud: function() {
+            var self = $('.login-page .h--form--field'), cloud = self.children('.cloud');
+            if (self.hasClass('loginError')) {
+                self.removeClass('loginError');
+                self.find('input[name="login"], input[name="password"]').on('keyup', function() {
+                    if ($(this).val().length) {
+                        cloud.hide();
+                    }
+                });
+            }
+        },
+        updateNavigation: function() {
+            if ($.isFunction(history.replaceState) && $.isFunction(history.pushState)) {
+                history.replaceState(null, document.title, location.pathname + "#!/preventhistoryback");
+                history.pushState(null, document.title, location.pathname + '#index/index');
+                window.addEventListener("popstate", function() {
+                    if ("#!/preventhistoryback" === location.hash) {
+                        history.replaceState(null, document.title, location.pathname);
+                        setTimeout(function() {
+                            window.App.navigate('index/index');
+                        }, 0);
+                    }
+                }, !1);
+            } else {
+                return !1;
+            }
+        },
+        showHideMsgSection: function(event) {
+            var view = this, button = $(event.currentTarget), msgSection = $('#msg_section');
+            if (button.hasClass('active')) {
+                view.hideMsgSection(button);
+            } else {
+                if (msgSection.hasClass('shown')) {
+                    view.hideMsgSection(button).promise().done(function() {
+                        view.showMgsSection(button);
+                    });
+                } else {
+                    view.showMgsSection(button);
+                }
+            }
+        },
+        closeMsgSection: function(event) {
+            var view = this, closeBtn = $(event.currentTarget), button = $('div.msg_list').find('li.showMgsSection[data-code="' + closeBtn.data('code') + '"]');
+            view.hideMsgSection(button);
+        },
+        hideMsgSection: function(button) {
+            var view = this, deferr = $.Deferred(), msgSection = $('#msg_section'), msgBtns = $('.showMgsSection');
+            if (msgSection.hasClass('shown')) {
+                msgSection.animate({
+                    left: '-' + msgSection.outerWidth() + 'px'
+                }, 500, 'easeOutQuad', function() {
+                    msgSection.removeClass('shown');
+                    msgBtns.removeClass('active');
+                    deferr.resolve(view, button);
+                });
+            } else {
+                deferr.resolve(view, button);
+            }
+            return deferr;
+        },
+        showMgsSection: function(button) {
+            var view = this, deferr = $.Deferred(), msgSection = $('#msg_section'),
+                otherBtns = ($('#help_section'), $('.showMgsSection').not(button));
+            $.getJSON('/index/getMessage/' + button.data('code'), function(data) {
+                button.addClass('active');
+                otherBtns.removeClass('active');
+                view.hideLoginHelp(button);
+                msgSection.find('.hideMgsSection').data('code', data.code).end().find('.mgs_title').html(data.title).end().find('.mgs_date').html(data.date).end().find('.mgs_content').find('.content').html(data.description).end();
+                view.hideHelp().promise().done(function() {
+                    msgSection.css({
+                        height: $('.login-wrapper').outerHeight() + 'px'
+                    }).animate({
+                        left: '0'
+                    }, '500', 'easeOutQuad', function() {
+                        msgSection.addClass('shown').find('.mgs_content').nanoScroller();
+                    });
+                });
+            });
+            return deferr;
+        },
+        moreMgs: function () {
+
+            var msgSection = $('.messages .more');
+            var wrapper = $('#index-container .wrapper'), wrapper2 = $('.h--section-white');
+            if (msgSection.hasClass('hide')) {
+                msgSection.animate({
+                    left: '-' + msgSection.outerWidth() + 'px'
+                }, 500, 'easeOutQuad', function () {
+                    msgSection.removeClass('hide');
+                    $('.messages .bt').css('border-width', '1px');
+                    $('.messages .triangle').removeClass('down');
+                    $('.messages .triangle').addClass('up');
+
+                    if (wrapper.outerHeight() == '608') {
+                        wrapper.css('height', '628px');
+                        wrapper2.css('min-height', '1100px');
+                    }
+                });
+            } else {
+                msgSection.animate({
+                    left: '-' + msgSection.outerWidth() + 'px'
+                }, 500, 'easeOutQuad', function () {
+                    msgSection.addClass('hide');
+                    $('.messages .bt').css('border-width', '0px');
+                    $('.messages .triangle').removeClass('up');
+                    $('.messages .triangle').addClass('down');
+
+                    if (wrapper.outerHeight() == '628') {
+                        wrapper.css('height', '608px');
+                        wrapper2.css('min-height', '770px');
+                    }
+                });
+            }
+        },
+        showHideHelp: function(event) {
+            var view = this, help = $('#help_section');
+            if (!help.hasClass('shown')) {
+                view.showHelp(event);
+            } else {
+                $('#help-box').hide();
+                $('#more_help').removeClass('icon--less-black').removeClass('icon--more-black');
+                $('.info-wrapper').removeClass('wrapper-more-help');
+                view.hideHelp(event);
+            }
+        },
+
+        collapsableLoginHelp: function(event) {
+            var self = $(event.currentTarget), whileExpanding = self.hasClass('collapsed'),
+                clickFromOtherEvent = $(event.originalEvent.target).hasClass('collapsable');
+            if (clickFromOtherEvent) {
+                return true;
+            }
+            $(self).find('.icon').toggleClass('icon--less-black').toggleClass('icon--more-black');
+
+            if(whileExpanding) {
+                $('.info-wrapper').addClass('wrapper-more-help');
+            } else {
+                $('.info-wrapper').removeClass('wrapper-more-help');
+            }
+            this.hideAllCollapseLoginHelp(event);
+        },
+
+        hideAllCollapseLoginHelp: function(event) {
+            var self = $(event.currentTarget), elements = $('.collapsable');
+            for (var i = 0; i < elements.length; i++) {
+                var element = elements[i];
+                if (!element.classList.contains('collapsed')) {
+                    if (!self.is(element)) {
+                        $(element).find('.icon').toggleClass('icon--less-black').toggleClass('icon--more-black');
+                    }
+                    element.click();
+                }
+            }
+        },
+
+        showHideLoginHelp: function (event) {
+            var view = this, help = $('#login_help_section'),
+                msgButton = $('.showMgsSection.active').length ? $('.showMgsSection.active') : $('.showMgsSection').eq(0);
+            $('.login-page .h--form--field').find('.cloud').css('display', 'none');
+            if (!help.hasClass('shown')) {
+                view.hideHelp();
+                view.hideMsgSection(msgButton);
+                view.showLoginHelp();
+            } else {
+                $('#help-box').hide();
+                $('#more_help').removeClass('icon--less-black').removeClass('icon--more-black');
+                view.hideLoginHelp(event);
+            }
+        },
+        showLoginHelp: function (event) {
+            var view = this, deferr = $.Deferred(), help = $('#login_help_section'), msgButton = $('.showMgsSection.active').length ? $('.showMgsSection.active') : $('.showMgsSection').eq(0);
+            view.hideLoginHelp(event);
+            help.css({
+            }).animate({
+                left: '0'
+            }, 500, 'easeOutQuad', function () {
+                help.addClass('shown');
+                deferr.resolve(view, help);
+            });
+            return deferr;
+        },
+        hideLoginHelp: function (event) {
+            var help = $('#login_help_section');
+            var view = this, deferr = $.Deferred();
+            if (help.hasClass('shown')) {
+                help.animate({
+                    left: '-' + help.outerWidth() + 'px'
+                }, 500, 'easeOutQuad', function () {
+                    help.removeClass('shown');
+                    $('.info-wrapper').removeClass('wrapper-more-help');
+                    view.hideAllCollapseLoginHelp(event);
+                });
+            }
+        },
+        showHelp: function(event) {
+            var view = this, deferr = $.Deferred(), help = $('#help_section'), msgButton = $('.showMgsSection.active').length ? $('.showMgsSection.active') : $('.showMgsSection').eq(0);
+            view.hideLoginHelp(event);
+            view.hideMsgSection(msgButton).promise().done(function() {
+                help.css({
+//                    height: $('.login-wrapper').outerHeight() + 'px'
+                }).animate({
+                    left: '0'
+                }, 500, 'easeOutQuad', function() {
+                    help.addClass('shown');
+                    deferr.resolve(view, help);
+                });
+            });            
+            return deferr;
+        },
+        hideHelp: function() {
+            var view = this, deferr = $.Deferred(), help = $('#help_section');
+            if (help.hasClass('shown')) {
+                help.animate({
+                    left: '-' + help.outerWidth() + 'px'
+                }, 500, 'easeOutQuad', function() {
+                    help.removeClass('shown');
+                    deferr.resolve(view, help);
+                });
+            } else {
+                deferr.resolve(view, help);
+            }
+            return deferr;
+        },
+        useKeyboard: function(event) {
+            var self = $(event.currentTarget), classLi = self.attr('class'), loginCont = $('#login-container'), inputFields = loginCont.find('input[type="text"], input[type="password"]'), inputField = inputFields, text = null, goNext = !1;
+            if (inputFields.length > 1) {
+                inputField = inputFields.filter(function() {
+                    return '' == $(this).val();
+                }).eq(0);
+                goNext = !0;
+            }
+            switch (classLi) {
+              case 'letter':
+                text = self.text();
+                break;
+
+              case 'symbol':
+              case 'symbol lastitem':
+              case 'tab symbol':
+                text = self.find('span:visible').text();
+                break;
+
+              case 'letter uppercase':
+                text = self.text().toUpperCase();
+                break;
+
+              case 'left-shift':
+              case 'right-shift lastitem':
+              case 'left-shift active':
+              case 'right-shift lastitem active':
+                $('.letter', '.keyboard_wrapper').toggleClass('uppercase');
+                $('.left-shift, .right-shift', '.keyboard_wrapper').toggleClass('active');
+                $('.symbol span', '.keyboard_wrapper').toggle();
+                $('.capslock', '.keyboard_wrapper').toggleClass('disabled');
+                return !1;
+
+              case 'capslock':
+              case 'capslock active':
+                $('.left-shift, .right-shift', '.keyboard_wrapper').toggleClass('disabled');
+                self.toggleClass('active');
+                $('.letter', '.keyboard_wrapper').toggleClass('uppercase');
+                break;
+
+              case 'space lastitem':
+                text = ' ';
+                break;
+
+              case 'delete lastitem':
+                if (inputFields.length > 1) {
+                    inputField = inputFields.filter(function() {
+                        return '' != $(this).val();
+                    }).eq(-1);
+                    if (inputField.hasClass('InF')) {
+                        inputField.val('').removeClass('InF');
+                    } else {
+                        inputField.focus().addClass('InF');
+                    }
+                } else {
+                    var position = inputField.caret(), newValueBefore = inputField.range(0, position - 1).range().text, newValueAfter = inputField.range(position, inputField.val().length).range().text;
+                    inputField.val(newValueBefore + newValueAfter).caret(position - 1);
+                }
+                break;
+
+              case 'return lastitem':
+                loginCont.find('button[type="submit"]').trigger('click');
+            }
+            if (text) {
+                inputField.caret(text);
+                if (inputFields.length > 1 && goNext === !0) {
+                    inputField.parent().nextAll('div.cell').not('.disabled').eq(0).find('input').focus();
+                }
+            }
+            this.fillInput(null, inputField);
+            $.fn.runValidateMethods(inputField);
+            
+            if($('.left-shift').hasClass('active')){
+                $('.letter', '.keyboard_wrapper').toggleClass('uppercase');
+                $('.left-shift, .right-shift', '.keyboard_wrapper').toggleClass('active');
+                $('.symbol span', '.keyboard_wrapper').toggle();
+                $('.capslock', '.keyboard_wrapper').toggleClass('disabled');
+            }
+        },
+        showKeyboard: function() {
+            $('.keyboard_wrapper').toggleClass('shown');
+        },
+        fillInput: function(event, input) {
+            var element, view = this;
+            if (input) {
+                element = input;
+            } else {
+                element = $(event.currentTarget);
+            }
+            if (!element.hasClass('js-fillInput')) {
+                element.addClass('js-fillInput');
+                element.on('blur', function() {
+                    view._fillInput(element);
+                });
+            }
+            view._fillInput(element);
+        },
+        _fillInput: function(element) {
+            if (0 === element.val().length) {
+                element.removeClass('filled');
+            } else {
+                element.addClass('filled');
+            }
+        },
+        keyup: function(event) {
+            if (!window.maskedPassKeyup) {
+                window.maskedPassKeyup = !0;
+                var self = $(event.currentTarget),
+                    key = event.keyCode ? event.keyCode : event.charCode,
+                    fieldsNext = self.parent().nextAll('div.cell').not('.disabled');
+                self.parent().prevAll('div.cell').not('.disabled');
+                    switch (key) {
+                      case 8:
+                      case 9:
+                      case 13:
+                      case 16:
+                      case 17:
+                      case 18:
+                      case 20:
+                      case 27:
+                      case 33:
+                      case 34:
+                      case 35:
+                      case 36:
+                      case 37:
+                      case 38:
+                      case 39:
+                      case 40:
+                      case 45:
+                      case 46:
+                      case 112:
+                      case 113:
+                      case 114:
+                      case 115:
+                      case 116:
+                      case 117:
+                      case 118:
+                      case 119:
+                      case 120:
+                      case 121:
+                      case 122:
+                      case 123:
+                      case 144:
+                      case 145:
+                        break;
+
+                      default:
+                        if (self.val().length) {
+                            fieldsNext.eq(0).find('input').focus();
+                        }
+                    }
+                window.maskedPassKeyup = !1;
+            }
+        },
+        keydown: function(event) {
+            var self = $(event.currentTarget), key = event.keyCode ? event.keyCode : event.charCode, fieldsPrev = (self.parent().nextAll('div.cell').not('.disabled'),
+            self.parent().prevAll('div.cell').not('.disabled'));
+            if (!window.maskedPassKeydown) {
+                window.maskedPassKeydown = !0;
+                switch (key) {
+                  case 13:
+                    self.closest('.login-container').find('[type="submit"]').trigger('click');
+                    break;
+
+                  case 8:
+                  case 46:
+                    if (self.val().length) {
+                        self.val('');
+                    } else {
+                        fieldsPrev.eq(0).find('input').focus();
+                    }
+                }
+                window.maskedPassKeydown = !1;
+            }
+        },
+        afterForbidden: function(event) {
+            this.returnTo(event, 'index/index');
+        },
+        goToForbidden: function(event) {
+            this.returnTo(event, 'index/forbidden');
+        },
+        afterlogin: function(event, href) {
+            // modyfikacja na potrzeby przekierowań
+            if (void 0 !== href) {
+                this.returnTo(event, href.toString());
+            } else {
+                this.returnTo(event, 'wallet/index');
+            }
+        },
+        returnTo: function(event, href) {
+            if (event) {
+            event.preventDefault();
+            }
+            if (void 0 === href) {
+                var self = $(event.currentTarget), href = self.data('href');
+            }
+            if (void 0 !== href) {
+                window.App.navigate(href);
+                window.location.reload();
+            }
+        },
+        submitChooseService: function() {
+            var results = $('.choose-bank .results'), results_txt = '<mark class="error">Zaznacz bankowości, z których korzystasz</mark>';
+
+            if (1 == $('#checkOpenOnline').is(":checked")) {
+                results_txt = '<mark>Loguj się przy pomocy loginu i hasła <strong class="success">Open Online</strong></mark>';
+            }
+            if (1 == $('#checkGetinOnline').is(":checked")) {
+                results_txt = '<mark>Loguj się przy pomocy loginu i hasła <strong class="success">Getin Online</strong></mark>';
+            }
+            if (1 == $('#checkGetinBank').is(":checked")) {
+                results_txt = '<mark>Loguj się przy pomocy loginu i hasła <strong class="success">Getin Bank</strong></mark>';
+            }
+            if (1 == $('#checkNobleBank').is(":checked")) {
+                results_txt = '<mark>Loguj się przy pomocy loginu i hasła <strong class="success">Noble Bank</strong></mark>';
+            }
+            results.fadeOut(300, 'easeInQuad', function () {
+                results.html(results_txt).fadeIn(300, 'easeInQuad');
+            });
+        },
+        setCookie: function(name, value, expire) {
+            document.cookie = name + "=" + escape(value) + ((expire == null) ? "" : ("; expires=" + expire.toGMTString()))
+        },
+        showCookie: function(name) {
+             if (document.cookie != "") {
+                var toCookie = document.cookie.split("; ");
+                for (i = 0; i < toCookie.length; i++) {
+                    var cookieName = toCookie[i].split("=")[0];
+                    var cookieValue = toCookie[i].split("=")[1];
+                    if (cookieName == name)
+                        return unescape(cookieValue);
+                }
+            }
+        },
+        showCloud: function() {
+            var cloud = $('.cloud');
+            cloud.addClass('capslock-alert')
+            $('.cloud').show();
+            $('.cloud').html('<span>Caps Lock jest włączony</span>');
+        },
+        hideCloud: function() {
+            var cloud = $('.cloud');
+            cloud.removeClass('capslock-alert');
+            $('.cloud').hide();     
+        },
+        isCapslock: function(e) {
+            kc = e.keyCode?e.keyCode:e.which;
+            sk = e.shiftKey?e.shiftKey:((kc == 16)?true:false);
+            if(((kc >= 65 && kc <= 90) && !sk)||((kc >= 97 && kc <= 122) && sk)){
+                this.showCloud();
+            } else {
+                this.hideCloud();
+            }
+        },
+        pressCapslock: function(e){
+            if(e.keyCode == '20'){
+                this.hideCloud();
+            }
+        },
+        loginHelp: function() {
+            $('#help-box').toggle();
+            $('#more_help').toggleClass('icon--less-black').toggleClass('icon--more-black');
+            $('.info-wrapper').toggleClass('wrapper-more-help');
+        },
+        loginHelpMobile: function() {
+            $('#help-box-mobile').toggle();
+            $('#more_help_mobile').toggleClass('icon--less-black').toggleClass('icon--more-black');
+        },
+        mobileHelpList: function() {
+            $('.show-helpbox-mobile').toggle();
+            $('#show_help_mobile').toggleClass('icon--less-black').toggleClass('icon--more-black');
+        },
+        showRules: function() {
+            $('.rules').toggle();
+            $('.rules2').toggle();
+            $('.section-secure').find('h4').toggleClass('section-secure-line');
+            $('#show_rules').toggleClass('icon--less-black').toggleClass('icon--more-black');
+        },        
+        showHideMsgSectionMobile: function(event) {
+            var view = this, deferr = $.Deferred(), msgSection = $('.mobile_msg_description'), button = $(event.currentTarget), msgBtns = $('.showMgsSectionMobile');
+            if (button.hasClass('active')) {
+
+                if (msgSection.hasClass('shown')) {
+//                    msgSection.css({height: '0px'});
+                    msgSection.removeClass('messege-window');
+                    msgSection.removeClass('shown');
+                    button.find('.msg_arrow').removeClass('icon--less-black').addClass('icon--more-black');                    
+                    msgBtns.removeClass('active');
+                    deferr.resolve(view, button);
+
+                } else {
+                    deferr.resolve(view, button);
+                }
+                return deferr;
+            } else {
+                $.getJSON('/index/getMessage/' + button.data('code'), function (data) {
+
+                    msgSection.removeClass('messege-window');
+                    msgSection.removeClass('shown');
+                    msgBtns.removeClass('active');
+                    msgBtns.find('.msg_arrow').removeClass('icon--less-black').addClass('icon--more-black'); 
+                    button.addClass('active');
+                    button.find('.msg_arrow').removeClass('icon--more-black').addClass('icon--less-black'); 
+
+                    button.find('.mgs_content').find('.content').html(data.description).end();
+                    view.hideHelp().promise().done(function () {
+
+                    button.find(msgSection).addClass('messege-window');
+                    button.find(msgSection).addClass('shown').find('.mgs_content').nanoScroller();
+
+                    });
+                });
+                return deferr;
+
+            }
+        },        
+        loginInformation: function(event) {
+            $('.login-information').show();
+            $('.full-window').show();         
+        },
+        close_loginInformation: function(event) {
+            $('.login-information').hide(); 
+            $('.login-information-error').hide(); 
+            $('.full-window').hide();
+            $('.message-blockBI').hide(); 
+        },
+        empty_pesel: function() {
+            if($('input[id="empty_pesel"]:checked').val()==='on'){
+                $('#other_documents').addClass('hide');
+                $('input[name="pesel"]').attr("disabled", false).addClass('toValidate');
+                $('select[name="identificator_typ"]').removeClass('toValidate').removeClass('validateRequired');
+                $('input[name="nr_document"]').removeClass('toValidate').removeClass('validateRequired');
+            } else {
+                $('#other_documents').removeClass('hide');
+                $('input[name="pesel"]').attr("disabled", true).removeClass('toValidate').closest('div').removeClass('alert');
+                $('select[name="identificator_typ"]').addClass('toValidate').addClass('validateRequired');
+                $('input[name="nr_document"]').addClass('toValidate').addClass('validateRequired');
+            }
+        },
+        change_doc: function() {
+            var type = $('div[id="identificator_typ_select"]').text(), identificator = $('#nr_document');
+
+            $.fn.unbindValidation(identificator).val('');
+            switch(type){
+                case 'Paszport':
+                    $.fn.bindValidation(identificator, 'validatePassport');
+                    break;
+                case 'Dowód zagraniczny':
+//                    $.fn.bindValidation(identificator, 'validatePassport');
+                    break;
+                case 'Karta pobytu':
+//                    $.fn.bindValidation(identificator, 'validatePassport');
+                    break;
+            }
+            
+        },
+        question_place: function() {
+            if($('#management_questions').length){
+                $('#index-container').addClass('remindLogin-questions');
+            } else {
+                $('#index-container').removeClass('remindLogin-questions');
+            }                            
+        },
+        closeFrHighest: function(event) {
+            $(event.currentTarget).closest('.fr-highest-wraper').hide();
+        },
+        mobileBanner: function(system) {
+            var title = 'Pobierz bezpieczną aplikację';
+            var author = 'Getin Mobile';
+            if (app_brand == 'noblebank') {
+                author = 'Noble Mobile';
+            }
+            new SmartBanner({
+                daysHidden: smartBannerDaysHidden,
+                daysReminder: smartBannerDaysReminder,
+                appStoreLanguage: 'pl',
+                title: title,
+                author: author,
+                button: 'Instaluj',
+                store: {
+                    ios: '<span>App Store</span>',
+                    android: '<img src="/static/getinbank/images/android_store_icon.png" width=15 height=15 style="display: inline-block; vertical-align: middle;">&nbsp;&nbsp;<span>Google Play</span>',
+                    windows: '<img src="/static/getinbank/images/windows_store_icon.png" width=15 height=15 style="display: inline-block; vertical-align: middle;">&nbsp;&nbsp;<span>Windows Store</span>'
+                },
+                price: {
+                    ios: '',
+                    android: '',
+                    windows: ''
+                }
+            });
+        }
+        
+    });
+    return IndexView;
+});

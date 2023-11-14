@@ -1,0 +1,4 @@
+define([ 'jquery', 'underscore', 'backbone', 'mainRequestModel' ], function($, _, Backbone, mainRequestModel) {
+    var RequestModel = mainRequestModel.extend({});
+    return new RequestModel();
+});

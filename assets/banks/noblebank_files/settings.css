@@ -1,0 +1,73 @@
+.settings-title, .settings-title-middle{
+    height: 50px;
+    width: 100%;
+    min-width: 280px;
+    display: inline-block;
+    padding: 27px 0 0 10px;
+}
+.settings-title span, .settings-title-middle span{
+    font-size: 12px;
+    color: #999999;
+}
+.settings-container-flex{
+    min-width: 880px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    padding-right:2px;
+    padding-left:2px;
+    color: #4a4a4a;
+}
+.settings-row{
+    width: 100%;
+    margin-bottom: 1px;
+}
+.settings-row.settings-title-main h3{
+    font-weight: 500;
+    color: #111111;
+    margin: 0;
+    display: inline-block;
+}
+.settings-row .divider{
+    width: 100%;
+    border-bottom: 1px solid #eeeeee;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.settings-row .divider:last-child{
+    display: none;
+}
+.settings-row-secondary{
+    background-color: #fbfbfb;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-top: 8px;
+}
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: #2a2c31;
+    -webkit-opacity: .6;
+    -moz-opacity: .6;
+    opacity: .6;
+    display: none;
+}
+.details-opened{
+    z-index: 1002;
+    position: relative;
+}
+.settings-container-flex .last-screen{
+    min-height: 450px;
+}
+
+.ui-kit .blik-rule .ui-checkbox label.ui-checkbox-label{
+    font-weight: normal;
+}
+
+.ui-kit .blik-rule .ui-checkbox label.ui-checkbox-label a {
+    font-weight: bold;
+}

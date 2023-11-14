@@ -1,0 +1,3564 @@
+(function($, window, document, undefined) {
+    function DOMTokenList(el) {
+        this.el = el;
+        for(var classes = el.className.replace(/^\s+|\s+$/g, '').split(/\s+/), i = 0; i < classes.length; i++) {
+            push.call(this, classes[i]);
+        }
+    }
+
+    function defineElementGetter(obj, prop, getter) {
+        if(Object.defineProperty) {
+            Object.defineProperty(obj, prop, {
+                get: getter
+            });
+        } else {
+            obj.__defineGetter__(prop, getter);
+        }
+    }
+
+    if(!Date.now) {
+        Date.now = function() {
+            return new Date().getTime();
+        };
+    }
+    if("undefined" != typeof window.Element && !("classList" in document.documentElement)) {
+        var prototype = Array.prototype, push = prototype.push, splice = prototype.splice, join = prototype.join;
+        DOMTokenList.prototype = {
+            add: function(token) {
+                if(this.contains(token)) {
+                    return;
+                }
+                push.call(this, token);
+                this.el.className = this.toString();
+            },
+            contains: function(token) {
+                return -1 != this.el.className.indexOf(token);
+            },
+            item: function(index) {
+                return this[index] || null;
+            },
+            remove: function(token) {
+                if(!this.contains(token)) {
+                    return;
+                }
+                for(var i = 0; i < this.length && this[i] != token; i++) {
+                }
+                splice.call(this, i, 1);
+                this.el.className = this.toString();
+            },
+            toString: function() {
+                return join.call(this, ' ');
+            },
+            toggle: function(token) {
+                if(!this.contains(token)) {
+                    this.add(token);
+                } else {
+                    this.remove(token);
+                }
+                return this.contains(token);
+            }
+        };
+        window.DOMTokenList = DOMTokenList;
+        defineElementGetter(Element.prototype, 'classList', function() {
+            return new DOMTokenList(this);
+        });
+    }
+    var ValidateForms = {
+        localStoreSupport: function() {
+            try {
+                return 'localStorage' in window && null !== window.localStorage;
+            } catch(e) {
+                return !1;
+            }
+        },
+        defaults: {
+            liveWrapper: function() {
+                return $('body');
+            },
+            validateElementSelector: '.toValidate',
+            validateEvents: 'change.validateForms keyup.validateForms',
+            validateExcludedEvents: 'change.validateForms',
+            validateExcludedClass: 'validateOnChangeOnly',
+            elementValidatedClass: 'js-validatedElement',
+            softClass: 'soft',
+            alertClass: 'alert',
+            errorClass: 'error',
+            successClass: 'success',
+            disabledFormClass: 'disabled',
+            excludeString: function(stringToExclude, string) {
+                return stringToExclude.replace(string, '');
+            },
+            validationClassTarget: function(element) {
+                var container;
+
+                if('undefined' == typeof element) {
+                    container = $('.h--form--field, .js-validate-container, .jsValidateField');
+                } else {
+                    if(element.closest('.jsValidateField').length > 0) {
+                        return element.closest('.jsValidateField');
+                    }
+                    if(element.closest('.h--form--field').length) {
+                        container = element.closest('.h--form--field');
+                    } else {
+                        if(!element.next().hasClass('js-validate-container')) {
+                            var data = element.data(), message = '';
+                            Object.keys(data).forEach(function(key) {
+                                if(key.split('_').hasOwnProperty(1) && key.split('_')[1] == 'message') {
+                                    message = data[key];
+                                }
+                            });
+
+                            var newContainer = $('<div/>', {
+                                'class': 'js-validate-container h--form--field',
+                                html: '<label><div class="cloud">' + message + '</div></label>'
+                            });
+                            element.after(newContainer);
+                        }
+                        container = element.next();
+                    }
+                }
+                return container;
+            },
+            validationClassMarked: function() {
+                return $('.mark');
+            },
+            checkUnmask: function(element) {
+                if(element.hasClass('js-unmask') || element.hasClass('money')) {
+                    return true;
+                }
+                return false;
+            },
+            errorMessageTarget: function(element) {
+                var errorWrapper, errorTarget = element.siblings('label').eq(0), getWrapper = function(targetElement) {
+                        return targetElement.children('.cloud');
+                    }, selectMultiple = element.closest('.h--select.multiple'),
+                    notField = element.next('.js-validate-container'),
+                    parentAsWrapper = element.closest('.js-is-error-target');
+
+                if(element.closest('.jsValidateField').length > 0) {
+                    var t = element.closest('.jsValidateField').find('.jsValidateTarget');
+                    if(t) {
+                        return t;
+                    }
+                }
+
+                if(0 === errorTarget.length) {
+                    if(selectMultiple.length) {
+                        errorTarget = selectMultiple.children('label').eq(0);
+                    } else {
+                        if(notField.length) {
+                            errorTarget = element.next('.js-validate-container').find('label').eq(0);
+                        } else if(parentAsWrapper.length) {
+                            errorTarget = parentAsWrapper.find('.js-error-target').length ? parentAsWrapper.find('.js-error-target') : parentAsWrapper;
+                        } else {
+                            if(0 === element.siblings('.js-error-target').length) {
+                                errorTarget = $('<div/>', {
+                                    'class': 'js-error-target'
+                                });
+                                if(element.next().hasClass('add-on')) {
+                                    element.next().after(errorTarget);
+                                } else {
+                                    element.after(errorTarget);
+                                }
+                            } else {
+                                errorTarget = element.siblings('.js-error-target');
+                            }
+                        }
+                    }
+                }
+                errorWrapper = getWrapper(errorTarget);
+                if(0 === errorWrapper.length) {
+                    var parent = errorTarget.closest('.h--form--field'), errorWrapperClass = 'cloud';
+                    if(errorTarget.closest('.jsValidateField').length > 0) {
+                        parent = errorTarget.closest('.jsValidateField');
+                    }
+
+                    if(parent.hasClass('cloud-left')) {
+                        errorWrapperClass += ' cloud-left';
+                    } else {
+                        if(parent.hasClass('cloud-right')) {
+                            errorWrapperClass += ' cloud-right';
+                        } else {
+                            if(parent.hasClass('cloud-top')) {
+                                errorWrapperClass += ' cloud-top';
+                            }
+                        }
+                    }
+                    errorWrapper = $('<div/>', {
+                        'class': errorWrapperClass
+                    });
+                    errorWrapper.appendTo(errorTarget);
+                } else {
+
+                    if(errorWrapper.parents('.show-error-target').size() > 0) {
+                        errorWrapper.show();
+                        errorWrapper.parent('.js-error-target').show();
+                    }
+                }
+
+                return errorWrapper;
+            },
+            validateSameCompare: 'data-validatsametargets',
+            validateMethods: {
+                validateCoupleRadio: {
+                    name: 'validateCoupleRadio',
+                    error: 'Jedno z pól jest wymagane'
+                },
+                validateRadiobuttons: {
+                    name: 'validateRadiobuttons',
+                    error: 'Jedno z poniższych pól jest wymagane'
+                },
+                validateRequired: {
+                    name: 'validateRequired',
+                    other: 'data-validaterequired',
+                    error: 'Pole jest wymagane'
+                },
+                validateRequiredRadio: {
+                    name: 'validateRequiredRadio',
+                    other: 'data-validaterequired',
+                    error: 'Pole jest wymagane',
+                },
+                validateRequiredRadioValue: {
+                    name: 'validateRequiredRadioValue',
+                    other: 'data-validateRequiredRadioValue',
+                    isNotValidator: !0
+                },
+                validateRequiredRadioValue_value: {
+                    name: 'validateRequiredRadioValue_value',
+                    error: 'Niepoprawna opcja'
+                },
+                validateRequiredRadioAndInfo: {
+                    name: 'validateRequiredRadioAndInfo',
+                    error: 'Wybierz jedną z opcji, by zapisać zmiany'
+                },
+                validateRequiredYes: {
+                    name: 'validateRequiredYes',
+                    other: 'data-validaterequiredYes',
+                    error: 'Wymagana opcja Tak'
+                },
+                validateRequiredPrincipal: {
+                    name: 'validateRequiredPrincipal',
+                    other: 'data-validaterequired',
+                    error: 'Proszę, uzupełnij pole Dyspozycja w imieniu'
+                },
+                validateRequiredEurofatca: {
+                    name: 'validateRequired',
+                    other: 'data-validaterequired',
+                    error: 'Odpowiedź jest wymagana'
+                },
+                validateRequired_whenLike: {
+                    name: 'validateRequired_whenLike',
+                    error: 'Przynajmniej jedna wartość musi zostać wybrana'
+                },
+                validateLength: {
+                    name: 'validateLength',
+                    other: 'data-validatelength',
+                    isNotValidator: !0
+                },
+                validateRequired_validateUsTin: {
+                    name: 'validateRequired_validateUsTin',
+                    error: 'Podana wartość jest za krótka'
+                },
+                validateRequired_eurofatcaTin: {
+                    name: 'validateRequired_eurofatcaTin',
+                    error: 'Pole jest wymagane'
+                },
+                validateRequired_eurofatcaMainTin: {
+                    name: 'validateRequired_eurofatcaMainTin',
+                    error: 'Pole jest wymagane'
+                },
+                validateRequired_eurofatcaCountry: {
+                    name: 'validateRequired_eurofatcaCountry',
+                    error: 'Uzupełnij'
+                },
+                validateRequired_eurofatcaMainCountry: {
+                    name: 'validateRequired_eurofatcaMainCountry',
+                    error: 'Dany kraj rezydencji może być wybrany tylko raz'
+                },
+                validateRequired_eurofatcaDuplicateCountry: {
+                    name: 'validateRequired_eurofatcaDuplicateCountry',
+                    error: 'Dany kraj rezydencji może być wybrany tylko raz'
+                },
+                validatePromotionCheckBox: {
+                    name: 'validatePromotionCheckBox',
+                    error: 'Pole wymagane w przypadku wpisania kodu'
+                },
+                validatePromotionCode: {
+                    name: 'validatePromotionCode',
+                    error: 'KOD NIEPOPRAWNY'
+                },
+                validateRequired_eurofatcaOneRequired: {
+                    name: 'validateRequired_eurofatcaOneRequired',
+                    error: 'Pole jest wymagane'
+                },
+                validateLength_min: {
+                    name: 'validateLength_min',
+                    error: 'Podana wartość jest za krótka',
+                    errorCustom: 'Minimalna liczba znaków to'
+                },
+                validateLength_max: {
+                    name: 'validateLength_max',
+                    error: 'Podana wartość jest za długa',
+                    errorCustom: 'Maksymalna liczba znaków to'
+                },
+                validateLengthBT: {
+                    name: 'validateLengthBT',
+                    other: 'data-validatelengthBT',
+                    isNotValidator: !0
+                },
+                validateLengthBT_min: {
+                    name: 'validateLengthBT_min',
+                    error: 'Podana wartość jest za krótka, hasło ma składać się z 6-10 cyfr'
+                },
+                validateLengthBT_max: {
+                    name: 'validateLengthBT_max',
+                    error: 'Podana wartość jest za długa, hasło ma składać się z 6-10 cyfr'
+                },
+                validateLengthBTann: {
+                    name: 'validateLengthBTann',
+                    other: 'data-validatelengthBTann',
+                    isNotValidator: !0
+                },
+                validateLengthBTann_min: {
+                    name: 'validateLengthBTann_min',
+                    error: 'Podana wartość jest za krótka, hasło ma składać się z 6-10 cyfr'
+                },
+                validateLengthBTann_max: {
+                    name: 'validateLengthBTann_max',
+                    error: 'Hasło jest za długie'
+                },
+                validateLength_message: {
+                    name: 'validateLength_message',
+                    error: 'Podana wartość jest za krótka'
+                },
+                validateCustomerEmail: {
+                    name: 'validateCustomerEmail',
+                    error: 'Podany adres e-mail nie jest poprawny',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: ',
+                    errorMoreThanOneAt: "Adres e-mail musi zawierać 1 znak @",
+                    errorCharsLocalPart: "Identyfikator '%value%' nie jest poprawny. Dozwolone znaki to: litery, cyfry, kropki, myślniki, podkreślniki",
+                    errorCharsDomain: "Domena '%value%' nie jest poprawna. Dozwolone znaki to: litery, cyfry, kropki, myślniki",
+                    erorrPolishChars: "Proszę nie wprowadzać polskich znaków"
+                },
+                validateEmail: {
+                    name: 'validateEmail',
+                    error: 'Podany adres e-mail nie jest poprawny',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateAmount: {
+                    name: 'validateAmount',
+                    error: 'Podana wartość nie jest prawidłowa'
+                },
+                validateAmountPayout: {
+                    name: 'validateAmountPayout',
+                    error: 'Podana wartość nie jest wielokrotnością 50'
+                },
+                validateAlnum: {
+                    name: 'validateAlnum',
+                    error: 'Wartość nie jest alfanumeryczna'
+                },
+                validateAlpha: {
+                    name: 'validateAlpha',
+                    error: 'Wartość może zawierać tylko litery'
+                },
+                validateDigits: {
+                    name: 'validateDigits',
+                    error: 'Wprowadź tylko cyfry'
+                },
+                validateFullAmount: {
+                    name: 'validateFullAmount',
+                    error: 'Podana wartość nie jest prawidłowa'
+                },
+                validateRounding: {
+                    name: 'validateRounding',
+                    error: 'Niepoprawne zaokrąglenie'
+                },
+                validateDate: {
+                    name: 'validateDate',
+                    other: 'data-validatedate',
+                    error: 'Nieprawidłowa data: DD.MM.RRRR'
+                },
+                validateDate_min: {
+                    name: 'validateDate_min',
+                    error: 'Data jest wcześniejsza niż oczekiwana'
+                },
+                validateDate_max: {
+                    name: 'validateDate_max',
+                    error: 'Data jest późniejsza niż oczekiwana'
+                },
+                validateDate_ZusEnd: {
+                    name: 'validateDate_ZusEnd',
+                    error: 'Data jest późniejsza niż oczekiwana'
+                },
+                validateDateIdentityCard: {
+                    name: 'validateDateIdentityCard',
+                    other: 'data-validateDateIdentityCard',
+                    error: 'Format daty jest nieprawidłowy - DD.MM.RRRR'
+                },
+                validateDateIdentityCard_min: {
+                    name: 'validateDateIdentityCard_min',
+                    error: 'Data ważności dokumentu musi być późniejsza od daty bieżącej'
+                },
+                validateDateIdentityCard_max: {
+                    name: 'validateDateIdentityCard_max',
+                    error: 'Data jest późniejsza niż oczekiwana'
+                },
+                validateValue: {
+                    name: 'validateValue',
+                    other: 'data-validatevalue',
+                    isNotValidator: !0
+                },
+                validateValue_min: {
+                    name: 'validateValue_min',
+                    error: 'Podana wartość jest za mała'
+                },
+                validateValue_max: {
+                    name: 'validateValue_max',
+                    error: 'Podana wartość jest za duża'
+                },
+                validateNip: {
+                    name: 'validateNip',
+                    error: 'Numer NIP jest nieprawidłowy',
+                    errorDigits: 'Numer NIP może składać się tylko z cyfr'
+                },
+                validatePesel: {
+                    name: 'validatePesel',
+                    error: 'Numer PESEL jest nieprawidłowy',
+                    errorDigits: 'Numer PESEL może składać się tylko z cyfr'
+                },
+                optionalValidatePesel: {
+                    name: 'optionalValidatePesel',
+                    error: 'Numer PESEL jest nieprawidłowy',
+                    errorDigits: 'Numer PESEL może składać się tylko z cyfr'
+                },
+                validateRegon: {
+                    name: 'validateRegon',
+                    error: 'Numer REGON jest nieprawidłowy',
+                    errorDigits: 'Numer REGON może składać się tylko z cyfr'
+                },
+                validatePostCode: {
+                    name: 'validatePostCode',
+                    error: 'Kod pocztowy niezgodny z formatem XX-XXX'
+                },
+                validatePhone: {
+                    name: 'validatePhone',
+                    error: 'Numer telefonu jest niepoprawny, powinien zawierać numer kierunkowy kraju np. +48123456789'
+                },
+                validatePhonePL: {
+                    name: 'validatePhonePL',
+                    error: "Wprowadź polski numer telefonu komórkowego bez kierunkowego '+48'. Numer powinien składać się z 9 cyfr"
+                },
+                validatePhoneOther: {
+                    name: 'validatePhoneOther',
+                    error: "Wprowadź numer telefonu. Numer telefonu powinien składać się od 4 do 16 cyfr."
+                },
+                validatePhonePrefix: {
+                    name: 'validatePhonePrefix',
+                    error: "Wprowadź poprawny prefix"
+                },
+                validatePhonePrefixAbroad: {
+                    name: 'validatePhonePrefixAbroad',
+                    error: "Aby wprowadzić polski numer, wybierz opcję KRAJOWY."
+                },
+                validatePhoneCountry: {
+                    name: 'validatePhoneCountry',
+                    error: "Wprowadź maksymalnie 9 cyfr. Pierwszą cyfrą numeru telefonu może być 4, 5, 6, 7, 8"
+                },
+                validatePhoneAbroad: {
+                    name: 'validatePhoneAbroad',
+                    error: 'Prefiks może składać się maksymalnie z 4 cyfr. Brak możliwości wpisania "+48". Numer telefonu razem z prefiksem może składać się maksymalnie z 15 cyfr.'
+                },
+                validatePhoneStac: {
+                    name: 'validatePhoneStac',
+                    error: 'Numer telefonu jest niepoprawny'
+                },
+                validateString: {
+                    name: 'validateString',
+                    error: 'Wartość zawiera niedozwolnone znaki',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateSHA: {
+                    name: 'validateSHA',
+                    error: 'Błędny kod SHA'
+                },
+                validateContactMessage: {
+                    name: 'validateContactMessage',
+                    error: 'Wartość zawiera niedozwolnone znaki',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateRecipientName: {
+                    name: 'validateRecipientName',
+                    error: 'Wartość zawiera niedozwolnone znaki',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateRegex: {
+                    name: 'validateRegex',
+                    other: 'data-validateregex',
+                    isNotValidator: !0
+                },
+                validateRegex_regex: {
+                    name: 'validateRegex',
+                    error: 'Wartość zawiera niedozwolnone znaki',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateCustomRegex: {
+                    name: 'validateCustomRegex',
+                    other: 'data-validatecustomregex',
+                    isNotValidator: !0
+                },
+                validateCustomRegex_regex: {
+                    name: 'validateCustomRegex',
+                    error: 'Nieprawidłowa wartość',
+                },
+                validateAccountName: {
+                    name: 'validateAccountName',
+                    error: 'Wartość zawiera niedozwolnone znaki',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validatePassword: {
+                    name: 'validatePassword',
+                    error: 'Hasło zawiera niedozwolone znaki',
+                    errorBigSmall: 'Hasło musi zawierać przynajmniej jedną małą i jedną dużą literę',
+                    errorNumber: 'Hasło musi zawierać przynajmniej jedną cyfrę'
+                },
+                validatePasswordStrenght: {
+                    name: 'validatePasswordStrenght',
+                    error: 'Hasło zawiera niedozwolone znaki',
+                    status: ['Hasło zbyt krótkie', 'Hasło słabe', 'Hasło średnie', 'Hasło dobre', 'Hasło silne', 'Hasło bardzo silne']
+                },
+                validateSame: {
+                    name: 'validateSame',
+                    other: 'data-validatesame',
+                    isNotValidator: !0
+                },
+                validateSame_with: {
+                    name: 'validateSame_with',
+                    error: 'Wartości nie są identyczne'
+                },
+                validateSameBT: {
+                    name: 'validateSameBT',
+                    other: 'data-validatesameBT',
+                    isNotValidator: !0
+                },
+                validateSameBT_with: {
+                    name: 'validateSameBT_with',
+                    error: 'Podane wartości nie są identyczne'
+                },
+                validateHigherLower: {
+                    name: 'validateHigherLower',
+                    other: 'data-validatehigherlower',
+                    dataAsParameters: !0,
+                    errorToHigh: 'Wartość jest niższa od wymaganej',
+                    errorToLow: 'Wartość jest wyższa od wymaganej',
+                    errorToDiff: 'Odstęp pomiędzy datami jest za krótki'
+                },
+                validateRequiredWith: {
+                    name: 'validateRequiredWith',
+                    other: 'data-validaterequiredwith',
+                    isNotValidator: !0
+                },
+                validateRequiredWith_with: {
+                    name: 'validateRequiredWith_with',
+                    error: 'Wartość musi zostać podana'
+                },
+                validateRequiredWith_withAny: {
+                    name: 'validateRequiredWith_withAny',
+                    error: 'Wartość nie może być pusta.',
+                    error2: 'Przynajmniej jedno powiadomienie musi zostać wybrane.'
+                },
+                validateRequiredWith_withValue: {
+                    name: 'validateRequiredWith_withValue',
+                    error: 'Wartość musi zostać podana (wv)'
+                },
+                validateRequiredWith_withFieldValues: {
+                    name: 'validateRequiredWith_withFieldValues',
+                    error: 'Pole jest wymagane'
+                },
+                validateRequiredWith_whenLike: {
+                    name: 'validateRequiredWith_whenLike',
+                    error: 'Przynajmniej jedno konto musi zostać wybrane.'
+                },
+                validateNrb: {
+                    name: 'validateNrb',
+                    error: 'Numer konta nie jest poprawny.',
+                    errorUnexpectedPrefix: 'Numer konta nie może zawierać prefiksu "PL"'
+                },
+                validateNrbIRP: {
+                    name: 'validateNrbIRP',
+                    error: 'Numer konta nie jest poprawny.',
+                    errorUnexpectedPrefix: 'Numer konta nie może zawierać prefiksu "PL"'
+                },
+                validateBankName: {
+                    name: 'validateBankName',
+                    error: 'Przenoszone rachunki powinny pochodzić z jednego Banku'
+                },
+                validatePassport: {
+                    name: 'validatePassport',
+                    error: 'Numer paszportu nie jest poprawny.'
+                },
+                validateIDCard: {
+                    name: 'validateIDCard',
+                    error: 'Numer dowodu nie jest poprawny.'
+                },
+                validateValue_us1: {
+                    name: 'validateValue_us1',
+                    error: 'Podana wartość nie jest poprawna.'
+                },
+                validateValue_us2: {
+                    name: 'validateValue_us2',
+                    error: 'Podana wartość nie jest poprawna.'
+                },
+                validateApartmentNumber: {
+                    name: 'validateApartmentNumber',
+                    error: 'Podana wartość nie jest poprawnym numerem domu/mieszkania.',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateDeclarationDate: {
+                    name: 'validateDeclarationDate',
+                    error: 'Nieprawidłowa wartość (Prawidłowy format pola to MMRRRR).'
+                },
+                validateUnique: {
+                    name: 'validateUnique',
+                    isNotValidator: !0,
+                    other: 'data-validateunique'
+                },
+                validateUnique_byName: {
+                    name: 'validateUnique_byName',
+                    error: 'Wartość musi być unikatowa pośród pól o tej samej nazwie',
+                    other: 'data-validateunique'
+                },
+                validateYear: {
+                    name: 'validateYear',
+                    error: 'Niepoprawny format roku.',
+                },
+                validateSurface: {
+                    name: 'validateSurface',
+                    error: 'Nieprawidłowa wartość'
+                },
+                validateBeneficiaryName: {
+                    name: 'validateBeneficiaryName',
+                    error: 'Nieprawidłowa wartość'
+                },
+                validateFiveHundredPlus: {
+                    name: 'validateFiveHundredPlus',
+                    error: 'Nieprawidłowa wartość',
+                    errorPesel: 'Numer pesel został już podany',
+                    errorAgeOnPesel: 'Świadczenie przysługuje na dziecko w wieku do ukończenia 18 roku życia.'
+                },
+                validateMobilePin: {
+                    name: 'validateMobilePin',
+                    error4Chars: 'KOD PIN NIE MOŻE SKŁADAĆ SIĘ Z KOLEJNYCH CYFR',
+                    error3Chars: 'KOD PIN MUSI ZAWIERAĆ MINIMUM 3 RÓŻNE CYFRY'
+                },
+                validateAmountSection: {
+                    name: 'validateAmountSection',
+                    error: 'Nieprawidłowa wartość'
+                },
+                validatePasswordBT: {
+                    name: 'validatePasswordBT',
+                    nextChars: 'Hasło nie może zawierać 4 kolejnych cyfr',
+                    otherChars: 'Hasło nie może zawierać 4 powtórzonych cyfr',
+                    uniqueChars: 'Hasło musi zawierać przynajmniej 4 unikalne cyfry'
+                },
+                validatePasswordBTann: {
+                    name: 'validatePasswordBTann',
+                    nextChars: 'Hasło nie może składać się z 4 kolejnych cyfr',
+                    otherChars: 'Hasło nie może zawierać 4 takich samych cyfr',
+                    uniqueChars: 'Hasło musi zawierać przynajmniej 4 unikalne cyfry'
+
+                },
+                validateStreet: {
+                    name: 'validateStreet',
+                    error: 'Wartość zawiera niedozwolnone znaki',
+                    errorChar: 'Niedozwolony znak: ',
+                    errorChars: 'Niedozwolone znaki: '
+                },
+                validateIdentityDoc: {
+                    name: 'validateIdentityDoc',
+                    error: 'Nieprawidłowy numer dokumentu'
+                },
+                validateFinoDictSelected: {
+                    name: 'validateFinoDictSelected',
+                    error: 'Pole jest wymagane'
+                },
+                validateFinoSelect: {
+                    name: 'validateFinoSelect',
+                    error: 'Pole jest wymagane'
+                },
+                validateRequiredCheckboxGroup: {
+                    name: 'validateRequiredCheckboxGroup'
+                },
+                validateAccountSelect: {
+                    name: 'validateAccountSelect'
+                },
+                validatePrincipalSelected: {
+                    name: 'validatePrincipalSelected'
+                },
+                validatePersonLimits: {
+                    name: 'validatePersonLimits',
+                    other: 'data-validatePersonLimits',
+                    dataAsParameters: !0
+                },
+            }
+        },
+        init: function() {
+            var _base = this, def = _base.defaults;
+            $(window).on('afterRenderLoad', function() {
+                var showPass = _base.defaults.validationClassTarget().find('.showPass-field');
+                showPass.each(function() {
+                    _base.showPass($(this));
+                });
+            });
+            $(def.validateElementSelector).livequery(function() {
+                var element = $(this);
+
+                if(element.hasClass('validateAmount')) {
+                    element.on('keypress', function(event) {
+                        var _element = $(this),
+                            keyCode = event.keyCode || event.which,
+                            keysAllowed = [44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8, 9, 13];
+
+                        if($.inArray(keyCode, keysAllowed) === -1 && event.ctrlKey === false) {
+                            event.preventDefault();
+                        }
+                    });
+                }
+
+                if(element.hasClass('amountSection')) {
+                    element.on('keypress', function(event) {
+                        var _element = $(this),
+                            keyCode = event.keyCode || event.which,
+                            whiteKeysAllowed = [0, 8, 9, 13],
+                            keysAllowed = [44, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8, 9, 13];
+
+                        // dodatkowa funkcjonaloność, daje możliwość wprowadzić liczbę z maksymalnie dwoma miejscami po przecinku/kropce
+                        var value = _element.val() + String.fromCharCode(event.which),
+                            hasComma = false,
+                            pattern = /^(\d+(?:[\.\,]\d{1,2})?)$/;
+                        // sprawdzenie czy kropka, przecinek został użyty
+                        if(_element.val().indexOf(",") != -1 || _element.val().indexOf(".") != -1) {
+                            hasComma = true;
+                        }
+                        // sprawdzanie czy wartość pasuje do wzoru
+                        if($.inArray(keyCode, whiteKeysAllowed) === -1 && event.ctrlKey === false) {
+                            if((hasComma && !pattern.test(value)) || !$.isNumeric(value.substring(0, 1))) {
+                                event.preventDefault();
+                            }
+                        }
+                        if($.inArray(keyCode, keysAllowed) === -1 && event.ctrlKey === false) {
+                            event.preventDefault();
+                        }
+                    });
+                    element.on('input', function(event) {
+                        var _element = $(this);
+
+                        _element.val(_element.val().replace(/\s+/g, ''));
+                    });
+                }
+
+                if(element.hasClass('validateDigits')) {
+                    element.on('keypress', function(event) {
+                        var _element = $(this),
+                            keyCode = event.keyCode || event.which,
+                            keysAllowed = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 0, 8, 9, 13];
+
+                        if($.inArray(keyCode, keysAllowed) === -1 && event.ctrlKey === false) {
+                            event.preventDefault();
+                        }
+                    });
+                }
+
+                if(element.hasClass('validatePhoneNumber')) {
+                    element.on('keypress', function(event) {
+                        var _element = $(this),
+                            keyCode = event.keyCode || event.which,
+                            keysAllowed = [48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 8, 9, 13];
+
+                        if($.inArray(keyCode, keysAllowed) === -1 && event.ctrlKey === false) {
+                            event.preventDefault();
+                        }
+                    });
+                }
+
+                if(element.hasClass(def.validateExcludedClass)) {
+                    element.on(def.validateExcludedEvents, function(event) {
+                        _base.bindEvents(element, event);
+                    }).on(def.excludeString(def.validateEvents, def.validateExcludedEvents), function(event) {
+                        if(element.hasClass(def.elementValidatedClass)) {
+                            _base.bindEvents(element, event);
+                        }
+                    });
+                } else {
+                    element.on(def.validateEvents, function(event) {
+                        if (event.type === 'change') {
+                            if (element.hasClass('jsHideErrorOnChange') && element.closest('.jsValidateField').hasClass('alert')) {
+                                element.closest('.jsValidateField').removeClass('alert');
+                                element.closest('.jsRadioSingleContainer').find('.jsValidateField.alert').first().removeClass('alert');
+                            }
+
+                            if (element.hasClass('jsNoRevalidateOnChange')) {
+                                return;
+                            }
+                        }
+
+                        _base.bindEvents(element, event);
+                    });
+                }
+            }, function() {
+                var element = $(this);
+                element.off('.validateForms');
+            });
+        },
+        bindEvents: function(element, event) {
+            var _base = this, timersObject = {};
+            _base.defaults.validationClassTarget(element);
+            if(_base.shouldBeValidate(_base, element)) {
+                var keyCode = event.keyCode || event.which,
+                    sameTargets = element.attr(_base.defaults.validateSameCompare),
+                    validateID = element.attr('data-validateformsid');
+                if(validateID === undefined) {
+                    element.attr('data-validateformsid', Date.now() + '_vfe');
+                    validateID = element.attr('data-validateformsid');
+                    timersObject[validateID] = null;
+                }
+                if('keyup' !== event.type) {
+                    if(null !== timersObject[validateID]) {
+                        clearTimeout(timersObject[validateID]);
+                    }
+                    _base.runValidateMethods(_base, element);
+                } else {
+                    switch(keyCode) {
+                        case 9:
+                        case 13:
+                        case 16:
+                        case 17:
+                        case 18:
+                        case 20:
+                            break;
+                        default:
+                            if(null !== timersObject[validateID]) {
+                                clearTimeout(timersObject[validateID]);
+                            }
+                            timersObject[validateID] = setTimeout(function() {
+                                _base.runValidateMethods(_base, element);
+                            }, 300);
+                    }
+                }
+                if(sameTargets !== undefined) {
+                    var sameElement, sameTargetsArray = sameTargets.split(' ');
+                    $.map(sameTargetsArray, function(item) {
+                        sameElement = element.closest('form').find('[name="' + item + '"]');
+                        setTimeout(function() {
+                            _base.runValidateMethods(_base, sameElement);
+                        }, 100);
+                    });
+                }
+            }
+        },
+        shouldBeValidate: function(_base, element) {
+            var shouldBeValidate = !1, elementParent = _base.defaults.validationClassTarget(element);
+            if(!element.is(':disabled') && elementParent.is(':visible') && !elementParent.hasClass('disabled')) {
+                shouldBeValidate = !0;
+            }
+            if(element.hasClass('validatePassword') || element.hasClass('forceValidation')) {
+                shouldBeValidate = !0;
+            }
+            return shouldBeValidate;
+        },
+        runValidateMethods: function(_base, element) {
+            if(!element.length) {
+                return !1;
+            }
+            var elementLocalstorage, toValidate, index, isOverallValid = !0, def = _base.defaults;
+            if(_base.shouldBeValidate(_base, element)) {
+                if(_base.localStoreSupport()) {
+                    elementLocalstorage = element.data('validateForms');
+                } else {
+                    elementLocalstorage = element.validateForms;
+                }
+                if(elementLocalstorage === undefined || $.isEmptyObject(elementLocalstorage)) {
+                    toValidate = _base.getAllValidationMethods(_base, element);
+                    if(_base.localStoreSupport()) {
+                        element.data('validateForms', toValidate);
+                    } else {
+                        element.validateForms = toValidate;
+                    }
+                } else {
+                    toValidate = elementLocalstorage;
+                }
+                for(index = 0; index < toValidate.length; ++index) {
+                    var validationStatus, errorMsg, methodName = toValidate[index].methodName,
+                        methodParams = toValidate[index].methodParams,
+                        isValid = _base.runSingleMethod(_base, element, methodName, methodParams),
+                        customMsg = element.attr('data-' + methodName.split('_')[0].toLowerCase() + '_message');
+
+                    if(methodName.indexOf('_message_') !== -1) {
+                        continue;
+                    }
+                    if('object' == typeof isValid) {
+                        validationStatus = isValid.validationStatus;
+                        errorMsg = isValid.errorMsg;
+
+                        if(isValid.breakValidation !== undefined && isValid.breakValidation) {
+                            isOverallValid = !1;
+                            break;
+                        }
+
+                    } else {
+                        validationStatus = isValid;
+                        errorMsg = _base.defaults.validateMethods[methodName].error;
+                    }
+                    $.map(toValidate, function(value, key) {
+                        var messageSplit = methodName.split('_'), messageName, isMessage;
+                        if(messageSplit[1] === 'max' && value.methodName.indexOf(messageSplit[0] + '_message_max_additional') !== -1) {
+                            messageName = messageSplit[0] + '_message_max_additional';
+                        } else {
+                            messageName = messageSplit[0] + '_message_' + messageSplit[1];
+                        }
+
+                        isMessage = value.methodName.indexOf(messageName);
+                        if(isMessage !== -1) {
+                            errorMsg = value.methodParams;
+                        }
+                    });
+                    if(customMsg) {
+                        var pattern = /(error:)(.*)(\;)/, _cusomMsg = customMsg.replace(pattern, '$2');
+                        if(_cusomMsg) {
+                            errorMsg = _cusomMsg;
+                        }
+                    }
+                    if(validationStatus === !1) {
+                        _base.updateValidationError(_base, element, errorMsg);
+                        _base.setValidationClass(_base, element, def.alertClass, def.successClass + ' ' + def.errorClass);
+                        isOverallValid = !1;
+
+                        $('.js-validation-cloud-show input:focus').next('label').find('.cloud').addClass("show");
+
+                        $('#formStandard input:focus').next('label').find('.cloud').addClass("show");
+                        $('#formUs input:focus').next('label').find('.cloud').addClass("show");
+                        $('#formZus input:focus').next('label').find('.cloud').addClass("show");
+                        $('#formCurrency input:focus').next('label').find('.cloud').addClass("show");
+                        break;
+                    } else {
+                        if(isValid === undefined) {
+                            _base.updateValidationError(_base, element, 'Wystąpił nieoczekiwany błąd aplikacji.');
+                            _base.setValidationClass(_base, element, def.alertClass, def.successClass + ' ' + def.errorClass);
+                            isOverallValid = !1;
+                            break;
+                        }
+                        $('#formStandard input:focus').next('label').find('.cloud').removeClass("show");
+                        $('#formUs input:focus').next('label').find('.cloud').removeClass("show");
+                        $('#formZus input:focus').next('label').find('.cloud').removeClass("show");
+                        $('#formCurrency input:focus').next('label').find('.cloud').removeClass("show");
+                    }
+                }
+                if(isOverallValid) {
+                    _base.setValidationClass(_base, element, def.successClass, def.alertClass + ' ' + def.errorClass + ' ' + def.softClass);
+                }
+                _base.formBlocking(_base, element);
+            }
+            return element;
+        },
+        runSingleMethod: function(_base, element, methodName, methodValue) {
+            if(_base[methodName] !== undefined) {
+                validateResult = _base[methodName](_base, element, methodValue);
+                return validateResult;
+            } else {
+            }
+        },
+        updateValidationError: function(_base, element, error) {
+            _base.defaults.errorMessageTarget(element).html(error);
+        },
+        setValidationClass: function(_base, element, addClass, removeClass) {
+
+            var def = _base.defaults, classMarked = def.validationClassMarked(),
+                classTarget = def.validationClassTarget(element),
+                removeClassVal = removeClass !== undefined ? removeClass : '';
+            element.addClass(def.elementValidatedClass);
+            classTarget.addClass(addClass).removeClass(removeClassVal);
+            if($('.alert:not(.mark)').length === 0 && element.closest('form').find('.error').length === 0) {
+                classMarked.removeClass(removeClassVal);
+            }
+            $('.mark[data-name="' + element.attr('name') + '"]').addClass(addClass).removeClass(removeClassVal);
+            if(!(addClass === 'success' && $('form .alert').length > 0)) {
+                $('.activeStep .mark').addClass(addClass).removeClass(removeClassVal);
+            }
+            if(addClass === 'success') {
+                element.parent().children().find('.cloud').removeClass('show');
+            }
+
+            if($('.mark-multiple').length > 0) {
+                var markContainer = element.closest('.mark-multiple');
+                if(markContainer instanceof jQuery) {
+                    markContainer.find('.alert-warning').addClass(addClass).removeClass(removeClassVal);
+                }
+            }
+        },
+        showPass: function(passShow) {
+            var _base = this, def = _base.defaults, passElement, visiblePass;
+            if(!passShow.hasClass('js-password-show')) {
+                passShow.addClass('js-password-show');
+                passShow.on('click', function(event) {
+                    event.preventDefault();
+                    passElement = _base.defaults.validationClassTarget(passShow).find('input[type="password"]');
+                    if(!passShow.hasClass('active')) {
+                        passShow.addClass('active');
+                        visiblePass = $('<input/>', {
+                            type: 'text',
+                            'class': 'js-visible-password'
+                        });
+                        if(passShow.hasClass('validateTin')) {
+                            visiblePass = $('<input/>', {
+                                type: 'text',
+                                'class': 'todisabled toValidate validateRequired validateDigits validateRequired_validateUsTin inputMask js-visible-password',
+                                'maxlength': '9',
+                                'data-inputmask': "'mask': '999999999', 'placeholder': ''",
+                                'data-validate-class': "alert"
+                            });
+                        }
+                        if(passShow.hasClass('validateBTpass')) {
+                            visiblePass = $('<input/>', {
+                                type: 'text',
+                                'class': 'todisabled toValidate validateRequired validateDigits validateLengthBT validatePasswordBT js-visible-password',
+                                'maxlength': '10',
+                                'data-validatelengthbt': "min:6;max:10;"
+                            });
+                        }
+                        if(passShow.hasClass('validateBTpass2')) {
+                            visiblePass = $('<input/>', {
+                                type: 'text',
+                                'class': 'todisabled toValidate validateDigits validateLengthBT validateSame js-visible-password',
+                                'maxlength': '10',
+                                'data-validatelengthbt': "min:6;max:10;",
+                                'data-validatesame': "with:new_password_bt;"
+                            });
+                        }
+                        if(passShow.hasClass('validateBTpassAnn')) {
+                            visiblePass = $('<input/>', {
+                                type: 'text',
+                                'class': 'todisabled toValidate validateRequired validateDigits validateLengthBTann validatePasswordBTann js-visible-password',
+                                'maxlength': '10',
+                                'data-validatelengthbtann': "min:6;max:10;"
+                            });
+                        }
+                        if(passShow.hasClass('validateBTpassAnn2')) {
+                            visiblePass = $('<input/>', {
+                                type: 'text',
+                                'class': 'todisabled toValidate validateDigits validateLengthBTann validateSameBT js-visible-password',
+                                'maxlength': '10',
+                                'data-validatelengthbtann': "min:6;max:10;",
+                                'data-validatesameBT': "with:new_password_bt;"
+                            });
+                        }
+                        visiblePass.insertAfter(passElement.hide()).val(passElement.val()).focus();
+                        visiblePass.on('change.validateForms', function() {
+                            passElement.val(visiblePass.val());
+                            passElement.trigger('change');
+                        }).on('keyup.validateForms', function() {
+                            passElement.val(visiblePass.val());
+                            passElement.trigger('keyup');
+                        });
+                    } else {
+                        passShow.removeClass('active');
+                        passElement.show().focus().next('.js-visible-password').trigger('change').remove();
+                    }
+                });
+            }
+        },
+        verifyTinIsDisabled: function(passShow) {
+            // showPass = $('form').find('.showPass-field');
+            if(showPass.length > 0) {
+                $(showPass).each(function() {
+                    if($(this).parents("#eurofatca-country-example").length) {
+                        return;
+                    }
+                    let container = $(this).closest('.h--form--field');
+                    let textInput = container.find('input[type="text"]').length < 1 ? container.find('input[type="password"]') : container.find('input[type="text"]');
+                    if(textInput.prop('disabled')) {
+                        container.find('.js-visible-password').remove();
+                        $(this).removeClass('js-password-show');
+                        $(this).unbind();
+                    }
+                });
+            }
+        },
+        getAllValidationMethods: function(_base, element) {
+            var index, i, def = _base.defaults, classArray = element[0].classList, toValidate = [];
+            for(index = 0; index < classArray.length; ++index) {
+                var additionalValidators, methodOptions, methodName = classArray[index];
+                if($.isEmptyObject(def.validateMethods[methodName]) === !1) {
+                    methodOptions = def.validateMethods[methodName];
+                    if(methodOptions.other !== undefined) {
+                        if(methodOptions.isNotValidator !== !0 && methodOptions.dataAsParameters !== !0) {
+                            toValidate.push({
+                                methodName: methodOptions.name,
+                                methodParams: methodOptions.params
+                            });
+                        }
+                        if(element.attr(methodOptions.other) !== undefined) {
+                            additionalValidators = _base.stringToArray(_base, element.attr(methodOptions.other));
+                            if($.isEmptyObject(additionalValidators) === !1) {
+                                if(methodOptions.dataAsParameters !== !0) {
+                                    for(i = 0; i < additionalValidators.length; ++i) {
+                                        if(additionalValidators[i].name !== 'message') {
+                                            toValidate.push({
+                                                methodName: methodOptions.name + '_' + additionalValidators[i].name,
+                                                methodParams: additionalValidators[i].params
+                                            });
+                                        }
+                                    }
+                                } else {
+                                    var aMethodParams = [];
+                                    for(i = 0; i < additionalValidators.length; ++i) {
+                                        if(additionalValidators[i].name !== 'message') {
+                                            aMethodParams[additionalValidators[i].name] = additionalValidators[i].params;
+                                        }
+                                    }
+                                    toValidate.push({
+                                        methodName: methodOptions.name,
+                                        methodParams: aMethodParams
+                                    });
+                                }
+                            }
+                        }
+                    } else {
+                        if('validatePasswordStrenght' !== methodOptions.name) {
+                            toValidate.push({
+                                methodName: methodOptions.name,
+                                methodParams: methodOptions.params
+                            });
+                        } else {
+                            toValidate.splice(0, 0, {
+                                methodName: methodOptions.name,
+                                methodParams: methodOptions.params
+                            });
+                        }
+                    }
+                }
+            }
+            return toValidate;
+        },
+        formBlocking: function(_base, element) {
+            var form = element.closest('form');
+            notValidElements = form.find('.' + _base.defaults.alertClass + ':not(.skipValidation)');
+            errorElements = form.find('.' + _base.defaults.errorClass + ':not(.skipValidation)');
+
+            if(notValidElements.length > 0 || errorElements.length > 0) {
+                _base.lockForm(_base, form);
+            } else {
+                _base.unlockForm(_base, form);
+            }
+        },
+        lockForm: function(_base, form) {
+            form.addClass(_base.defaults.disabledFormClass);
+            form.trigger('form:lock');
+        },
+        unlockForm: function(_base, form) {
+            form.removeClass(_base.defaults.disabledFormClass);
+            form.trigger('form:unlock');
+        },
+        setFormErrors: function(errorObject) {
+            var _base = this, counter = 0;
+            if(errorObject instanceof String) {
+                try {
+                    errorObject = $.parseJSON(errorObject);
+                } catch(error) {
+                }
+            }
+            if(errorObject.validationMessages !== undefined) {
+                $.map(errorObject.validationMessages, function(value, key) {
+
+                    if(typeof key === 'string' && key.indexOf('.') > -1) {
+                        // Obsługa formularzy wielowymiarowych
+                        var split = key.split('.');
+
+                        var implode = split[0];
+                        for(i = 1; i < split.length; i++) {
+                            implode += '[' + split[i] + ']';
+                        }
+
+                        key = implode;
+                    }
+
+                    var elementMain = typeof value === 'string' ? $('[name="' + key + '"]') : $(value.selector),
+                        element = elementMain.hasClass('validateNotVisible') ? elementMain.eq(0) : elementMain.filter(':visible').eq(0),
+                        field = _base.defaults.validationClassTarget(elementMain),
+                        errorMsg = typeof value === 'string' ? value : value.message,
+                        form = element.closest('form'),
+                        def = _base.defaults,
+                        elementOT;
+
+                    if(field.hasClass('h--select') || field.hasClass('jsSelectCustomValidate')) {
+                        element = elementMain;
+                    }
+                    if(element === undefined) {
+                        elementOT = element.offset().top;
+                    } else {
+                        elementOT = null;
+                    }
+
+                    var errorClass = element.attr('data-validate-class') ? element.attr('data-validate-class') : def.errorClass;
+
+                    if(true === value.is_soft) {
+                        errorClass = def.softClass;
+                    }
+
+                    _base.updateValidationError(_base, element, errorMsg);
+                    _base.setValidationClass(_base, element, errorClass);
+
+                    if(true === value.is_soft) {
+                        element.parent().find('.cloud').addClass('show');
+                        return true;
+                    }
+
+                    _base.lockForm(_base, form);
+                    element.on(def.validateEvents, function() {
+                        var target = $('.js-error-target');
+                        target.length > 0 ? target.remove() : true;
+
+                        _base.setValidationClass(_base, element, undefined, errorClass);
+                        _base.unlockForm(_base, form);
+                    });
+                    if(0 === counter && element && !_base.elementInViewport(element) && null !== elementOT) {
+                        $('html, body').animate({
+                            scrollTop: elementOT - _base.defaults.validationClassTarget(element).find('.cloud').actual('outerHeight') - 25 + 'px'
+                        }, 250, 'easeOutQuad');
+                    }
+                    counter++;
+                });
+            }
+        },
+        elementInViewport: function(el) {
+            if(el instanceof jQuery) {
+                el = el[0];
+            }
+            var rect = el.getBoundingClientRect();
+            return rect.top >= 0 && rect.bottom <= $(window).height() && rect.height > 0 && rect.width > 0;
+        },
+        stringToArray: function(_base, string) {
+            var splitOnSemicolons, arrayFromString = [];
+            if(-1 !== string.indexOf(';')) {
+                splitOnSemicolons = string.split(';');
+                $.map(splitOnSemicolons, function(value) {
+                    if(-1 !== value.indexOf(':')) {
+                        var splitOnColon = value.split(':');
+                        arrayFromString.push({
+                            name: splitOnColon[0],
+                            params: splitOnColon[1]
+                        });
+                    } else {
+                        if('' !== value) {
+                        }
+                    }
+                });
+            }
+            return arrayFromString;
+        },
+        resetValidation: function(_base, element, unlockForm) {
+            var def = _base.defaults, resetElements = $(), classMarked = def.validationClassMarked();
+            if('object' == typeof element) {
+                resetElements = element.filter('.toValidate').length ? element.filter('.toValidate') : element.find('.toValidate');
+            }
+            if('string' == typeof element) {
+                $.map(element.replace(/\s+/g, '').split(','), function(value) {
+                    resetElements = resetElements.add($('[name="' + value + '"]'));
+                });
+            }
+            resetElements.each(function() {
+                $(this).removeClass('js-validatedElement');
+                _base.defaults.validationClassTarget($(this)).removeClass('alert error success');
+                _base.defaults.validationClassTarget($(this)).find('.cloud').removeClass('display show');
+                if(unlockForm) {
+                    $(this).closest('form').removeClass('disabled');
+                }
+            });
+            if($('.alert:not(.mark)').length === 0 && $(element).closest('form').find('.error').length === 0) {
+                classMarked.removeClass('alert error success');
+            }
+            return resetElements;
+        },
+        unbindValidation: function(_base, element) {
+            var unbindElements = $();
+            if(element instanceof jQuery) {
+                if(element.hasClass('toValidate')) {
+                    unbindElements = unbindElements.add(element);
+                } else {
+                    unbindElements = unbindElements.add(element.find('.toValidate'));
+                }
+            } else {
+                if('string' == typeof element) {
+                    $.map(element.replace(/\s+/g, '').split(','), function(value) {
+                        unbindElements = unbindElements.add($('[name="' + value + '"]'));
+                    });
+                }
+            }
+            unbindElements.each(function() {
+                $(this).removeClass(function(index, className) {
+                    return (className.match(/\bvalidate\S+/g) || []).join(' ');
+                }).removeClass('js-validatedElement');
+                _base.defaults.validationClassTarget($(this)).removeClass('alert error');
+                if(_base.localStoreSupport()) {
+                    if($(this).data('validateForms')) {
+                        $(this).data('validateForms', {});
+                    }
+                } else {
+                    $(this).validateForms = {};
+                }
+            });
+            return unbindElements;
+        },
+        unbindSpecificValidation: function(_base, element, validationClass) {
+            var unbindElements = $();
+            if(element instanceof jQuery) {
+                unbindElements = unbindElements.add(element);
+            }
+            unbindElements.each(function() {
+                $(this).removeClass(validationClass);
+                if(_base.localStoreSupport()) {
+                    if($(this).data('validateForms')) {
+                        $(this).data('validateForms', {});
+                    }
+                } else {
+                    $(this).validateForms = {};
+                }
+            });
+            return unbindElements;
+        },
+        bindValidation: function(_base, element, validateMethods, bindToCurrent) {
+            var bindElements = $();
+            if(element instanceof jQuery) {
+                if(bindToCurrent || element.hasClass('toValidate')) {
+                    bindElements = bindElements.add(element);
+                } else {
+                    bindElements = bindElements.add(element.find('.toValidate'));
+                }
+            } else {
+                if('string' == typeof element) {
+                    $.map(element.replace(/\s+/g, '').split(','), function(value) {
+                        bindElements = bindElements.add($('[name="' + value + '"]'));
+                    });
+                }
+            }
+            bindElements.each(function() {
+                $(this).addClass('toValidate').addClass(validateMethods).removeClass('js-validatedElement');
+                if(_base.localStoreSupport()) {
+                    if($(this).data('validateForms')) {
+                        $(this).data('validateForms', {});
+                    }
+                } else {
+                    $(this).validateForms = {};
+                }
+            });
+            return bindElements;
+        },
+        getElementValue: function(el, withMask) {
+            var value, element = el;
+            if(!element instanceof jQuery) {
+                element = $(el);
+            }
+            if((element.data('inputmask') || this.defaults.checkUnmask(element)) && withMask !== true) {
+                value = element.inputmask('unmaskedvalue');
+            } else {
+                switch(element.attr('type')) {
+                    case 'checkbox':
+                    case 'radio':
+                        if(element.is(':checked')) {
+                            value = 1;
+                        } else {
+                            value = 0;
+                        }
+                        break;
+
+                    default:
+                        value = element.val();
+                }
+            }
+            return value;
+        },
+        validateRequired: function(_base, element) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(element.attr('data-validaterequired')) {
+                isValid = !0;
+            } else {
+                if("select" === element[0].nodeName.toLowerCase()) {
+                    isValid = value && value.length > 0 ? !0 : !1;
+                } else {
+                    if(/radio|checkbox/i.test(element[0].type)) {
+                        isValid = element.filter(":checked").length > 0 ? !0 : !1;
+                    } else {
+                        if(value.length > 0) {
+                            isValid = !0;
+                        }
+                    }
+                }
+            }
+            return isValid;
+        },
+        validateRequiredRadio: function(_base, element) {
+            var value = _base.getElementValue(element), isValid = !1;
+            var element = $(element).prop('type') == "radio" ? element : element.find('input');
+            if(element.attr('data-validaterequired')) {
+                isValid = !0;
+            } else {
+                if($(element).prop('type') == "radio") {
+                    let currentName = element.attr('name');
+                    isValid = $('input[name="' + currentName + '"]:checked').length > 0 ? !0 : !1;
+                } else {
+                    if(value.length > 0) {
+                        isValid = !1;
+                    }
+                }
+            }
+            return isValid;
+        },
+        validateRequiredRadioValue_value: function(_base, element, value) {
+            var element = $(element).prop('type') == "radio" ? element : element.find('input'), isValid = !1;
+            var currentName = element.attr('name');
+            var elValidate = $('input[name="' + currentName + '"]:checked');
+            if(elValidate.lenght === 0) {
+                isValid = !1;
+            } else {
+                isValid = elValidate.val() == value;
+            }
+            return isValid;
+        },
+        validateRequiredRadioAndInfo: function(_base, el) {
+            var isValid = !1,
+                currentName = el.attr('name')
+            ;
+
+            isValid = $('input[name="' + currentName + '"]:checked').length > 0 ? !0 : !1;
+
+            return isValid;
+        },
+        validateRequiredYes: function(_base, element) {
+            var value = _base.getElementValue(element), isValid = !0;
+            if(value != 1) {
+                isValid = !1;
+            }
+            return isValid;
+        },
+        validateRequiredPrincipal: function(_base, element) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(element.attr('data-validaterequired')) {
+                isValid = !0;
+            } else {
+                if("select" === element[0].nodeName.toLowerCase()) {
+                    isValid = value && value.length > 0 ? !0 : !1;
+                } else {
+                    if(/radio|checkbox/i.test(element[0].type)) {
+                        isValid = element.filter(":checked").length > 0 ? !0 : !1;
+                    } else {
+                        if(value.length > 0) {
+                            isValid = !0;
+                        }
+                    }
+                }
+            }
+
+            var parentElement = $(element).parents('.dlDispositionBy.disposition');
+            if($(element).parents('.dlDispositionBy.disposition').length > 0) {
+                if(isValid == !1) {
+                    parentElement.find('[data-error-color="true"]').each(function() {
+                        $(this).addClass("error-color");
+                    });
+                } else {
+                    parentElement.find('[data-error-color="true"]').each(function() {
+                        $(this).removeClass("error-color");
+                    });
+                }
+            }
+
+            return isValid;
+        },
+        validateRequired_whenLike: function(_base, element, partOfName) {
+            var isValid = !1, fields = element.closest('form').find('[name^="' + partOfName + '"]');
+            fields.each(function() {
+                if($(this).is(':checked')) {
+                    isValid = !0;
+                }
+            });
+            return isValid;
+        },
+        validateCustomerEmail: function(_base, element) {
+            var pattern = /^(?=^.{7,50}$)(?=^.{1,45}@.{4,48}$)[a-zA-Z0-9\_\-](?:\.?[a-zA-Z0-9\_\-])*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])*$/;
+            var value = _base.getElementValue(element);
+            var definedMsgs = _base.defaults.validateMethods.validateCustomerEmail;
+            var returnMsq = [];
+            if(pattern.test(value) && value.length < 255 && value.replace(pattern, '$1').length < 65) { //&& value.toLowerCase()!=='brak@brak.pl'
+                return !0;
+            } else {
+                var atCount = (value.match(/@/g) || []).length;
+                if(atCount > 1 || atCount < 1) {//@ count
+                    returnMsq.push(definedMsgs.errorMoreThanOneAt);
+                } else if(!(/^[^ĄąĆćĘęŁłŃńÓóŚśŹźŻż]+$/.test(value))) { //polish chars
+                    returnMsq.push(definedMsgs.erorrPolishChars);
+                } else {//email parts check
+                    var emailParts = value.split('@');
+                    var regexp = /^[A-Za-z\d\.\-\_]*$/;
+                    if(!(regexp.test(emailParts[0]))) {
+                        emailParts[0] = emailParts[0].length > 20 ? emailParts[0].substr(0, 20) + '...' : emailParts[0];
+                        returnMsq.push(definedMsgs.errorCharsLocalPart.replace('%value%', emailParts[0]));
+                    } else if(!(regexp.test(emailParts[1]))) {
+                        emailParts[1] = emailParts[1].length > 20 ? emailParts[1].substr(0, 20) + '...' : emailParts[1];
+                        returnMsq.push(definedMsgs.errorCharsDomain.replace('%value%', emailParts[1]));
+                    }
+                }
+            }
+            if(!returnMsq[0])
+                returnMsq.push(definedMsgs.error);
+            return {
+                validationStatus: !1,
+                errorMsg: returnMsq.join()
+            };
+        },
+        validateEmail: function(_base, element) {
+            if(element.hasClass('customerEmail')) {
+                return this.validateCustomerEmail(_base, element);
+            } else {
+                var pattern = /^(?=^.{7,50}$)(?=^.{2,45}@.{4,47}$)[a-zA-Z0-9\_\-](?:\.?[a-zA-Z0-9\_\-])*@[a-zA-Z0-9\-](?:\.?[a-zA-Z0-9\-])*$/,
+                    isValid = !1, value = _base.getElementValue(element);
+
+                if(!value) {
+                    return !0;
+                }
+                if(pattern.test(value) && value.length < 255 && value.replace(pattern, '$1').length < 65) {
+                    isValid = !0;
+                }
+                return isValid;
+            }
+        },
+        validateLength_min: function(_base, element, minLength) {
+            var value = _base.getElementValue(element), isValid = !1,
+                customMsg = _base.defaults.validateMethods.validateLength_min;
+
+            var withoutInt = element.data('withoutint');
+            if(!value) {
+                return !0;
+            }
+            if(withoutInt) {
+                value = value.replace(/[\s]+|(\.|,).*/g, '');
+            }
+            if(value.length >= parseInt(minLength)) {
+                isValid = !0;
+            }
+            if(element.hasClass('town') && !isValid) {
+                return {
+                    validationStatus: isValid,
+                    errorMsg: customMsg.errorCustom + ' ' + minLength
+                };
+            }
+            return isValid;
+        },
+        validateLength_max: function(_base, element, maxLength) {
+            var value = _base.getElementValue(element), isValid = !1,
+                customMsg = _base.defaults.validateMethods.validateLength_max;
+            ;
+            var withoutWhitespace = element.data('withoutwhitespace');
+            var withoutInt = element.data('withoutint');
+
+            if(!value) {
+                return !0;
+            }
+            if(withoutWhitespace) {
+                value = value.replace(/\s/g, '');
+            }
+            if(withoutInt) {
+                value = value.replace(/[\s]+|(\.|,).*/g, '');
+            }
+            if(value.length <= parseInt(maxLength)) {
+                isValid = !0;
+            }
+            if(element.is('.town, .street, .apartments_no, .house_no') && !isValid) {
+                return {
+                    validationStatus: isValid,
+                    errorMsg: customMsg.errorCustom + ' ' + maxLength
+                };
+            }
+            return isValid;
+        },
+        validateLengthBT_min: function(_base, element, minLength) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(value.length >= parseInt(minLength)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateLengthBT_max: function(_base, element, maxLength) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(value.length <= parseInt(maxLength)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePromotionCode: function(_base, element) {
+            var pattern = /^[a-hj-km-np-zA-HJ-KM-NP-Z1-9]*$/, isValid = !1, value = _base.getElementValue(element);
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateLengthBTann_min: function(_base, element, minLength) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(value.length >= parseInt(minLength)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateLengthBTann_max: function(_base, element, maxLength) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(value.length <= parseInt(maxLength)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateAmount: function(_base, element) {
+            var allowZero, value = _base.getElementValue(element), amount = parseFloat(value.replace(/,/, '.'));
+            if(!value) {
+                return !0;
+            } else {
+                value = value.replace(/ /g, '');
+                $(element).val(value);
+                if(value.length !== value.replace(/[^\d,.-]/g, '').length || '.' === value.slice(-1) || ',' === value.slice(-1)) {
+                    return !1;
+                }
+            }
+            var pattern = /(^0$)|(^0[.|,]\d{1,2}$)|(^[1-9]\d*([.|,]\d{1,2})?$)/, isValid = !1;
+            if(element.attr('data-validateamount') && -1 !== element.attr('data-validateamount').replace(/\s+/g, '').toLowerCase().indexOf('allowzero:1')) {
+                allowZero = !0;
+            } else {
+                allowZero = amount > 0;
+            }
+            if(allowZero && 1e9 >= amount && pattern.test(amount)) {
+                isValid = !0;
+            }
+
+            if(value.length > 1 && value[0] === '0' && element.attr('data-validateamounttype') === 'fullAmount') {
+                isValid = false;
+            }
+
+            return isValid;
+        },
+        validateAmountPayout: function(_base, element) {
+            var isValid = !1, value = _base.getElementValue(element);
+            if(value % 50 == 0) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateAlnum: function(_base, element) {
+            var pattern = /^[0-9a-zA-Z]*$/, isValid = !1, value = _base.getElementValue(element);
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateAlpha: function(_base, element) {
+            var pattern = /^[a-zA-Z]*$/, isValid = !1, value = _base.getElementValue(element);
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateDigits: function(_base, element) {
+            var pattern = /^[0-9]*$/, isValid = !1, value = _base.getElementValue(element);
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateFullAmount: function(_base, element) {
+            var pattern = /^[0-9]*(\,|\.)?[0-9]{1,2}$/, isValid = !1, value = _base.getElementValue(element);
+            if(!value) {
+                return !0;
+            }
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateRounding: function(_base, element) {
+            var isValid = !0, value = _base.getElementValue(element).replace(',', '.');
+            element.val(Math.round(value));
+            return isValid;
+        },
+        validateRounding: function(_base, element) {
+            var isValid = !0, value = _base.getElementValue(element).replace(',','.');
+            element.val(Math.round(value));
+            return isValid;
+        },
+        validateDate: function(_base, element) {
+            var elementLocalstorage, addMinIndex,
+                pattern = /^(0[1-9]|[12][0-9]|3[01])[.]{0,1}(0[1-9]|1[012])[.]{0,1}(19|20)\d\d$/, haveMinDate = !1,
+                isValid = !1, value = _base.getElementValue(element);
+            var allowedNull = element.data('allowednull') === 1 ? true : false;
+
+            if(!value && !allowedNull) {
+                return !0;
+            }
+
+            if(allowedNull) {
+                isValid = !0;
+            }
+
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            if(_base.localStoreSupport()) {
+                elementLocalstorage = element.data('validateForms');
+            } else {
+                elementLocalstorage = element.validateForms;
+            }
+            $.map(elementLocalstorage, function(item, index) {
+                if('validateDate_min' === item.methodName) {
+                    haveMinDate = !0;
+                }
+                if('validateDate' === item.methodName) {
+                    addMinIndex = index + 1;
+                }
+            });
+            if(!haveMinDate) {
+                var minDate, today = new Date(), dd = today.getDate(), mm = today.getMonth() + 1,
+                    yyyy = today.getFullYear();
+                if(10 > dd) {
+                    dd = '0' + dd;
+                }
+                if(10 > mm) {
+                    mm = '0' + mm;
+                }
+                minDate = dd + '-' + mm + '-' + yyyy;
+                elementLocalstorage.splice(addMinIndex, 0, {
+                    methodName: 'validateDate_min',
+                    methodParams: minDate
+                });
+            }
+            return isValid;
+        },
+        validateDate_min: function(_base, element, minDate) {
+            var valueMinDate, value = _base.getElementValue(element),
+                pattern = /(\d{2})[-|.]{0,1}(\d{2})[-|.]{0,1}(\d{4})/,
+                valueDate = new Date(value.replace(pattern, '$3/$2/$1')).getTime(), isValid = !1;
+            var allowedNull = element.data('allowednull') === 1 ? true : false;
+
+            if(allowedNull) {
+                isValid = !0;
+            }
+
+            if('0' == minDate) {
+                valueMinDate = 0;
+            } else {
+                valueMinDate = new Date(minDate.replace(pattern, '$3/$2/$1')).getTime();
+            }
+            if(valueDate >= valueMinDate) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateDate_max: function(_base, element, maxDate) {
+            var value = _base.getElementValue(element), pattern = /(\d{2})[-|.]{0,1}(\d{2})[-|.]{0,1}(\d{4})/,
+                valueDate = new Date(value.replace(pattern, '$3/$2/$1')).getTime(),
+                valueMaxDate = new Date(maxDate.replace(pattern, '$3/$2/$1')).getTime(), isValid = !1;
+            var allowedNull = element.data('allowednull') === 1 ? true : false;
+
+            if(allowedNull) {
+                isValid = !0;
+            }
+
+            if(valueMaxDate >= valueDate) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateDate_ZusEnd: function(_base, element) {
+            var value = _base.getElementValue(element),
+                pattern = /(\d{2})[-|.]{0,1}(\d{2})[-|.]{0,1}(\d{4})/,
+                valueDate = new Date(value.replace(pattern, '$3/$2/$1')).getTime(),
+                valueMaxDate = new Date($(element).data('validatedate_zusend').replace(pattern, '$3/$2/$1')).getTime(),
+                isValid = true;
+
+            if(!isNaN(parseFloat(valueDate)) && isFinite(valueDate)) {
+                if(valueMaxDate < valueDate) {
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        },
+        validateDateIdentityCard: function(_base, element) {
+            var elementLocalstorage, addMinIndex,
+                pattern = /^(0[1-9]|[12][0-9]|3[01])[.](0[1-9]|1[012])[.](19|20)\d\d$/, haveMinDate = !1, isValid = !1,
+                value = _base.getElementValue(element);
+            if(!value) {
+                return !0;
+            }
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            if(_base.localStoreSupport()) {
+                elementLocalstorage = element.data('validateForms');
+            } else {
+                elementLocalstorage = element.validateForms;
+            }
+            $.map(elementLocalstorage, function(item, index) {
+                if('validateDateIdentityCard_min' === item.methodName) {
+                    haveMinDate = !0;
+                }
+                if('validateDateIdentityCard' === item.methodName) {
+                    addMinIndex = index + 1;
+                }
+            });
+            if(!haveMinDate) {
+                var minDate, today = new Date(), dd = today.getDate(), mm = today.getMonth() + 1,
+                    yyyy = today.getFullYear();
+                if(10 > dd) {
+                    dd = '0' + dd;
+                }
+                if(10 > mm) {
+                    mm = '0' + mm;
+                }
+                minDate = dd + '-' + mm + '-' + yyyy;
+                elementLocalstorage.splice(addMinIndex, 0, {
+                    methodName: 'validateDateIdentityCard_min',
+                    methodParams: minDate
+                });
+            }
+            return isValid;
+        },
+        validateDateIdentityCard_min: function(_base, element, minDate) {
+            var valueMinDate, value = _base.getElementValue(element), pattern = /(\d{2})[-|.](\d{2})[-|.](\d{4})/,
+                valueDate = new Date(value.replace(pattern, '$3/$2/$1')).getTime(), isValid = !1;
+            if('0' == minDate) {
+                valueMinDate = 0;
+            } else {
+                valueMinDate = new Date(minDate.replace(pattern, '$3/$2/$1')).getTime();
+            }
+            if(valueDate >= valueMinDate) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateDateIdentityCard_max: function(_base, element, maxDate) {
+            var value = _base.getElementValue(element), pattern = /(\d{2})[-|.](\d{2})[-|.](\d{4})/,
+                valueDate = new Date(value.replace(pattern, '$3/$2/$1')).getTime(),
+                valueMaxDate = new Date(maxDate.replace(pattern, '$3/$2/$1')).getTime(), isValid = !1;
+            if(valueMaxDate >= valueDate) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateNip: function(_base, element) {
+            var isDigits, n, i, value = _base.getElementValue(element), nipVerification = [6, 5, 7, 2, 3, 4, 5, 6, 7],
+                isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            isDigits = _base.validateDigits(_base, element);
+            if(isDigits) {
+                if(10 === value.length) {
+                    n = 0;
+                    for(i = 0; 9 > i; i++) {
+                        n += parseInt(value[i]) * nipVerification[i];
+                    }
+                    n %= 11;
+                    if(n === parseInt(value[9])) {
+                        isValid = !0;
+                    }
+                }
+            } else {
+                isValid = {
+                    validationStatus: !1,
+                    errorMsg: _base.defaults.validateMethods.validateNip.errorDigits
+                };
+            }
+            return isValid;
+        },
+        validatePesel: function(_base, element) {
+            var isDigits, n, m, c, i, value = _base.getElementValue(element),
+                peselVerification = [1, 3, 7, 9, 1, 3, 7, 9, 1, 3], isValid = !1;
+            isDigits = _base.validateDigits(_base, element);
+            if(isDigits) {
+                if(11 === value.length) {
+                    n = 0;
+                    for(i = 0; 10 > i; i++) {
+                        n += parseInt(value[i]) * peselVerification[i];
+                    }
+                    m = 10 - n % 10;
+                    if(10 === m) {
+                        c = 0;
+                    } else {
+                        c = m;
+                    }
+                    if(c === parseInt(value[10])) {
+                        isValid = !0;
+                    }
+                }
+            } else {
+                isValid = {
+                    validationStatus: !1,
+                    errorMsg: _base.defaults.validateMethods.validatePesel.errorDigits
+                };
+            }
+            return isValid;
+        },
+        optionalValidatePesel: function(_base, element) {
+            var value = _base.getElementValue(element);
+
+            if(value.length > 0) {
+                return this.validatePesel(_base, element);
+            } else {
+                return !0;
+            }
+        },
+        validateRegon: function(_base, element) {
+            var regonVeryfication, isDigits, n, m, c, i, value = _base.getElementValue(element),
+                regon9Verification = [8, 9, 2, 3, 4, 5, 6, 7],
+                regon14Verification = [2, 4, 8, 5, 0, 9, 7, 3, 6, 1, 2, 4, 8], valueLength = value.length, isValid = !1;
+            isDigits = _base.validateDigits(_base, element);
+            if(isDigits) {
+                if(9 === valueLength || 14 === valueLength) {
+                    regonVeryfication = 9 === valueLength ? regon9Verification : regon14Verification;
+                    n = 0;
+                    for(i = 0; valueLength - 1 > i; i++) {
+                        n += parseInt(value[i]) * regonVeryfication[i];
+                    }
+                    m = n % 11;
+                    if(10 === m) {
+                        c = 0;
+                    } else {
+                        c = m;
+                    }
+                    if(c === parseInt(value[valueLength - 1])) {
+                        isValid = !0;
+                    }
+                }
+            } else {
+                isValid = {
+                    validationStatus: !1,
+                    errorMsg: _base.defaults.validateMethods.validateRegon.errorDigits
+                };
+            }
+            return isValid;
+        },
+        validatePostCode: function(_base, element) {
+            var pattern = /^\d{5}$/, isValid = !1, value = _base.getElementValue(element);
+            if(pattern.test(value)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhone: function(_base, element) {
+            var value = _base.getElementValue(element), pattern = /^(\([+]\d{2,4}\)|[+]\d{2,4})?\d{9,13}$/,
+                isValid = !1, valLength = value.length;
+            if(valLength) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhonePL: function(_base, element) {
+            var value = _base.getElementValue(element), pattern = /^[4-8][0-9]{8}$/, isValid = !1,
+                valLength = value.length;
+            if(valLength) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhoneOther: function(_base, element) {
+            var value = _base.getElementValue(element), pattern = /^[\d]{4,16}$/, isValid = !1,
+                valLength = value.length;
+            if(valLength) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        addPlus: function(_base, element) {
+            var value = _base.getElementValue(element), valWithPlus = value, self = $(element);
+            if(value[0] != '+') {
+                valWithPlus = '+' + value;
+                self.val(valWithPlus);
+            }
+            return valWithPlus;
+        },
+        validatePhonePrefix: function(_base, element) {
+            var value = _base.addPlus(_base, element), pattern = /^[+]\d{1,6}$/, isValid = !1, valLength = value.length;
+            if(valLength > 1) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhonePrefixAbroad: function(_base, element) {
+            var value = _base.addPlus(_base, element), pattern = /^\+48$/, isValid = !1, valLength = value.length;
+            if(valLength) {
+                if(!pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhoneCountry: function(_base, element) {
+            var value = _base.getElementValue(element), pattern = /^[4-8]\d{8}$/, isValid = !1,
+                valLength = value.length;
+            if(valLength) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhoneAbroad: function(_base, element) {
+
+            var value = _base.getElementValue(element), pattern = /^(?=^.{2,16}$)(?!^\+48 )\d{1,4} \d+$/, isValid = !1,
+                valLength = value.length, prefix = $(element).siblings('.validatePhonePrefix'),
+                valuePrefix = _base.getElementValue(prefix);
+            if(valLength) {
+                if(pattern.test(valuePrefix + ' ' + value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePhoneStac: function(_base, element) {
+            var value = _base.getElementValue(element), pattern = /^(\([+]\d{2}\)|[+]\d{2})?\d{7,9}$/, isValid = !1,
+                valLength = value.length;
+            if(valLength) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateString: function(_base, element) {
+            var invalidArray, invalidChar, errorMessage,
+                pattern = /^[a-zA-Z0-9àâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒäöüßÄÖÜẞąćęłńóśźżĄĆĘŁŃÓŚŹŻàèéìíîòóùúÀÈÉÌÍÎÒÓÙÚáéíñóúüÁÉÍÑÓÚÜěřŘŮĚőűŰŐđĐ()\/\-_?:.,\s]+$/i,
+                patternFail = /[a-zA-Z0-9àâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒäöüßÄÖÜẞąćęłńóśźżĄĆĘŁŃÓŚŹŻàèéìíîòóùúÀÈÉÌÍÎÒÓÙÚáéíñóúüÁÉÍÑÓÚÜěřŘŮĚőűŰŐđĐ()\/\-_?:.,\s]/g,
+                isValid = !1, value = _base.getElementValue(element);
+            if(value.length > 0) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray.sort());
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateSHA: function(_base, element) {
+            var value = _base.getElementValue(element), pattern = /^(([0-9a-f]{64})|([0-9a-f]{8}))$/gmi;
+
+            if(value.length > 0) {
+                return pattern.test(value);
+            }
+
+            return !0;
+        },
+        validateContactMessage: function(_base, element) {
+            var invalidArray, invalidChar, errorMessage,
+                pattern = /^[0-9a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻАаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯяАаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя\x21\x40\x25\x28\x29\x2b\x2d\x5c\x3a\x22\x27\x3f\x2c\x2e\x2f\s]+$/i,
+                patternFail = /[0-9a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻАаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯяАаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя\x21\x40\x25\x28\x29\x2b\x2d\x5c\x3a\x22\x27\x3f\x2c\x2e\x2f\s]/g,
+                isValid = !1, value = _base.getElementValue(element);
+
+            if(value.length > 0) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray);
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateRecipientName: function(_base, element) {
+            var invalidArray, invalidChar, errorMessage,
+                pattern = /^[0-9a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\x60\x21\x40\x23\x24\x25\x5e\x26\x2a\x28\x29\x5f\x2b\x2d\x3d\x5c\x5b\x5d\x3a\x22\x3b\x27\x3f\x2c\x2e\x2f\s]+$/i,
+                patternFail = /[0-9a-zA-ZąćęłńóśźżĄĆĘŁŃÓŚŹŻ\x60\x21\x40\x23\x24\x25\x5e\x26\x2a\x28\x29\x5f\x2b\x2d\x3d\x5c\x5b\x5d\x3a\x22\x3b\x27\x3f\x2c\x2e\x2f\s]/g,
+                isValid = !1, value = _base.getElementValue(element);
+            if(value.length > 0) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray);
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateRegex_regex: function(_base, element, _regex) {
+            var invalidArray, invalidChar, errorMessage, regex = _regex.replace('/[^', '').replace(']+/i', ''),
+                pattern = new RegExp('[^' + regex + ']+', 'i'),
+                patternFail = new RegExp('[' + regex + ']', 'g'),
+                isValid = !1, value = _base.getElementValue(element);
+            if(value.length > 0) {
+                if(!pattern.test(value)) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray);
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateCustomRegex_regex: function(_base, element, _regex) {
+            var pattern = new RegExp(_regex, 'i'),
+                isValid = !1, value = _base.getElementValue(element, true);
+            if(value.length > 0) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateIdentityDoc: function(_base, element) {
+            var type = $(element.data('validateidentitydoctype'));
+            var isValid = true;
+
+            if(type.val() == 2) {
+                var controlSteps = [7, 3, 1, 0, 7, 3, 1, 7, 3],
+                    controlSum = 0,
+                    controlShift = 55,
+                    isValid = !1, value = _base.getElementValue(element);
+
+                for(var i in value) {
+                    var letter = value[i];
+                    var letterValue = letter;
+                    if(i < 3) {
+                        letterValue = letter.toUpperCase().charCodeAt(0) - controlShift;
+                    }
+                    controlSum += letterValue * controlSteps[i]
+                }
+                isValid = (controlSum % 10) == value[3];
+            }
+            return isValid;
+        },
+        validateApartmentNumber: function(_base, element) {
+            var invalidArray, invalidChar, errorMessage, pattern = /^[a-zA-Z0-9ąĄżŻśŚźŹęĘćĆńŃóÓłŁ\/\-_?:.,\s]+$/i,
+                patternFail = /[a-zA-Z0-9ąĄżŻśŚźŹęĘćĆńŃóÓłŁ\/\-_?:.,\s]/g, isValid = !1,
+                value = _base.getElementValue(element);
+            if(value.length > 0) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray);
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateAccountName: function(_base, element) {
+            var invalidArray, invalidChar, errorMessage, pattern = /[\<|\>|\‘|\„|\”|\\|\/|\$]/g,
+                patternFail = /[^\<|\>|\‘|\„|\”|\\|\/|\$]/g, isValid = !1, value = _base.getElementValue(element);
+            if(value.length > 0) {
+                if(pattern.test(value) === !1) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray);
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateValue_min: function(_base, element, minValue) {
+            var value = parseFloat(_base.getElementValue(element).replace(/ /, '').replace(/,/, '.').replace(/[^0-9.]/g, "")),
+                isValid = !1,
+                allowZero = $(element).attr('data-validateValue_allowZero');
+
+            if(!value && 0 !== value && allowZero === undefined) {
+                return !0;
+            }
+
+            if(value >= parseFloat(minValue.replace(/,/, '.'))) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateValue_max: function(_base, element, maxValue) {
+            var value = parseFloat(_base.getElementValue(element).replace(/,/, '.').replace(/[^0-9.]/g, "")),
+                isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(value <= parseFloat(maxValue.replace(/,/, '.'))) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateValue_us1: function(_base, element) {
+            var value = _base.getElementValue(element), isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(1 == value || 40 == value || 51 == value || 70 == value || 80 == value) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateValue_us2: function(_base, element) {
+            var value = parseInt(_base.getElementValue(element)), isValid = !1;
+            if(!value) {
+                return !0;
+            }
+            if(value >= 1 && 49 >= value || value >= 51 && 89 >= value) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePassword: function(_base, element) {
+            var pattern = /[ąĄćĆęĘłŁńŃóÓżŻźŹ&< '"]+/g, testBigSmall = /^(?=.*[a-z])(?=.*[A-Z]).*$/, isValid = !1,
+                value = _base.getElementValue(element),
+                testNumber = /^(?=.*[\d]).*$/;
+            if(pattern.test(value) === !1) {
+                if(testBigSmall.test(value)) {
+                    if(testNumber.test(value)) {
+                        isValid = !0;
+                    } else {
+                        isValid = {
+                            validationStatus: !1,
+                            errorMsg: _base.defaults.validateMethods.validatePassword.errorNumber
+                        };
+                    }
+                } else {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: _base.defaults.validateMethods.validatePassword.errorBigSmall
+                    };
+                }
+            }
+            return isValid;
+        },
+        validateSame_with: function(_base, element, sameElementName) {
+            var sameElement = element.closest('form').find('[name="' + sameElementName + '"]'),
+                elementName = element.attr('name'), validateTargetName = _base.defaults.validateSameCompare,
+                isValid = (sameElement.attr(validateTargetName),
+                    !1);
+            if(!sameElement.attr(validateTargetName)) {
+                sameElement.attr(validateTargetName, elementName);
+            }
+            if(_base.getElementValue(element) === _base.getElementValue(sameElement)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateSameBT_with: function(_base, element, sameElementName) {
+            var sameElement = element.closest('form').find('[name="' + sameElementName + '"]'),
+                elementName = element.attr('name'), validateTargetName = _base.defaults.validateSameCompare,
+                isValid = (sameElement.attr(validateTargetName),
+                    !1);
+            if(!sameElement.attr(validateTargetName)) {
+                sameElement.attr(validateTargetName, elementName);
+            }
+            if(_base.getElementValue(element) === _base.getElementValue(sameElement)) {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validatePasswordStrenght: function(_base, element) {
+            var value = _base.getElementValue(element), testBigSmall = /^(?=.*[a-z])(?=.*[A-Z]).*$/,
+                testDigit = /^(?=.*[\d]).*$/, testSpecialChar = /^(?=.*[!@#$%^*()_\+\-={}|\\\[\];:,.<>\/\?]).*$/,
+                passStr = element.closest('form').find('.pass_strength'),
+                passStrVal = passStr.find('.pass_strength_val'), passStrStatus = passStr.find('.pass_strength_status'),
+                strCounter = 0;
+            isValid = !0;
+            if(value.length >= 10) {
+                strCounter++;
+                if(testBigSmall.test(value)) {
+                    strCounter++;
+                }
+                if(testDigit.test(value)) {
+                    strCounter++;
+                }
+                if(testSpecialChar.test(value)) {
+                    strCounter++;
+                }
+                if(value.length >= 15) {
+                    strCounter++;
+                }
+            }
+            passStrVal.removeClass('on');
+            for(i = 0; i < strCounter + 1; i++) {
+                passStrVal.eq(i).addClass('on');
+            }
+            switch(strCounter) {
+                case 0:
+                case 1:
+                    passStr.addClass('red').removeClass('orange green');
+                    break;
+
+                case 2:
+                case 3:
+                    passStr.addClass('orange').removeClass('red green');
+                    break;
+
+                case 4:
+                case 5:
+                    passStr.addClass('green').removeClass('red orange');
+            }
+            passStrStatus.html(_base.defaults.validateMethods.validatePasswordStrenght.status[strCounter]);
+            return isValid;
+        },
+        validateHigherLower: function(_base, element, aParamiters) {
+            var compareElement, compareType, compareElementError, isValid = (_base.getElementValue(element),
+                    !0), def = _base.defaults, errorToHigh = def.validateMethods.validateHigherLower.errorToHigh,
+                errorToLow = def.validateMethods.validateHigherLower.errorToLow,
+                errorToDiff = def.validateMethods.validateHigherLower.errorToDiff, getValue = function(el) {
+                    var val, pattern = /(\d{2})[-|.]{0,1}(\d{2})[-|.]{0,1}(\d{4})/;
+                    if(el.hasClass('datepicker') || el.hasClass('datepicker2') || el.hasClass('datepicker2Earning')) {
+                        val = new Date(el.val().replace(pattern, '$3/$2/$1')).getTime();
+                    } else {
+                        val = parseFloat(_base.getElementValue(el).replace(/,/, '.'));
+                    }
+                    return val;
+                };
+
+            if(typeof aParamiters['message_high'] != 'undefined') {
+                errorToHigh = aParamiters['message_high'];
+            }
+            if(typeof aParamiters['message_low'] != 'undefined') {
+                errorToLow = aParamiters['message_low'];
+            }
+            if(typeof aParamiters['message_diff'] != 'undefined') {
+                errorToDiff = aParamiters['message_diff'];
+            }
+
+            if(aParamiters['with'] === undefined) {
+                return !1;
+            }
+            if(aParamiters.type === undefined) {
+                return !1;
+            }
+            compareElement = element.closest('form').find('[name="' + aParamiters['with'] + '"]');
+            if(1 !== compareElement.length) {
+                return !1;
+            }
+            compareType = aParamiters.type;
+            compareElementError = function() {
+                return def.validationClassTarget(compareElement).find('.cloud').html();
+            };
+            switch(compareType) {
+                case 'higher':
+                    if(aParamiters['message'] !== undefined) {
+                        errorToHigh = aParamiters['message'];
+                        errorToLow = aParamiters['message'];
+                    }
+                    if(getValue(element) < parseFloat(getValue(compareElement))) {
+                        isValid = {
+                            validationStatus: !1,
+                            errorMsg: errorToHigh
+                        };
+                        if('' !== _base.getElementValue(compareElement)) {
+                            _base.setValidationClass(_base, compareElement, def.alertClass, def.successClass + ' ' + def.errorClass);
+                            _base.updateValidationError(_base, compareElement, errorToLow);
+                        }
+                    } else {
+                        if(compareElementError() === errorToLow) {
+                            _base.setValidationClass(_base, compareElement, def.successClass, def.alertClass + ' ' + def.errorClass);
+                        }
+                    }
+                    break;
+
+                case 'lower':
+                    if(aParamiters['message'] !== undefined) {
+                        errorToHigh = aParamiters['message'];
+                        errorToLow = aParamiters['message'];
+                    }
+
+                    if(getValue(element) > parseFloat(getValue(compareElement))) {
+                        isValid = {
+                            validationStatus: !1,
+                            errorMsg: errorToLow
+                        };
+                        if('' !== _base.getElementValue(compareElement)) {
+                            _base.setValidationClass(_base, compareElement, def.alertClass, def.successClass + ' ' + def.errorClass);
+                            _base.updateValidationError(_base, compareElement, errorToHigh);
+                        }
+                    } else {
+                        if(compareElementError() === errorToHigh) {
+                            _base.setValidationClass(_base, compareElement, def.successClass, def.alertClass + ' ' + def.errorClass);
+                        }
+                    }
+                case 'diff':
+                    if(aParamiters['message'] !== undefined) {
+                        errorToHigh = aParamiters['message'];
+                        errorToLow = aParamiters['message'];
+                        errorToDiff = aParamiters['message'];
+                    }
+                    if(Math.abs((parseFloat(getValue(element)) - parseFloat(getValue(compareElement))) / parseFloat(aParamiters['period'])) < 1) {
+                        isValid = {
+                            validationStatus: !1,
+                            errorMsg: errorToDiff
+                        };
+                        if('' !== _base.getElementValue(compareElement)) {
+                            _base.setValidationClass(_base, compareElement, def.alertClass, def.successClass + ' ' + def.errorClass);
+                            _base.updateValidationError(_base, compareElement, errorToDiff);
+                        }
+                    } else {
+                        _base.setValidationClass(_base, compareElement, def.successClass, def.alertClass + ' ' + def.errorClass);
+                    }
+            }
+            return isValid;
+        },
+        validateRequiredWith_with: function(_base, element, field) {
+            var isValid = !0, value = _base.getElementValue(element),
+                $field = element.closest('form').find('[name="' + field + '"]');
+            switch($field.attr('type')) {
+                case 'checkbox':
+                case 'radio':
+                    if($field.is(':checked') && !value) {
+                        isValid = !1;
+                    }
+                    break;
+
+                default:
+                    if(_base.getElementValue($field) && !value) {
+                        isValid = !1;
+                    }
+            }
+            return isValid;
+        },
+        validateRequired_validateUsTin: function(_base, element) {
+            if(this.validateLength_max(_base, element, 9) && this.validateLength_min(_base, element, 9)) {
+                var regex = /[0-9]|\./;
+
+                var value = $(element).val();
+                if(regex.test(value)) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        validateRequired_eurofatcaTin: function(_base, element) {
+            var row = $(element).parents('.eurofatca-row');
+
+            if(element.val()) {
+                var minLengthValidator = this.validateLength_min(_base, element, 3);
+
+                if(!minLengthValidator) {
+                    var customMsg = _base.defaults.validateMethods.validateLength_min
+
+                    return {
+                        validationStatus: false,
+                        errorMsg: customMsg.error
+                    }
+                }
+            }
+
+            return this._validateRequired_eurofatcaRow(row, element);
+        },
+        validateRequired_eurofatcaMainTin: function(_base, element) {
+            return (!element.val() && $('input[name="fatca_checkbox_main"]', $(element.closest('.fatca_main'))).val() == 0) ? false : true;
+        },
+        validateRequired_eurofatcaCountry: function(_base, element) {
+            var row = $(element).parents('.eurofatca-row');
+            return this._validateRequired_eurofatcaRow(row, element);
+        },
+        validateRequired_eurofatcaMainCountry: function(_base, element) {
+            var container = element.parents('.eurofatca-country-container');
+            var selects = container.find('.eurofatca-row:not(#eurofatca-country-example) select');
+            var mainCountry = container.attr('data-main_country');
+            var result = true;
+
+            selects.each(function() {
+                var currentElement = $(this);
+                var currentValue = currentElement.val();
+
+                if(currentValue.length == 0) {
+                    return true;
+                }
+
+                if(currentValue == mainCountry) {
+                    var def = _base.defaults;
+                    var errorMsg = def.validateMethods['validateRequired_eurofatcaMainCountry'].error;
+
+                    _base.updateValidationError(_base, currentElement, errorMsg);
+                    _base.setValidationClass(_base, currentElement, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    result = false;
+                }
+            });
+
+            return {
+                validationStatus: true,
+                errorMsg: null,
+                breakValidation: !result,
+            };
+        },
+        validatePromotionCheckBox: function(_base, element) {
+            var targetsVal = document.getElementById('promotion_code').value;
+
+            if(targetsVal) {
+                return isValid = this.validateRequired(_base, element);
+            }
+
+            return 1;
+        },
+        validateRequired_eurofatcaOneRequired: function(_base, element) {
+            var container = element.parents('.eurofatca-country-container');
+            var selects = container.find('.eurofatca-row:not(#eurofatca-country-example) select');
+            var isValid = false;
+            selects.each(function(index) {
+                var currentElement = $(this);
+                var currentValue = currentElement.val();
+                if(currentValue.length > 0) {
+                    isValid = true;
+                }
+            });
+
+            return isValid;
+        },
+        validateRequired_eurofatcaDuplicateCountry: function(_base, element) {
+            var container = element.parents('.eurofatca-country-container');
+            var selects = container.find('.eurofatca-row:not(#eurofatca-country-example) select');
+            var result = true;
+
+            selects.each(function() {
+                var currentElement = $(this);
+                var currentValue = currentElement.val();
+
+                selects.each(function() {
+                    var innerElement = $(this);
+                    var innerValue = innerElement.val();
+
+                    if(!innerElement.is(currentElement) && innerValue.length != 0 && innerValue == currentValue) {
+                        var def = _base.defaults;
+                        var errorMsg = def.validateMethods['validateRequired_eurofatcaDuplicateCountry'].error;
+
+                        _base.updateValidationError(_base, currentElement, errorMsg);
+                        _base.setValidationClass(_base, currentElement, def.alertClass, def.successClass + ' ' + def.errorClass);
+                        result = false;
+                    }
+                });
+            });
+
+            return {
+                validationStatus: true,
+                errorMsg: null,
+                breakValidation: !result,
+            };
+        },
+        _validateRequired_eurofatcaRow: function(rowElement, actElement) {
+            var countryEmpty = !$('select option:selected', rowElement).val();
+            var tinEmpty = !$('input[name*="tin"]', rowElement).val() && $('input[name*="emptyTin"]', rowElement).val() !== 'true';
+            if(actElement.val()) {
+                return true;
+            }
+            if(countryEmpty && tinEmpty) {
+                return true;
+            }
+
+            return false;
+        },
+        validateRequiredWith_withAny: function(_base, element, fields) {
+            var index, errorMsg, isValid = !1, value = _base.getElementValue(element),
+                valueBool = value.length > 0 || 1 == value, fieldsName = fields.replace(/\s+/g, '').split(','),
+                fieldsCounter = 0;
+            for(index = 0; index < fieldsName.length; ++index) {
+                var $field = element.closest('form').find('[name="' + fieldsName[index] + '"]'),
+                    fieldValue = _base.getElementValue($field), fieldBool = fieldValue.length > 0 || 1 == fieldValue,
+                    fieldChangeClass = 'validateRW_wa_change_' + element.attr('name');
+                if(fieldBool) {
+                    fieldsCounter++;
+                    if(valueBool) {
+                        isValid = !0;
+                    }
+                }
+                if(-1 != element.attr('data-validaterequiredwith').indexOf('whenLike')) {
+                    errorMsg = _base.defaults.validateMethods.validateRequiredWith_withAny.error2;
+                    if(!isValid && !valueBool) {
+                        isValid = !0;
+                    }
+                }
+                if(!$field.hasClass(fieldChangeClass)) {
+                    $field.addClass(fieldChangeClass).off('change.validateRequiredWith_withAny').on('change.validateRequiredWith_withAny', function() {
+                        var oldArray = $field.attr('class').split(' '), newArray = [];
+                        $.map(oldArray, function(value) {
+                            if(-1 !== value.indexOf('validateRW_wa_change_')) {
+                                newArray.push(value.replace('validateRW_wa_change_', ''));
+                            }
+                        });
+                        $.map(newArray, function(value) {
+                            element.closest('form').find('[name="' + value + '"]').trigger('change');
+                        });
+                    });
+                }
+            }
+            if(0 === fieldsCounter) {
+                element.addClass('vrwEmpty');
+            } else {
+                element.removeClass('vrwEmpty');
+            }
+            if(!isValid && errorMsg) {
+                isValid = {
+                    validationStatus: !1,
+                    errorMsg: errorMsg
+                };
+            }
+            return isValid;
+        },
+        validateRequiredWith_withFieldValues: function() {
+            var isValid = !0;
+            return isValid;
+        },
+        validateRequiredWith_withValue: function() {
+            var isValid = !0;
+            return isValid;
+        },
+        validateRequiredWith_whenLike: function(_base, element, partOfName) {
+            var isValid = !1, _isValise = !1, value = _base.getElementValue(element),
+                fields = (value.length > 0 || 1 == value,
+                    element.closest('form').find('[name^="' + partOfName + '"]'));
+            fields.each(function() {
+                if($(this).is(':checked')) {
+                    _isValise = !0;
+                }
+            });
+            if(_isValise && !element.hasClass('vrwEmpty')) {
+                isValid = !0;
+            } else {
+                if(!_isValise && element.hasClass('vrwEmpty')) {
+                    isValid = !0;
+                }
+            }
+            return isValid;
+        },
+        validateNrb: function(_base, element) {
+            var value = _base.getElementValue(element), nrb = value.replace(/\s+/g, ''),
+                weights = [1, 10, 3, 30, 9, 90, 27, 76, 81, 34, 49, 5, 50, 15, 53, 45, 62, 38, 89, 17, 73, 51, 25, 56, 75, 71, 31, 19, 93, 57],
+                isValid = !1, sum = 0;
+
+            if(!value) {
+                return !0;
+            }
+            if(28 === nrb.length && 'pl' == nrb.slice(0, 2).toLowerCase()) {
+                if(element.data('enableiban') == true) {
+                    isValid = !0;
+                } else {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: _base.defaults.validateMethods.validateNrb.errorUnexpectedPrefix
+                    };
+                    return isValid;
+                }
+            }
+            if(26 === nrb.length) {
+                nrb += "2521";
+                nrb = nrb.substr(2) + nrb.substr(0, 2);
+                for(var i = 0; 30 > i; i++) {
+                    sum += nrb[29 - i] * weights[i];
+                }
+                if(sum % 97 == 1) {
+                    isValid = !0;
+                }
+            }
+            return isValid;
+        },
+        validateNrbIRP: function(_base, element) {
+            var value = _base.getElementValue(element), nrbOrg = value.replace(/\s+/g, ''), nrb = nrbOrg,
+                weights = [1, 10, 3, 30, 9, 90, 27, 76, 81, 34, 49, 5, 50, 15, 53, 45, 62, 38, 89, 17, 73, 51, 25, 56, 75, 71, 31, 19, 93, 57],
+                isValidNRB = !1, isValidIRP = !1, sum = 0;
+
+            if(!value) {
+                return !0;
+            }
+            if(26 === nrb.length) {
+                nrb += "2521";
+                nrb = nrb.substr(2) + nrb.substr(0, 2);
+                for(var i = 0; 30 > i; i++) {
+                    sum += nrb[29 - i] * weights[i];
+                }
+                if(sum % 97 == 1) {
+                    isValidNRB = !0;
+                }
+            }
+            let pattern = /^(PL){0,1}(\d{2}10100071\d{3}[1,2,3]{1}\d{12})$/gi, result = pattern.test(nrbOrg);
+            if(result) {
+                isValidIRP = !0;
+            }
+            return isValidIRP && isValidNRB;
+        },
+        validateBankName: function(_base, element) {
+            var previousInput;
+            var valid = true;
+            $('.from_bank_name').each(function(i) {
+                if(previousInput !== undefined && previousInput.val() !== '' && $(this).val() !== '') {
+                    if(previousInput.val() !== $(this).val()) {
+                        valid = false;
+                        return false;
+                    }
+                }
+                previousInput = $(this);
+            });
+            return valid;
+        },
+        validatePassport: function(_base, element) {
+            var pattern = /^[A-Z0-9]{8,14}$/gi, id = _base.getElementValue(element), result = pattern.test(id);
+            if(result) {
+                return 1;
+            }
+            return !1;
+        },
+        validateIDCard: function(_base, element) {
+            var tablica, weights, sum, i, klucz, id_length, id = _base.getElementValue(element);
+            tablica = {
+                A: "10",
+                B: "11",
+                C: "12",
+                D: "13",
+                E: "14",
+                F: "15",
+                G: "16",
+                H: "17",
+                I: "18",
+                J: "19",
+                K: "20",
+                L: "21",
+                M: "22",
+                N: "23",
+                O: "24",
+                P: "25",
+                Q: "26",
+                R: "27",
+                S: "28",
+                T: "29",
+                U: "30",
+                V: "31",
+                W: "32",
+                X: "33",
+                Y: "34",
+                Z: "35"
+            };
+            weights = [7, 3, 1, 9, 7, 3, 1, 7, 3];
+            sum = 0;
+            klucz = '';
+            id = id.split('');
+            id_length = id.length;
+            for(i = 0; id_length > i; i += 1) {
+                klucz = id[i];
+                if('undefined' != typeof tablica[klucz]) {
+                    id[i] = parseInt(tablica[klucz], 10);
+                } else {
+                    id[i] = parseInt(id[i], 10);
+                }
+                sum += id[i] * weights[i];
+            }
+            if(sum % 10 === 0) {
+                return !0;
+            }
+            return !1;
+        },
+        validateLength_message: function() {
+            return !0;
+        },
+        validateDeclarationDate: function(_base, element) {
+            var pattern = /\d{6}$/, value = _base.getElementValue(element);
+            if('' == value) {
+                return !0;
+            }
+            if(pattern.test(value)) {
+                var month = parseInt(value.substr(0, 2)), year = parseInt(value.substr(2));
+                if(month > 0 && 12 >= month && year >= 1970) {
+                    return !0;
+                }
+            }
+            return !1;
+        },
+        validateUnique_byName: function(_base, element, namePattern) {
+            var isValid = !0,
+                elemVal = element.val().toLowerCase().replace(/\s+/g, ''),
+                form = element.closest('form'),
+                similarElems = form.find('[name^="' + namePattern + '"]').not(element);
+
+            if(elemVal.length) {
+                similarElems.each(function() {
+                    if($(this).val().toLowerCase().replace(/\s+/g, '') === elemVal) {
+                        isValid = !1;
+                        return false;
+                    }
+                });
+            }
+
+            return isValid;
+        },
+        validateYear: function(_base, element, namePattern) {
+            var value = _base.getElementValue(element);
+
+            if(value[0] == 0) {
+                return !1;
+            }
+            if($.isNumeric(value)) {
+                if(value < 2010 || value > 2030) {
+                    return !1;
+                }
+            } else {
+                if(value === '') {
+                    return !0;
+                } else {
+                    return !1;
+                }
+            }
+
+            return !0;
+        },
+        validateSurface: function(_base, element, namePattern) {
+            var value = _base.getElementValue(element);
+
+            value = value.replace(",", ".");
+
+            if(value != '' && !value.match(/^-?[0-9]+(?:\.[0-9]{1,4})?$/)) {
+                return !1;
+            }
+
+            return !0;
+        },
+        validateBeneficiaryName: function(_base, element, namePattern) {
+            var value = _base.getElementValue(element);
+
+            if(value == '' || value.match(/^[a-zA-Z0-9àâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒäöüßÄÖÜẞąćęłńóśźżĄĆĘŁŃÓŚŹŻàèéìíîòóùúÀÈÉÌÍÎÒÓÙÚáéíñóúüÁÉÍÑÓÚÜ()\/\-_?:.,\s]+$/i)) {
+                return !0;
+            } else {
+                return !1;
+            }
+        },
+        validateFiveHundredPlus: function(_base, element, namePattern) {
+            var type = element.data('validatetype');
+            var validateAge = element.data('age') || null;
+            var value = _base.getElementValue(element);
+
+            if(type == 'name') {
+                var isValid = !0;
+                if(!value.match(/^[a-zA-Z àâäôéèëêïîçùûüÿæœÀÂÄÔÉÈËÊÏÎŸÇÙÛÜÆŒäöüßÄÖÜẞąćęłńóśźżĄĆĘŁŃÓŚŹŻàèéìíîòóùúÀÈÉÌÍÎÒÓÙÚáéíñóúüÁÉÍÑÓÚÜ.;,\-?!:"()\s]+$/i)) {
+                    isValid = !1;
+                }
+
+                return {
+                    validationStatus: isValid,
+                    errorMsg: 'Niedozwolone znaki'
+                };
+
+            }
+
+            if(type == 'houseNumber') {
+                if(!value.match(/[^a-z A-Z zżźćńółęąśŻŹĆĄŚĘŁÓŃ 0-9 \/ -]/)) {
+                    return !0;
+                } else {
+                    return !1;
+                }
+
+            }
+
+            if(type == 'email') {
+                var pattern = /^(([0-9a-zA-Z]+[\-._+&amp;])*[0-9a-zA-Z]+@([\-0-9a-zA-Z]+[.])+[a-zA-Z]{2,6})$/,
+                    isValid = !1,
+                    msg = 'Podany adres e-mail nie jest poprawny';
+
+                if(!value) {
+                    return !0;
+                } else {
+                    if(pattern.test(value)) {
+                        isValid = true;
+                    }
+                }
+                if(value.length > 50) {
+                    isValid = false;
+                    msg = 'Adres email jest za długi';
+                }
+                return {
+                    validationStatus: isValid,
+                    errorMsg: msg
+                };
+            }
+
+            if(type == 'countryOutside') {
+                var message = '',
+                    chars = '',
+                    no_error = false,
+                    input_type = element.data('validateinputtype'),
+                    pattern;
+
+                switch(input_type) {
+                    case 'country':
+                        pattern = /[^a-z A-Z zżźćńółęąśŻŹĆĄŚĘŁÓŃ .]/;
+                        break;
+                    case 'address':
+                        pattern = /[^a-z A-Z zżźćńółęąśŻŹĆĄŚĘŁÓŃ 0-9 /\- ]/;
+                        break;
+
+                }
+
+                for(var i = 0; i < value.length; i++) {
+
+                    if(value[i].match(pattern)) {
+                        if(chars.indexOf(value[i]) == -1) {
+                            no_error = true;
+                            chars += value[i];
+
+
+                            if(message == '') {
+                                message = value[i];
+                            } else {
+                                message += ', ' + value[i];
+                            }
+                        }
+                    }
+                }
+
+                if(no_error) {
+                    return {
+                        validationStatus: !1,
+                        errorMsg: 'Niedozwolone znaki: ' + message
+                    };
+                } else {
+                    return !0;
+                }
+            }
+
+            if(type == 'amount') {
+                value = value.replace(",", ".");
+
+                if(value[0] == 0 && value[1] == 0) {
+                    return !1;
+                }
+
+                if(value != '' && !value.match(/^-?[0-9]+(?:\.[0-9]{1,2})?$/)) {
+                    return !1;
+                }
+            }
+
+            if(type == 'pesel') {
+                var pesels = $('.benefits').find('.pesel');
+
+                if(value.length == 11 && $.isNumeric(value)) {
+                    var count = 0;
+
+                    if($.isNumeric(validateAge)) {
+
+                        var birth_year = parseInt(value.substr(0, 2)),
+                            birth_month = parseInt(value.substr(2, 2)),
+                            birth_day = parseInt(value.substr(4, 2));
+                        var birth_year_mod = 0, birth_month_mod = 0;
+
+                        if(birth_month >= 81 && birth_month <= 92) {
+                            birth_year_mod = 1800;
+                            birth_month_mod = 80;
+                        } else if(birth_month >= 61 && birth_month <= 72) {
+                            birth_year_mod = 2200;
+                            birth_month_mod = 60;
+                        } else if(birth_month >= 41 && birth_month <= 52) {
+                            birth_year_mod = 2100;
+                            birth_month_mod = 40;
+                        } else if(birth_month >= 21 && birth_month <= 32) {
+                            birth_year_mod = 2000;
+                            birth_month_mod = 20;
+                        } else {
+                            birth_year_mod = 1900;
+                        }
+
+                        birth_year += birth_year_mod;
+                        birth_month -= birth_month_mod;
+
+                        var currentDate = new Date(),
+                            currentYear = currentDate.getFullYear(),
+                            currentMonth = currentDate.getMonth() + 1,
+                            currentDay = currentDate.getDay();
+
+                        var age = currentYear - birth_year;
+
+                        if(currentMonth < birth_month || (currentMonth == parseInt(birth_month) && (currentDay < parseInt(birth_day)))) {
+                            age--;
+                        }
+
+                        if(age >= validateAge) {
+                            return {
+                                validationStatus: !1,
+                                errorMsg: _base.defaults.validateMethods.validateFiveHundredPlus.errorAgeOnPesel
+                            };
+                        }
+                    }
+
+                    $.each(pesels, function(key, input) {
+                        if($(input).val() == value) {
+                            count++;
+                        }
+                    });
+
+                    if(count >= 2) {
+                        return {
+                            validationStatus: !1,
+                            errorMsg: _base.defaults.validateMethods.validateFiveHundredPlus.errorPesel
+                        };
+                    }
+                }
+            }
+
+            return !0;
+        },
+        validateMobilePin: function(_base, element, namePattern) {
+            var value = _base.getElementValue(element);
+            var numbers = value.split('');
+            var arrLength = numbers.length;
+            var counterResult4Char = 0;
+            var result3Char = false;
+            var countObject = {};
+            //not sortable
+            for(var i = 0, base = 10; i < base; i++) {
+                for(var ii = 0; ii < arrLength; ii++) {
+                    var currentNumber = parseInt(numbers[ii]);
+                    if(currentNumber === i) {
+                        isNaN(countObject[i]) ? countObject[i] = 1 : countObject[i]++;
+                    }
+                }
+            }
+            for(var k in countObject) {
+                if(countObject[k] >= 3) {
+                    result3Char = true;
+                    break;
+                }
+            }
+            //min 3 other chars
+            for(var i = 0; i < arrLength; i++) {
+                var current = parseInt(numbers[i]);
+                var next = parseInt(numbers[i + 1]);
+                var prev = parseInt(numbers[i - 1]);
+                if(!isNaN(next) && next - current === 1) {
+                    counterResult4Char++;
+                } else if(!isNaN(prev) && prev - current === 1) {
+                    counterResult4Char++;
+                }
+            }
+            if(value !== '' && (counterResult4Char >= 3 || result3Char)) {
+                return {
+                    validationStatus: false,
+                    errorMsg: counterResult4Char >= 3 ? _base.defaults.validateMethods.validateMobilePin.error4Chars : _base.defaults.validateMethods.validateMobilePin.error3Chars
+                };
+            }
+            return true;
+        },
+        validateRadiobuttons: function(_base, element) {
+            var isChecked = false;
+
+            if(element.prop('checked')) {
+                isChecked = true;
+                element.removeClass('alert');
+            }
+            ;
+
+            return isChecked;
+        },
+        validateCoupleRadio: function(_base, element) {
+            return element.prop('checked');
+        },
+        validateAmountSection: function(_base, element, namePattern) {
+            var pattern = /^(\d+(?:[\.\,]\d{1,2})?)$/;
+            var value = _base.getElementValue(element);
+
+            if(pattern.test(value)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        validatePasswordBT: function(_base, element) {
+            var value = _base.getElementValue(element);
+            var numbers = value.split('');
+            var arrLength = numbers.length;
+
+            var counternextChars = 1;
+            var counterprevChars = 1;
+            var next4Charts = false;
+
+            var otherChars = 1;
+            var other4Chars = false;
+
+            var unique4Chars = false;
+
+            //czy cyfra powtrza sie 4 razy (np. 1111)
+            for(var i = 1; i < arrLength; i++) {
+                var current = parseInt(numbers[i]);
+                var prev = parseInt(numbers[i - 1]);
+                if(!isNaN(prev) && current - prev === 0) {
+                    otherChars++;
+                    if(otherChars >= 4) {
+                        other4Chars = true;
+                    }
+                } else {
+                    otherChars = 1;
+                }
+            }
+
+            //czy kolejne cyfry (np. 1234 lub 4321)
+            for(var i = 1; i < arrLength; i++) {
+                var current = parseInt(numbers[i]);
+                var prev = parseInt(numbers[i - 1]);
+                if(!isNaN(prev) && current - prev === 1) {
+                    counternextChars++;
+                    if(counternextChars >= 4) {
+                        next4Charts = true;
+                    }
+                } else {
+                    counternextChars = 1;
+                }
+
+                if(!isNaN(prev) && current - prev === -1) {
+                    counterprevChars++;
+                    if(counterprevChars >= 4) {
+                        next4Charts = true;
+                    }
+                } else {
+                    counterprevChars = 1;
+                }
+            }
+
+//            czy sa 4 unikalne cyfry
+            var unique = $.unique(numbers.sort());
+            if(value !== '' && unique.length < 4) {
+                unique4Chars = true;
+            }
+
+            if(value !== '' && (next4Charts || other4Chars || unique4Chars)) {
+                if(other4Chars === true) {
+                    var mess = _base.defaults.validateMethods.validatePasswordBT.otherChars;
+                } else if(next4Charts === true) {
+                    var mess = _base.defaults.validateMethods.validatePasswordBT.nextChars;
+                } else if(unique4Chars === true) {
+                    var mess = _base.defaults.validateMethods.validatePasswordBT.uniqueChars;
+                }
+
+                return {
+                    validationStatus: false,
+                    errorMsg: mess
+                };
+            }
+            return true;
+        },
+        validatePasswordBTann: function(_base, element) {
+            var value = _base.getElementValue(element);
+            var numbers = value.split('');
+            var arrLength = numbers.length;
+
+            var counternextChars = 1;
+            var counterprevChars = 1;
+            var next4Charts = false;
+
+            var otherChars = 1;
+            var other4Chars = false;
+
+            var unique4Chars = false;
+
+            //czy cyfra powtrza sie 4 razy (np. 1111)
+            for(var i = 1; i < arrLength; i++) {
+                var current = parseInt(numbers[i]);
+                var prev = parseInt(numbers[i - 1]);
+                if(!isNaN(prev) && current - prev === 0) {
+                    otherChars++;
+                    if(otherChars >= 4) {
+                        other4Chars = true;
+                    }
+                } else {
+                    otherChars = 1;
+                }
+            }
+
+            //czy kolejne cyfry (np. 1234 lub 4321)
+            for(var i = 1; i < arrLength; i++) {
+                var current = parseInt(numbers[i]);
+                var prev = parseInt(numbers[i - 1]);
+                if(!isNaN(prev) && current - prev === 1) {
+                    counternextChars++;
+                    if(counternextChars >= 4) {
+                        next4Charts = true;
+                    }
+                } else {
+                    counternextChars = 1;
+                }
+
+                if(!isNaN(prev) && current - prev === -1) {
+                    counterprevChars++;
+                    if(counterprevChars >= 4) {
+                        next4Charts = true;
+                    }
+                } else {
+                    counterprevChars = 1;
+                }
+            }
+
+//            czy sa 4 unikalne cyfry
+            var unique = $.unique(numbers.sort());
+            if(value !== '' && unique.length < 4) {
+                unique4Chars = true;
+            }
+
+            if(value !== '' && (next4Charts || other4Chars || unique4Chars)) {
+                if(other4Chars === true) {
+                    var mess = _base.defaults.validateMethods.validatePasswordBTann.otherChars;
+                } else if(next4Charts === true) {
+                    var mess = _base.defaults.validateMethods.validatePasswordBTann.nextChars;
+                } else if(unique4Chars === true) {
+                    var mess = _base.defaults.validateMethods.validatePasswordBTann.uniqueChars;
+                }
+
+                return {
+                    validationStatus: false,
+                    errorMsg: mess
+                };
+            }
+            return true;
+        },
+        validateStreet: function(_base, element) {
+            var invalidArray, invalidChar, errorMessage, pattern = /^[a-zA-Z0-9ąĄżŻśŚźŹęĘćĆńŃóÓłŁ()\/\-_?:.,'"\s]+$/i,
+                patternFail = /[a-zA-Z0-9ąĄżŻśŚźŹęĘćĆńŃóÓłŁ()\/\-_?:.,'"\s]/g, isValid = !1,
+                value = _base.getElementValue(element);
+            if(value.length > 0) {
+                if(pattern.test(value)) {
+                    isValid = !0;
+                } else {
+                    invalidArray = value.replace(patternFail, '').split('');
+                    $.unique(invalidArray.sort());
+                    invalidChar = invalidArray.join(", ");
+                    if(invalidArray.length > 1) {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChars + invalidChar;
+                    } else {
+                        errorMessage = _base.defaults.validateMethods.validateString.errorChar + invalidChar;
+                    }
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: errorMessage
+                    };
+                }
+            } else {
+                isValid = !0;
+            }
+            return isValid;
+        },
+        validateRequiredCheckboxGroup: function(_base, element) {
+            var elementName = element.attr('name');
+            var warningBox = element.closest('.products').find('.error-container .alert-warning');
+            isValid = $('input[type="checkbox"][name="' + elementName + '"]:checked').length > 0 ? !0 : !1;
+            if(isValid === !0) {
+                $('input[type="checkbox"][name="' + elementName + '"]').each(function() {
+                    $(this).parent().removeClass('error');
+                    $(this).parent().parent().removeClass('alert');
+                });
+            } else {
+                element.parent().addClass('error');
+            }
+            return isValid;
+        },
+        validateAccountSelect: function(_base, element) {
+            var isValid = !1;
+
+            $.each(element[0], function(key, value) {
+                var _value = $(value);
+                if(_value.is(':selected') && _value.val()) {
+                    isValid = !0;
+                }
+            });
+            if(isValid === !1) {
+                $(element).closest('.select-input.accounts').next().find('.alert-warning').addClass('alert');
+            }
+            return isValid;
+        },
+        validatePrincipalSelected: function(_base, element) {
+            var isValid = !1;
+
+            $.each(element[0], function(key, value) {
+                var _value = $(value);
+                if(_value.is(':selected') && _value.val()) {
+                    isValid = !0;
+                }
+            });
+            if(isValid === !1) {
+                $(element).closest('.select-input.principal').next().find('.alert-warning').addClass('alert');
+            }
+            return isValid;
+        },
+        validateFinoDictSelected: function(_base, element) {
+            var isDigits, isValid = !1;
+            isDigits = _base.validateDigits(_base, element);
+            if(isDigits) {
+                isValid = !0;
+            } else {
+                isValid = {
+                    validationStatus: !1,
+                    errorMsg: _base.defaults.validateMethods.validateFinoDictSelected.error
+                };
+            }
+            return isValid;
+        },
+        validateFinoSelect: function(_base, element) {
+            var isValid = !1, value = _base.getElementValue(element);
+            if(value == 'CNW') {
+                value = '';
+            }
+
+            if(value.length > 0) {
+                isValid = !0;
+            } else {
+                isValid = {
+                    validationStatus: !1,
+                    errorMsg: _base.defaults.validateMethods.validateFinoSelect.error
+                };
+            }
+            return isValid;
+        },
+        validatePersonLimits: function(_base, element, aParamiters) {
+            var current = element.attr('name').split('-'), def = _base.defaults,
+                day_limit = element.closest('form').find('[name="' + aParamiters['day_limit'] + '"]'),
+                one_time_limit = element.closest('form').find('[name="' + aParamiters['one_time_limit'] + '"]'),
+                month_limit = element.closest('form').find('[name="' + aParamiters['month_limit'] + '"]'),
+                val_day_limit = parseFloat(_base.getElementValue(day_limit).replace(/,/, '.')),
+                val_one_time_limit = parseFloat(_base.getElementValue(one_time_limit).replace(/,/, '.')),
+                val_month_limit = parseFloat(_base.getElementValue(month_limit).replace(/,/, '.')),
+                mes_month_1 = 'Limit miesięczny nie może być niższy od limitu dziennego',
+                mes_month_2 = 'Limit miesięczny nie może być niższy od limitu dla pojedynczej transakcji',
+                mes_day_1 = 'Limit dzienny nie może być wyższy od limitu miesięcznego',
+                mes_day_2 = 'Limit dzienny nie może być niższy od limitu dla pojedynczej transakcji',
+                mes_one_time_1 = 'Limit dla pojedynczej transakcji nie może być wyższy od limitu miesięcznego',
+                mes_one_time_2 = 'Limit dla pojedynczej transakcji nie może być wyższy od limitu dziennego';
+
+//            resetowanie komunikatow
+            isValid = {
+                validationStatus: !0
+            };
+            _base.setValidationClass(_base, one_time_limit, def.successClass, def.alertClass + ' ' + def.errorClass);
+            _base.setValidationClass(_base, day_limit, def.successClass, def.alertClass + ' ' + def.errorClass);
+            _base.setValidationClass(_base, month_limit, def.successClass, def.alertClass + ' ' + def.errorClass);
+
+//            zmiana limitu miesiecznego
+            if(current[2] === 'month_limit') {
+                if(val_month_limit < val_day_limit) {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: mes_month_1
+                    };
+//                    komunikat bledu dla limitu dziennego
+                    _base.setValidationClass(_base, day_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    _base.updateValidationError(_base, day_limit, mes_day_1);
+                    if(val_month_limit < val_one_time_limit) {
+//                        komunikat bledu dla limitu pojedynczej transakcji
+                        _base.setValidationClass(_base, one_time_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                        _base.updateValidationError(_base, one_time_limit, mes_one_time_1);
+                    }
+                } else if(val_month_limit < val_one_time_limit) {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: mes_month_2
+                    };
+//                    komunikat bledu dla limitu pojedynczej transakcji
+                    _base.setValidationClass(_base, one_time_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    _base.updateValidationError(_base, one_time_limit, mes_one_time_1);
+                }
+            }
+
+//            zmiana limitu dziennego
+            if(current[2] === 'day_limit') {
+                if(val_month_limit < val_day_limit) {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: mes_day_1
+                    };
+//                    komunikat bledu dla limitu miesiecznego
+                    _base.setValidationClass(_base, month_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    _base.updateValidationError(_base, month_limit, mes_month_1);
+                    if(val_day_limit < val_one_time_limit) {
+//                        komunikat bledu dla limitu pojedynczej transakcji
+                        _base.setValidationClass(_base, one_time_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                        _base.updateValidationError(_base, one_time_limit, mes_one_time_2);
+                    }
+                } else if(val_day_limit < val_one_time_limit) {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: mes_day_2
+                    };
+//                    komunikat bledu dla limitu pojedynczej transakcji
+                    _base.setValidationClass(_base, one_time_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    _base.updateValidationError(_base, one_time_limit, mes_one_time_2);
+                }
+            }
+
+//            zmiana limitu dla pojedynczej transakcji
+            if(current[2] === 'one_time_limit') {
+                if(val_month_limit < val_one_time_limit) {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: mes_one_time_1
+                    };
+//                    komunikat bledu dla limitu miesiecznego
+                    _base.setValidationClass(_base, month_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    _base.updateValidationError(_base, month_limit, mes_month_2);
+                    if(val_day_limit < val_one_time_limit) {
+//                        komunikat bledu dla limitu dziennego
+                        _base.setValidationClass(_base, day_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                        _base.updateValidationError(_base, day_limit, mes_day_2);
+                    }
+
+                } else if(val_day_limit < val_one_time_limit) {
+                    isValid = {
+                        validationStatus: !1,
+                        errorMsg: mes_one_time_2
+                    };
+//                    komunikat bledu dla limitu dziennego
+                    _base.setValidationClass(_base, day_limit, def.alertClass, def.successClass + ' ' + def.errorClass);
+                    _base.updateValidationError(_base, day_limit, mes_day_2);
+                }
+            }
+
+            return isValid;
+        }
+    };
+    ValidateForms.init();
+    $.fn.setFormErrors = function(errorObject) {
+        try {
+            ValidateForms.setFormErrors(errorObject);
+        } catch(error) {
+        }
+    };
+    $.fn.showPass = function(element) {
+        ValidateForms.showPass(element);
+    };
+    $.fn.verifyTinIsDisabled = function(element) {
+        ValidateForms.verifyTinIsDisabled(element);
+    };
+    $.fn.runValidateMethods = function(element) {
+        ValidateForms.runValidateMethods(ValidateForms, element);
+    };
+    $.fn.resetValidation = function(element, unlockForm) {
+        return ValidateForms.resetValidation(ValidateForms, element, unlockForm);
+    };
+    $.fn.unbindValidation = function(element) {
+        return ValidateForms.unbindValidation(ValidateForms, element);
+    };
+    $.fn.unbindSpecificValidation = function(element, validationClass) {
+        return ValidateForms.unbindSpecificValidation(ValidateForms, element, validationClass);
+    };
+    $.fn.bindValidation = function(element, validateMethods, bindToCurrent) {
+        return ValidateForms.bindValidation(ValidateForms, element, validateMethods, bindToCurrent);
+    };
+    /**
+     * odblokowuje form
+     * @param element
+     */
+    $.fn.unlock = function(element) {
+        return ValidateForms.unlockForm(ValidateForms, element);
+    };
+    /**
+     * blokuje form
+     * @param element
+     */
+    $.fn.lock = function(element) {
+        return ValidateForms.lockForm(ValidateForms, element);
+    };
+}(jQuery, window, document));

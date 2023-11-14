@@ -1,0 +1,113 @@
+if (![].map) {
+    Array.prototype.map = function(callback, self) {
+        for (var array = this, len = array.length, newArray = new Array(len), i = 0; len > i; i++) {
+            if (i in array) {
+                newArray[i] = callback.call(self, array[i], i, array);
+            }
+        }
+        return newArray;
+    };
+}
+
+if (![].filter) {
+    Array.prototype.filter = function(callback) {
+        if (null == this) {
+            throw new TypeError();
+        }
+        var t = Object(this), len = t.length >>> 0;
+        if ('function' != typeof callback) {
+            throw new TypeError();
+        }
+        for (var newArray = [], thisp = arguments[1], i = 0; len > i; i++) {
+            if (i in t) {
+                var val = t[i];
+                if (callback.call(thisp, val, i, t)) {
+                    newArray.push(val);
+                }
+            }
+        }
+        return newArray;
+    };
+}
+
+if (![].indexOf) {
+    Array.prototype.indexOf = function(searchElement) {
+        if (null == this) {
+            throw new TypeError();
+        }
+        var t = Object(this), len = t.length >>> 0;
+        if (0 === len) {
+            return -1;
+        }
+        var n = 0;
+        if (arguments.length > 1) {
+            n = Number(arguments[1]);
+            if (n != n) {
+                n = 0;
+            } else {
+                if (0 !== n && n != 1 / 0 && n != -(1 / 0)) {
+                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
+                }
+            }
+        }
+        if (n >= len) {
+            return -1;
+        }
+        for (var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0); len > k; k++) {
+            if (k in t && t[k] === searchElement) {
+                return k;
+            }
+        }
+        return -1;
+    };
+}
+
+var nativeSplit = String.prototype.split, compliantExecNpcg = void 0 === /()??/.exec('')[1];
+
+String.prototype.split = function(separator, limit) {
+    var str = this;
+    if ('[object RegExp]' !== Object.prototype.toString.call(separator)) {
+        return nativeSplit.call(str, separator, limit);
+    }
+    var separator2, match, lastIndex, lastLength, output = [], flags = (separator.ignoreCase ? 'i' : '') + (separator.multiline ? 'm' : '') + (separator.extended ? 'x' : '') + (separator.sticky ? 'y' : ''), lastLastIndex = 0;
+    separator = new RegExp(separator.source, flags + 'g');
+    str += '';
+    if (!compliantExecNpcg) {
+        separator2 = new RegExp('^' + separator.source + '$(?!\\s)', flags);
+    }
+    limit = void 0 === limit ? -1 >>> 0 : limit >>> 0;
+    for (;match = separator.exec(str); ) {
+        lastIndex = match.index + match[0].length;
+        if (lastIndex > lastLastIndex) {
+            output.push(str.slice(lastLastIndex, match.index));
+            if (!compliantExecNpcg && match.length > 1) {
+                match[0].replace(separator2, function() {
+                    for (var i = 1; i < arguments.length - 2; i++) {
+                        if (void 0 === arguments[i]) {
+                            match[i] = void 0;
+                        }
+                    }
+                });
+            }
+            if (match.length > 1 && match.index < str.length) {
+                Array.prototype.push.apply(output, match.slice(1));
+            }
+            lastLength = match[0].length;
+            lastLastIndex = lastIndex;
+            if (output.length >= limit) {
+                break;
+            }
+        }
+        if (separator.lastIndex === match.index) {
+            separator.lastIndex++;
+        }
+    }
+    if (lastLastIndex === str.length) {
+        if (lastLength || !separator.test('')) {
+            output.push('');
+        }
+    } else {
+        output.push(str.slice(lastLastIndex));
+    }
+    return output.length > limit ? output.slice(0, limit) : output;
+};
