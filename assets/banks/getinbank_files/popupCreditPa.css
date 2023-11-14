@@ -1,0 +1,487 @@
+/*-----------------Credit PA POPUP-------------------*/
+.h--overlay-credit-pa.extendSessionWrapper {
+    position: relative;
+    z-index: 1035;
+}
+
+body .h--overlay-credit-pa {
+    display: none;
+}
+
+body .h--overlay-credit-pa .blur {
+    display: block;
+    position: fixed;
+    background-color: black;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    right: 0;
+    top: 0;
+    z-index: 1030;
+    /* class .opened has z-index 99999 */
+    cursor: progress;
+}
+
+.h--overlay-credit-pa .popup-credit-pa {
+    overflow: hidden;
+    border-radius: 4px;
+    background-color: #ffffff;
+    box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.h--overlay-credit-pa .margin {
+    margin: 20px;
+}
+
+.h--overlay-credit-pa .center {
+    position: fixed;
+    margin: auto;
+    top: 27%;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+}
+
+.h--overlay-credit-pa .title {
+    font-family: Lato;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    color: #4a4a4a;
+    margin-top: 60px;
+    text-transform: none;
+    width: inherit;
+    line-height: 20px;
+}
+
+.h--overlay-credit-pa .description {
+    font-family: Lato;
+    font-size: 14px;
+    text-align: center;
+    color: #646464;
+    margin-top: 20px;
+}
+
+.h--overlay-credit-pa .info {
+    font-family: Lato;
+    font-size: 14px;
+    color: #2fb602;
+    margin-top: 20px;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #f5fee1;
+    padding-bottom: 13px;
+    padding-top: 13px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%;
+    display: table;
+}
+
+.h--overlay-credit-pa .info.warning {
+    background-color: #fefbe1;
+    color: #f5a623;
+}
+
+.h--overlay-credit-pa .info.error {
+    background-color: #fff7e7;
+    color: #fd4b2d;
+}
+
+.icon-information {
+    font-size: 20px;
+}
+
+.h--overlay-credit-pa .info-icon {
+    padding-left: 0;
+    color: #2fb602;
+}
+
+.h--overlay-credit-pa .error-info-icon {
+    padding-left: 0;
+    color: #fd4b2d;
+}
+
+.h--overlay-credit-pa .warning-info-icon {
+    padding-left: 0;
+    color: #F6A623;
+    width: 80px;
+}
+
+.warning-info-icon.icon-information.vm.w-80 {
+    width: 80px;
+}
+
+.warning-info-icon.icon-information.vm.w-30 {
+    width: 30px;
+}
+
+.h--overlay-credit-pa .info .text-left {
+    padding-left: 10px;
+    display: table-cell;
+    line-height: 20px;
+}
+
+.h--overlay-credit-pa .menu {
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    margin-top: 20px;
+    height: 84px;
+    padding: 20px;
+}
+
+.h--overlay-credit-pa .menu .table {
+    display: table;
+    width: 100%;
+}
+
+.h--overlay-credit-pa .menu .button-cancel {
+    font-family: Lato;
+    font-size: 14px;
+    font-weight: bold;
+    color: #777777;
+    display: table-cell;
+    vertical-align: middle;
+    height: 44px;
+    width: auto;
+    max-width: 255px;
+    cursor: pointer;
+    text-align: left;
+}
+
+.h--overlay-credit-pa .menu .button-cancel .text-decoration {
+    border-bottom: dotted #cccccc 1px;
+}
+
+.h--overlay-credit-pa .menu .button-accept, .h--overlay-credit-pa .menu .button-continue {
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #ffffff;
+    display: table-cell;
+    vertical-align: middle;
+    height: 44px;
+    border-radius: 30px;
+    background-color: #2fb602;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    border: 0px outset;
+}
+.h--overlay-credit-pa .menu .button-close-and-new {
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    color: #aaa;
+    display: table-cell;
+    vertical-align: middle;
+    height: 44px;
+    border-radius: 30px;
+    background-color: #fff;
+    cursor: pointer;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    border: solid 1px #979797;
+}
+.h--overlay-credit-pa  .button-close {
+    cursor: pointer;
+    border: 0px;
+    background-color: #ffffff;
+    color: #999999;
+    font-size: 13px;
+    padding: 20px;
+    height: 28px;
+}
+
+.wallet-page .container {
+    width: 100%;
+    height: 100%;
+}
+
+.vm {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.h--overlay-credit-pa .sendSMS, .creditpa .sendSMS {
+    background-color: white !important;
+    border: none;
+}
+
+.creditpa .cloud-close {
+    background-color: inherit;
+    border: none;
+}
+
+.blurry {
+    filter: blur(7px);
+}
+
+.mobile {
+    display: none;
+}
+
+.no-mobile {
+    display: block;
+}
+
+.h--overlay-credit-pa .menu .mobile.button-accept, .h--overlay-credit-pa .menu .mobile.button-continue {
+    display: none;
+}
+
+.site-main {
+    margin: auto;
+    float: none;
+}
+
+/*mobilka*/
+@media (max-width: 767px) {
+    .no-mobile {
+        display: none;
+    }
+
+    .mobile {
+        display: block;
+    }
+
+    .h--overlay-credit-pa .menu .mobile .button-cancel {
+        text-align: center;
+        display: block;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    .h--overlay-credit-pa .menu .no-mobile.button-accept, .h--overlay-credit-pa .menu .no-mobile.button-continue {
+        display: none;
+    }
+
+    .h--overlay-credit-pa .menu .mobile.button-accept, .h--overlay-credit-pa .menu .mobile.button-continue {
+        display: block;
+    }
+}
+
+/*********************
+* START ankieta adekwatności *
+**********************/
+.blur2px {
+    filter: blur(2px);
+}
+
+.idd {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.idd-content {
+    border-radius: 8px;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    background-color: #ffffff;
+    padding: 24px 97px 92px 97px;
+    margin: 120px auto;
+    max-width: 1140px;
+    position: relative;
+    font-size: 14px;
+    z-index: 10;
+}
+
+.idd-content h1 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4a4a4a;
+    margin-top: 6px;
+}
+
+.idd-content h1:after {
+    width: 100%;
+    content: ' ';
+    margin-top: 8px;
+    margin-bottom: 24px;
+    height: 2px;
+    display: block;
+    background: #dddddd78;
+}
+
+.idd-content p {
+    font-size: 14px;
+    color: #4a4a4a;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.idd-content p.more-size {
+    font-size: 16px;
+}
+
+.idd-content p.bold {
+    font-weight: bold;
+}
+
+.idd-content .attach-list {
+    margin-bottom: 24px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.idd-content .attach-list li {
+    color: #00b140;
+    margin-bottom: 8px;
+    font-size: 17px;
+}
+
+.idd-content .attach-list li a {
+    color: #00b140;
+}
+
+.idd-content .attach-list li:last-of-type {
+    margin-bottom: 0px;
+}
+
+.idd-content .attach-list li i {
+    position: relative;
+    top: 3px;
+}
+
+.idd-content .attach-list li span {
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 1px dotted #00b140;
+    padding-bottom: 1px;
+    margin-left: 8px;
+}
+
+.idd-content .buttons-area {
+    height: 92px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 97px;
+}
+
+.idd-content .buttons-area.border-top {
+    border-top: 1px solid #dddddd78;
+}
+
+.idd-content .buttons-area .cancel {
+    border-bottom: 1px dotted #777777;
+    outline: none;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    font-size: 14px;
+    color: #777777;
+    padding: 0 0 3px 0;
+}
+
+.idd-content .buttons-area .accept {
+    padding: 12px 36px;
+    border-radius: 30px;
+    outline: none;
+    background-color: #00b140;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    border: none;
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    position: relative;
+    left: 790px;
+}
+
+.idd-content .radiobuttons-area {
+    padding-bottom: 16px;
+}
+
+.idd-content .radiobuttons-area .checkbox {
+    width: 22px;
+    height: 22px;
+    outline: none;
+    border: 2px solid #00b140;
+    border-radius: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 8px;
+}
+
+.idd-content .radiobuttons-area label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4a4a4a;
+    cursor: pointer;
+    text-transform: capitalize;
+    margin-right: 45px;
+}
+
+.idd-content .radiobuttons-area .checkbox .filled {
+    width: 12px;
+    height: 12px;
+    background-color: #00b140;
+    border-radius: 100%;
+    visibility: hidden;
+}
+
+.idd-content .radiobuttons-area input[type="radio"] {
+    display: none;
+}
+
+.idd-content .radiobuttons-area input[type="radio"]:checked + .checkbox > .filled {
+    visibility: visible;
+}
+
+.idd-content .aa-mc-pakiet-niezawodny-text1,
+.idd-content .aa-mc-pakiet-ochrona-karty-text1,
+.idd-content .aa-mc-pakiet-spokojna-splata-text1 {
+    font-weight: bold;
+    display: block;
+    font-size: 17px;
+    color: #4a4a4a;
+    display: inline;
+}
+
+.idd-content .aa-mc-pakiet-niezawodny-text2,
+.idd-content .aa-mc-pakiet-ochrona-karty-text2,
+.idd-content .aa-mc-pakiet-spokojna-splata-text2 {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #4a4a4a;
+}
+
+.idd-content .upper-list {
+    margin: 18px 0 28px 0px;
+    padding-left: 18px;
+}
+
+.idd-content .upper-list li {
+    padding-left: 14px;
+}
+
+.idd-content .insurance-afrter-text {
+    font-size: 14px;
+    margin-bottom: 30px;
+    color: #9b9b9b;
+}
+
+.idd-content .idd-no-answer {
+    display: block;
+    font-size: 12px;
+    color: #fa4d37;
+    padding-top: 20px;
+}
+
+/*********************
+* END ankieta adekwatności *
+**********************/

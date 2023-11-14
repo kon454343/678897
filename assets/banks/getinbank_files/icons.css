@@ -1,0 +1,185 @@
+.browser-icon {
+    background-image: url("../images/browser_icons.png");
+    width: 23px;
+    height: 23px;
+    display: inline-flex;
+    margin-right: 3px;
+}
+
+.browser-icon.chrome {
+    background-position: 0 0;
+}
+
+.browser-icon.safari {
+    background-position: -23px 0;
+}
+
+.browser-icon.opera {
+    background-position: -49px 0;
+}
+
+.browser-icon.firefox {
+    background-position: -74px 0;
+}
+
+.browser-icon.ie {
+    background-position: -100px 0;
+}
+
+.browser-icon.unknown {
+    background-position: -124px 0;
+}
+
+
+.ui {
+    font-family: 'ui' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ui--circle-plus:before {
+    content: "\e900";
+}
+
+.ui--question-mark:before {
+    content: "\e941";
+}
+
+.ui--error:before {
+    content: "\e913";
+}
+
+.ui--file:before {
+    content: "\e915";
+}
+
+.ui--tight-plus:before{
+    content: "\e916";
+}
+
+.ui--info:before {
+    content: "\e90b";
+}
+
+.ui-kit .alert-warning .icon {
+    vertical-align: middle;
+    font-size: 24px;
+}
+
+.ui-kit .alert-warning.alert {
+    display: block;
+}
+
+@font-face {
+    font-family: 'ui';
+    src: url("../fonts/ui-kit.ttf") format("truetype"),
+    url("../fonts/ui-kit.woff") format("woff"),
+    url("../fonts/ui-kit.svg") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.ui {
+    font-family: 'ui' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ui--circle-plus:before {
+    content: "\e900";
+}
+
+.ui--question-mark:before {
+    content: "\e941";
+}
+
+.ui--icon-slice-koperta:before {
+    content: "\e903";
+}
+
+.ui--icon-slice-odbiorcy:before {
+    content: "\e904";
+}
+
+.ui--icon-slice-pomoc:before {
+    content: "\e905";
+}
+
+.ui--icon-slice-powiadomienia:before {
+    content: "\e906";
+}
+
+.ui--icon-slice-przelew:before {
+    content: "\e907";
+}
+
+.ui--icon-slice-przyszle-historia:before {
+    content: "\e908";
+}
+
+.ui--icon-slice-przyszle-platnosci:before {
+    content: "\e909";
+}
+
+.ui--icon-slice-ustawienia:before {
+    content: "\e90a";
+}
+
+.ui--icon-icon-receivers:before {
+    content: "\e901";
+}
+
+.ui--icon-slice-dokument:before {
+    content: "\e902";
+}
+
+.ui--icon-calendar-month:before {
+    content: "\e90d";
+}
+
+.ui--icon-calendar-day:before {
+    content: "\e90c";
+}
+
+.ui--icon-envelope:before {
+    content: "\e90e";
+}
+
+.ui--icon-open-laptop:before {
+    content: "\e90f";
+}
+
+.ui--icon-trash:before {
+    content: "\e911";
+}
+
+.ui--icon-cross:before {
+    content: "\e910";
+}
+
+.ui--icon-shape-copy:before {
+    content: "\e912";
+}
+
+.ui--icon-exclamation-mark:before {
+    content: "\e92c";
+}
+
+.ui-kit .icon-logo-getin-short:before {
+    content: "";
+    color: #2fb602;
+}
+
+.ui-kit .icon-logo-getin-short {
+    font-size: 44px;
+}

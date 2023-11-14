@@ -1,0 +1,1229 @@
+    /*messages-button*/
+.messages-navigation button {
+    width: 263px;
+    height: 44px;
+    border-radius: 2px;
+    border: 1px solid;
+    border-color: #e7e7e7;
+    text-transform: none;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.messages-navigation button:hover {
+    background-color: #f3fee7;
+    border-color: #f3fee7;
+    box-shadow: none;
+    color: #333333;
+}
+.messages-page button i.icon,
+.message-section a i.icon,
+.messages-page label.h--btn i.icon {
+    font-size: 16px;
+    position: relative;
+    top: -3px;
+}
+.messages-navigation button.active {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    box-shadow: none;
+    color: #333333;
+    cursor: pointer;
+}
+.messages-navigation button.active:hover {
+    border: 1px solid #ffffff;
+    color: #333333;
+    box-shadow: none;
+}
+.messages-navigation button .message-counter {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background-color: #2fb602;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #ffffff;
+    float: right;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+.messages-navigation button.new_message {
+    background-color: #2fb602;
+    color: #ffffff;
+    border-color: #06BA41;
+    margin-bottom: 10px;
+}     
+.messages-navigation button.new_message.company  {
+    background-color: #3359C6;
+    color: #ffffff;
+    border-color: #3359C6;
+} 
+.messages-navigation button#received {
+    margin-top: 40px;
+    margin-bottom: 10px;
+    position: relative;
+}
+.message-section .details-actions {
+    border-top: solid 1px #f5f5f5;
+    border-bottom: solid 1px #f5f5f5;
+    padding: 10px 20px;
+    margin-top: 21px;
+}
+.message-section .message-form .details-actions{
+    padding: 10px 15px;
+}
+.message-section .details-actions button,
+.message-section .details-actions a {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4a4a4a;
+    height: 44px;
+    margin-right: 20px;
+    text-transform: none;
+    vertical-align: top;
+}
+.message-section .details-actions button.return {
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+    width: 115px;
+    height: 44px;
+    padding: 0;
+    text-align: center;
+}
+.message-section .details-actions button.response {
+    width: 145px;
+    height: 44px;
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+}
+.message-section .details-actions .printBtn {
+      padding-top: 9px;
+}
+.message-section .details-actions .printBtn i {
+    font-size: 23px;
+    position: relative;
+    top: 0px;
+    margin-right: 5px;
+}
+.message-section .details-actions button:hover,
+.message-section .details-actions a:hover {
+    color: #ffffff;
+    background-color: #2a2c31;
+    border-color: #2a2c31;
+}
+    /*messages-navigation*/
+.messages-navigation {
+    margin-top: 21px;
+}
+    /*messages-section*/
+.message-section {
+    padding-left: 12px;
+    padding-top: 5px;
+    position: relative;
+}
+.message-section .messagesBox {
+    background-color: #ffffff;
+}
+.message-section .messagesBox .separator {
+    height: 30px;
+    background-color: #eee;
+}
+.message-section .messagesBox .last_messages {
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin-top: 20px;
+}
+.message-section .messagesBox .section-title {
+    padding: 0px;
+    margin: 0px;
+    font-family: Roboto;
+    font-size: 18px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin: 35px 22px 0 22px;
+    
+}
+.message-section .messagesBox .section-title i.icon {
+    font-size: 15px;
+}
+.message-section .messages-list {
+    list-style: none;
+    margin-top: 31px;
+    margin-bottom: 15px;
+    padding: 0px;
+}
+.message-section .message-item:first-child {
+    border-top: solid 1px #f5f5f5;
+}
+
+.message-section .message-item {
+    background-color: #ffffff;
+    border-bottom: solid 1px #f5f5f5;
+    padding: 15px 22px;
+    cursor: pointer;
+}
+.message-section .message-item.unread .message-title {
+    color: #2FB602;
+}
+.message-section .message-item.important-message {
+    /*background-color: #fffeee;*/
+    background-color: #fff;
+    position: relative;
+    padding: 15px 22px 15px 65px;
+}
+.message-section .message-item.important-message .message-title {
+    /*color: #ff9f24;*/
+}
+.message-section .message-item.important-message i.icon--file-edit-2,
+.message-section .message-item.important-message i.icon--file-edit-3,
+.message-section .message-item.important-message i.icon--warning {
+    position: absolute;
+    font-size: 20px;
+    top: 26px;
+    left: 30px;
+    /*color: #ff9f24;*/
+}
+.message-section .message-date {
+    margin: 0 0 2px 0;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #8a8a8a;
+}
+.message-section .message-title {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin: 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.message-section .message-title .icon--attach {
+    margin-left: 5px;
+}
+    /* message datails */
+.message-section .details_messages {
+    margin-bottom: 10px;
+}
+.message-section .details_message {
+    margin: 0 22px;
+    padding-bottom: 20px;
+    border-bottom: solid 1px #666666;
+}
+.message-section .details_message:last-child {
+    border-bottom: none;
+}
+.message-section .details-title {
+    margin-top: 20px;
+    padding: 0 0 24px;
+    margin: 20px 0px 0px 0px;
+    border-bottom: dashed 1px #e7e7e7;
+}
+.message-section .details-title .date {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 12px;
+    letter-spacing: normal;
+    text-align: left;
+    color: #8a8a8a;
+    margin-bottom: 2px;
+}
+.message-section .details-title .title {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 16px;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin: 0;
+    position: relative;
+    top: 3px;
+    word-wrap: break-word;
+}
+.message-section .details-title .title i.icon {
+    margin-left: 5px;
+}
+.message-section .details-title .bank_image {
+    background: transparent url(../images/icon.png) repeat scroll 0 0;
+    border-radius: 4px;
+    display: inline-block;
+    float: left;
+    height: 34px;
+    margin-right: 10px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    width: 34px;
+}
+.message-section .details-content {
+    margin-top: 20px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    padding: 0;
+    word-wrap: break-word;
+}
+.message-section .details-footer {
+    height: 220px;
+    padding: 0 97px 0 0;
+    margin-top: 15px;
+    margin-left: -15px;
+}
+.message-section .details-footer div.column {
+    height: 85px;
+    border-right: 3px solid #d7d7d7;
+    font-size: 11px;
+    font-family: Arial, sans-serif;
+    color: #757575;
+    padding: 0 20px;
+    float: left;
+    margin-left: -10px;
+}
+.message-section .details-footer div.column.no-border {
+    border-right: none;
+}
+.message-section .details-footer .check-us {
+    margin-top: 10px;
+    margin-bottom: 0px;
+}
+.message-section .details-footer .find-us {
+}
+.message-section .details-footer .bank-info {
+    margin-top: 10px;
+}
+.message-section .details-footer .bank-logo {
+    margin-top: 23px;
+}
+.message-section .details-footer .information {
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    color: #757575;
+    margin-top: 20px;
+    margin-right: 45px;
+}
+.message-section .details-footer .we-are-noble {
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    color: #757575;
+    font-weight: 600;
+    margin-left: 5px;
+}
+.message-section .details-footer .facebook {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    background: transparent url(../images/transfer-facebook-icon.png) no-repeat scroll 0 0;
+    background-size: 25px 25px;
+    text-decoration: none;
+    border-bottom: none;
+    position: relative;
+    top: 8px;
+    margin-left: 19px;
+}
+.message-section .details-footer .instagram {
+    display: inline-block;
+    width: 26px;
+    height: 25px;
+    background: transparent url(../images/instagram.png) no-repeat scroll 0 0;
+    background-size: 26px 25px;
+    text-decoration: none;
+    position: relative;
+    border-bottom: none;
+    top: 8px;
+    margin-left: 14px;
+}
+.message-section .details-footer .noblebank {
+    display: inline-block;
+    width:76px;
+    height: 46px;
+    background: transparent url(../images/message-noble.png) no-repeat scroll 0 0;
+    background-size: 76px 46px;
+    margin-left: 15px;
+    position: relative;
+    top: 3px;
+}
+.message-section .details-attachments {
+    margin-bottom: 20px;
+}
+.message-section .details-attachments p {
+    border-bottom: dashed 1px #e7e7e7;
+    padding-bottom: 5px;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #8a8a8a;
+    margin-top: 30px;
+}
+.message-section .details-attachments .attachment a.attach {
+    display: block;
+    width: 341px;
+    height: 62px;
+}
+.message-section .details-attachments .attachment a .attach-item {
+    width: 845px;
+    height: 62px;
+    border-radius: 2px;
+    border: solid 1px #e7e7e7;
+    margin-top: 5px;
+    padding: 10px 10px 10px 44px;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #666666;
+    position: relative;
+    display: table;
+}
+.message-section .details-attachments .attachment a .attach-item span {
+    vertical-align:middle;
+    display: table-cell;
+}
+.message-section .details-attachments .attachment a .attach-item i.icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    font-size: 23px;
+    color: #2fb602;
+    margin-top: -12px;
+}
+    /* message form */
+.message-section .message-form {
+    margin-top: 22px;
+}
+
+.message-section .h--form--field label {
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #4a4a4a;
+    text-transform: none;
+    background: none;
+}
+.message-section .h--form--field .selected-type {
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.13;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4a4a4a;
+    padding: 14px 10px 12px;
+    margin-top: 16px;
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    height: 44px;
+}
+.message-section .h--form--field .selected-type.empty {
+    color: #cccccc;
+}
+.message-section .h--form--field .selected-type.focus {
+    background-color: #f5f5f5;
+    border: solid 1px #e7e7e7;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    color: #4a4a4a;
+}
+.message-section .h--form--field .selected-type i.icon--more-black,
+.message-section .h--form--field .selected-type i.icon--less-black {
+    display: block;
+    border-left: 1px solid #e7e7e7;
+    display: block;
+    position: absolute;
+    top: -4px;
+    right: 0;
+    padding: 14px;
+}
+.message-section .h--form--field .notification-list {
+    display: none;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    z-index: 999;
+    width: 243px;
+}
+.message-section .h--form--field .notification-list .item {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.13;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4a4a4a;
+    padding: 14px 10px 12px;
+    border-bottom: 1px solid #e7e7e7;
+    cursor: pointer;
+}
+.message-section .h--form--field .notification-list .item:hover {
+    background-color: #f3fee7;
+}
+.message-section .h--form--field .notification-list .item:last-child {
+    border-bottom: none;
+}
+.message-section .h--form--field input,
+.message-section .h--form--field textarea {
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.13;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4a4a4a;
+    padding: 10px 10px 9px;
+    margin-top: 16px;
+}
+.message-section .h--form--field input.placeholder:disabled,
+.message-section .h--form--field .selected-type.disabled {
+    text-overflow: ellipsis;
+    color: #C3C3C3;
+    background-color: #FBFBFB;
+}
+.message-section .h--form--field input:disabled ~ label:after {
+    display: none;
+}
+.message-section .h--form--field textarea {
+    height: 304px;
+    resize: none;
+}
+
+.message-section .h--form--field.input-message {
+    margin-bottom: 0;
+}
+.message-section .h--form--field.input-message input {
+    height: 44px;
+    width: 100%;
+}
+.messages-page .message-form .details-actions {
+    border-top: none;
+    border-bottom: none;
+    margin-bottom: 10px;
+    position: relative;
+    height: 100px;
+}
+.messages-page .message-form .details-actions p {
+    width: 290px;
+    font-family: Roboto;
+    font-size: 10px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-align: left;
+    color: #9b9b9b;
+    display: inline-block;
+    position: absolute;
+    top: 36px;
+    left: 220px;
+}
+.messages-page .message-form .details-actions label {
+    border-radius: 2px;
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4a4a4a;
+    padding: 12px 20px 13px;
+    text-transform: none;
+    display: inline;
+    position: absolute;
+    top: 30px;
+}
+.messages-page .message-form .details-actions label.attachments_button {
+    width: 185px;
+    height: 44px;
+    display: inline-block;
+}
+.messages-page .message-form .details-actions button#return-btn {
+    width: 119px;
+    height: 44px;
+    display: inline-block;
+    position: absolute;
+    top: 30px;
+    right: 218px;
+    padding-top: 10px;
+}
+.messages-page .message-form .details-actions button.send_message {
+    width: 203px;
+    height: 44px;
+    display: inline-block;
+    position: absolute;
+    top: 30px;
+    right: 15px;
+    padding-top: 10px;
+}
+.messages-page .message-form .details-actions button {
+    border-radius: 2px;
+    background-color: #ffffff;
+    border: solid 1px #e7e7e7;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4a4a4a;
+    padding: 12px 20px 13px;
+    text-transform: none;
+    display: inline;
+    float: right;
+}
+.messages-page .message-form .details-actions button:hover,
+.messages-page .message-form .details-actions label:hover {
+    background-color: #2a2c31;
+    color: #ffffff;
+}
+.messages-page .message-form .details-actions div.right {
+    width: 350px;
+    float: right;
+}
+.messages-page .message-form .details-actions .send_message {
+    background-color: #2FB602;
+    border-color: #2FB602;
+    color: #fff;
+    margin-right: 0;
+}
+.messages-page .message-form .details-actions .send_message.company {
+    background-color: #3359C6;
+    border-color: #3359C6;
+    color: #fff;
+}
+.messages-page .message-form .details-actions .send_message i.icon {
+    font-size: 17px;
+    position: relative;
+    top: 2px;
+    margin-right: 6px;
+}
+.messages-page .message-form .details-actions button#return-btn i.icon {
+    margin-right: 6px;
+}
+.messages-page .message-form .attachments_list .attachments_title {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #8a8a8a;
+    margin-top: 20px;
+    padding-bottom: 5px;
+    border-bottom: dashed 1px #e7e7e7;
+    margin-bottom: 0px;
+}
+.messages-page .message-form .attachments_list ul {
+    list-style: none;
+    padding: 0 0 15px 0;
+    list-style: none;
+    border-bottom: dashed 1px #e7e7e7;
+}
+.messages-page .message-form .attachment_item {
+    width: 438px;
+    height: 64px;
+    border-radius: 2px;
+    border: solid 1px #e7e7e7;
+    padding:0;
+    position: relative;
+    margin-top: 15px;
+}
+.messages-page .message-form .attachment_item button .icon--trush {
+    font-size: 22px;
+    position: relative;
+    top: 1px;
+}
+.messages-page .message-form .attachment_item.errorAttach {
+    width: 100%;
+    border-radius: 4px;
+    background-color: #fff7e7;
+    padding-top: 14px;
+    padding-left: 22px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #fd4b2d;
+}
+.messages-page .message-form .attachment_item.errorAttach i.icon {
+    margin-right: 10px;
+    font-size: 15px;
+    position: relative;
+    top: 2px;
+}
+.messages-page .message-form .attachment_item.loading {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #333333;
+    padding: 3px 20px;
+}
+.messages-page .message-form .attachment_item.loading .icon-loader {
+    background: transparent url(../images/loadery/preloader_zielony.gif) repeat scroll 0 0;
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background-size: 100%;
+    position: relative;
+    top: 12px;
+}
+.messages-page .attachment_item .file_information {
+    display: inline;
+    margin-top: 10px;
+}
+.messages-page .attachment_item .file_information i {
+    font-size: 24px;
+    margin: 19px 10px 0 10px;
+    display: inline-block;
+    color: #2fb602;
+}
+.messages-page .attachment_item .file_information .file_title {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #666666;
+    width: 245px;
+    display: inline-table;
+    height: 63px;
+    position: absolute;
+    top: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    left: 50px;
+}
+.messages-page .attachment_item .file_information .file_title span{
+    vertical-align: middle;
+    display: table-cell;
+    word-break: break-all;
+}
+.messages-page .attachment_item button {
+    border-radius: 2px;
+    border: solid 1px #e7e7e7;
+    padding: 10px 20px;
+    font-family: Lato;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #ff473d;
+    text-transform: none;
+    display: inline-block;
+    height: 44px;
+    float: right;
+    margin: 10px;
+}
+.messages-page .attachment_item button:hover {
+    background-color: #ffffff;
+    color: #ff473d;
+}
+.messages-page .layer {
+    position: absolute;
+    background-color: rgba(221, 221, 221, 0.75);
+    width: 100%;
+    height: 100%;
+    left: 6px;
+    top: 0;
+    display: none;
+}
+.messages-page .layer .success_content,
+.messages-page .layer .error_content{
+    background: #fff;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 360px;
+    height: 340px;
+    margin-left: -180px;
+    margin-top: 110px;
+}
+.messages-page .layer .success_content .header,
+.messages-page .layer .error_content .header {
+    background-color: #2fb602;
+    text-align: center;
+    height: 120px;
+    padding-top: 39px;
+    color: #fff;
+    font-size: 44px;
+}
+.messages-page .layer .error_content .header {
+    background-color: #fd4b2d;
+}
+.messages-page .layer .success_content .content h1,
+.messages-page .layer .error_content .content h1 {
+    text-decoration: none;
+    text-align: center;
+    font-size: 19px;
+    margin-top: 20px;
+}
+.messages-page .layer .success_content .content p,
+.messages-page .layer .error_content .content p {
+    text-align: center;
+    margin-top: 22px;
+    font-size: 12px;
+}
+.messages-page .layer .success_content .content span,
+.messages-page .layer .error_content .content span {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 22px;
+    font-size: 12px;
+    color: #999;
+}
+.messages-page .layer .success_content .content .details-actions,
+.messages-page .layer .error_content .content .details-actions {
+    border-top: none;
+    border-bottom: none;
+    text-align: center;
+    margin-top: 5px;
+}
+.messages-page .layer .success_content .content .details-actions button,
+.messages-page .layer .error_content .content .details-actions button {
+    margin-right: 0;
+}
+.messages-page .layer .content .details-actions button#cancel {
+    width: 135px;
+    height: 44px;
+}
+/* wiadomości wymagające potwierdzenie tokenem sms*/
+.messages-page .confirm-information {
+    height: 65px;
+    background-color: #fff7e7;
+    margin: 0 -22px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #fd4b2d;
+    padding: 20px;
+}
+.messages-page .confirm-information i {
+    font-size: 25px;
+}
+.messages-page .confirm-information p {
+    display: inline;
+    position: relative;
+    top: -5px;
+}
+.messages-page .prepareConfirmation h2 {
+    font-family: Roboto;
+    font-size: 18px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin-top: 60px;
+    margin-bottom: 23px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eaeaea;
+}
+.messages-page .terms label {
+    text-transform: none;
+    font-family: Roboto;
+    font-size: 13px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #4a4a4a;
+    width: 680px;
+}
+.messages-page .terms label a {
+    color: #2fb602;
+}
+.messages-page .terms label a.company {
+    color: #3359C6 !important;
+}
+.messages-page .sms-code {
+    background: none;
+    margin: 0;
+    width: 100%;
+    padding: 0;
+}
+.messages-page .sms-code h3 {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin: 34px 0 0 0;
+    padding: 0;
+}
+.messages-page .sms-code p {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #777777;
+    margin: 0;
+    padding: 0;
+}
+.messages-page .sms-code .sms h3 {
+    color: #2fb602;
+    margin: 34px 0 0 19px;
+}
+.messages-page .sms-code .sms p {
+    margin: 0 0 0 19px;
+}
+.messages-page .sms-code .info {
+    width: 40%;
+    padding-bottom: 33px;
+}
+.messages-page .sms-code .sms {
+    width: 60%;
+    border-radius: 4px;
+    background-color: #f5fee1;
+    text-align: left;
+    position: relative;
+    padding-bottom: 33px;
+}
+.messages-page .sms-code .sms.company {
+    background-color: #86A7F2;
+}
+.messages-page .sms-code .sms.error {
+    background-color: #fff7e7;
+}
+.messages-page .sms-code .sms.error h3 {
+    color: #fd4b2d;
+}
+.messages-page .sms-code .sms a.renewConfirmation {
+    position: absolute;
+    bottom: -29px;
+    left: 19px;
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #777777;
+    padding-bottom: 2px;
+    border-bottom: dotted 1px #777777;
+    cursor: pointer;
+}
+.messages-page .sms-code .sms .h--form--field {
+    position: absolute;
+    top: 30px;
+    right: 19px;
+}
+.messages-page .sms-code .sms .h--form--field input {
+    margin: 0;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 2px #2fb602;
+    width: 146px;
+    height: 44px;
+    font-family: Roboto;
+    font-size: 14px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+}
+.messages-page .sms-code .sms.error .h--form--field input {
+    border: solid 2px #fd4b2d;
+}
+.messages-page .sms-code .sms.error .h--form--field .errorMsg {
+    font-family: Roboto;
+    font-size: 12px;
+    font-weight: normal;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #fd4b2d;
+    margin: 0;
+    padding: 0;
+}
+.messages-page .prepareConfirmation .actions {
+    padding: 0;
+    margin-top: 35px;
+}
+.messages-page .prepareConfirmation .actions button {
+    border-radius: 30px;
+    border: solid 1px #eaeaea;
+    padding: 13px 60px;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #777777;
+    height: 44px;
+    text-transform: none;
+}
+.messages-page .prepareConfirmation .actions button.smsSettingsValid {
+    height: 44px;
+    padding: 0px;
+    width: 165px;
+}
+.messages-page .prepareConfirmation .actions button:hover {
+    color: #ffffff;
+}
+.messages-page .success_confirmation {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #333333;
+    margin: 0 -22px;
+    padding: 35px 22px;
+    color: #2fb602;
+    border-radius: 4px;
+    background-color: #f5fee1;
+    
+}
+.messages-page .checkbox-item {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 1px #cccccc;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 18px;
+    color: #888;
+    position: relative;
+    top: 4px;
+    margin-right: 10px;
+}
+.messages-page .checkbox-item i.icon {
+    position: relative;
+    top: -2px;
+    color: #2fb602;
+}
+.placeholder::-webkit-input-placeholder {
+    /* WebKit, Blink, Edge */
+    color: #cccccc !important;
+}
+.placeholder:-moz-placeholder {
+    /* Mozilla Firefox 4 to 18 */
+    color: #cccccc !important;
+    opacity: 1 !important;
+}
+.placeholder::-moz-placeholder {
+    /* Mozilla Firefox 19+ */
+    color: #cccccc !important;
+    opacity: 1 !important;
+}
+.placeholder:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #cccccc !important;
+}
+.messages-page .message-form .details-actions label.attachments_button.blocked {
+    color: #C3C3C3;
+    background-color: #FBFBFB;
+    cursor: default;
+}
+.messages-page .message-form .details-actions button.send_message.blocked {
+    color: #C3C3C3;
+    background-color: #FBFBFB;
+    cursor: default;
+    border: solid 1px #e7e7e7;
+}
+.messages-navigation button.new_message.company  {
+    background-color: #3359C6 !important;
+    color: #ffffff;
+    border-color: #3359C6 !important;
+}
+.messages-navigation button.new_message.company:hover,
+.messages-navigation button.new_message.company:focus {
+    background-color: #3359C6 !important;
+    color: #ffffff !important;
+    border-color: #3359C6 !important;
+}
+.wrapper.company .message-section .h--green-hover:hover, .company .message-section .h--green-hover:focus {
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #333333;
+}
+.wrapper.company .message-section .h--green-hover:hover {
+    background: #2a2c31;
+    border-color: #2a2c31;
+}
+.wrapper.company .messages-navigation button .message-counter {
+    background-color: #3359C6;
+    color: #ffffff;
+}
+.wrapper.company .message-section .message-item.unread .message-title {
+    color: #3359C6;
+} 
+.wrapper.company .message-section .details-title .bank_image {
+    background: transparent url(../images/icon-comp.png) repeat scroll 0 0;
+}
+.wrapper.company .messages-navigation button.active:hover,
+.wrapper.company .messages-navigation button.active:focus {
+    border: 1px solid #ffffff;
+    color: #333333;
+    background: #ffffff;
+    box-shadow: none;
+}
+.wrapper.company .messages-navigation button:hover,
+.wrapper.company .messages-navigation button:focus {
+    background: #86A7F2;
+    border-color: #86A7F2;
+    color: #333333;
+}
+.wrapper.company .message-section .h--form--field .notification-list .item:hover {
+    background-color: #86A7F2;
+}
+.wrapper.company .message-section .details-attachments .attachment a .attach-item i.icon {
+    color: #3359C6;
+}
+.company.wrapper .message-section .sms-code {
+    background-color: #ffffff;
+}
+.messages-page.company .sms-code .sms.company h3 {
+    color: #3359C6;
+}
+.messages-page.company .sms-code .sms.company p {
+    color: #FFFFFF;
+}
+.messages-page.company .sms-code .sms.company .h--form--field input {
+    border: solid 2px #3359C6;
+}
+.messages-page.company .success_confirmation {
+    background: #86A7F2;
+    color: #FFFFFF;
+}
+.messages-page.company .attachment_item .file_information i {
+    color: #3359C6;
+}
+.messages-page.company .message-form .attachment_item.loading .icon-loader {
+    background: transparent url(../images/loadery/preloader_niebieski.gif) repeat scroll 0 0;
+    background-size: 100%;
+}
+.messages-page.company .layer .success_content .header {
+    background-color: #3359C6;
+}

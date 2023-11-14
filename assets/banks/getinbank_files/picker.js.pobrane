@@ -1,0 +1,457 @@
+!function(factory) {
+    if ('function' == typeof define && define.amd) {
+        define('picker', [ 'jquery' ], factory);
+    } else {
+        if ('object' == typeof exports) {
+            module.exports = factory(require('jquery'));
+        } else {
+            this.Picker = factory(jQuery);
+        }
+    }
+}(function($) {
+    function PickerConstructor(ELEMENT, NAME, COMPONENT, OPTIONS) {
+        function createWrappedComponent() {
+            return PickerConstructor._.node('div', PickerConstructor._.node('div', PickerConstructor._.node('div', PickerConstructor._.node('div', P.component.nodes(STATE.open), CLASSES.box), CLASSES.wrap), CLASSES.frame), CLASSES.holder);
+        }
+        function prepareElement() {
+            $ELEMENT.data(NAME, P).addClass(CLASSES.input).val($ELEMENT.data('value') ? P.get('select', SETTINGS.format) : ELEMENT.value).on('focus.' + STATE.id + ' click.' + STATE.id, focusToOpen);
+            if (!SETTINGS.editable) {
+                $ELEMENT.on('keydown.' + STATE.id, function(event) {
+                    var keycode = event.keyCode, isKeycodeDelete = /^(8|46)$/.test(keycode);
+                    if (27 == keycode) {
+                        P.close();
+                        return !1;
+                    }
+                    if (32 == keycode || isKeycodeDelete || !STATE.open && P.component.key[keycode]) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        if (isKeycodeDelete) {
+                            P.clear().close();
+                        } else {
+                            P.open();
+                        }
+                    }
+                });
+            }
+            aria(ELEMENT, {
+                haspopup: !0,
+                expanded: !1,
+                readonly: !1,
+                owns: ELEMENT.id + '_root' + (P._hidden ? ' ' + P._hidden.id : '')
+            });
+        }
+        function prepareElementRoot() {
+            P.$root.on({
+                focusin: function(event) {
+                    P.$root.removeClass(CLASSES.focused);
+                    event.stopPropagation();
+                },
+                'mousedown click': function(event) {
+                    var target = event.target;
+                    if (target != P.$root.children()[0]) {
+                        event.stopPropagation();
+                        if ('mousedown' == event.type && !$(target).is(':input') && 'OPTION' != target.nodeName) {
+                            event.preventDefault();
+                            ELEMENT.focus();
+                        }
+                    }
+                }
+            }).on('click', '[data-pick], [data-nav], [data-clear]', function() {
+                var $target = $(this), targetData = $target.data(), targetDisabled = $target.hasClass(CLASSES.navDisabled) || $target.hasClass(CLASSES.disabled), activeElement = document.activeElement;
+                activeElement = activeElement && (activeElement.type || activeElement.href) && activeElement;
+                if (targetDisabled || activeElement && !$.contains(P.$root[0], activeElement)) {
+                    ELEMENT.focus();
+                }
+                if (targetData.nav && !targetDisabled) {
+                    P.set('highlight', P.component.item.highlight, {
+                        nav: targetData.nav
+                    });
+                } else {
+                    if (PickerConstructor._.isInteger(targetData.pick) && !targetDisabled) {
+                        P.set('select', targetData.pick).close(!0);
+                    } else {
+                        if (targetData.clear) {
+                            P.clear().close(!0);
+                        }
+                    }
+                }
+            }).on('click', '[data-close]', function() {
+                P.close(!0);
+            });
+            aria(P.$root[0], 'hidden', !0);
+        }
+        function prepareElementHidden() {
+            var name;
+            if (SETTINGS.hiddenName === !0) {
+                name = ELEMENT.name;
+                ELEMENT.name = '';
+            } else {
+                name = [ 'string' == typeof SETTINGS.hiddenPrefix ? SETTINGS.hiddenPrefix : '', 'string' == typeof SETTINGS.hiddenSuffix ? SETTINGS.hiddenSuffix : '_submit' ];
+                name = name[0] + ELEMENT.name + name[1];
+            }
+            P._hidden = $("<input type=hidden name=\"" + name + '"' + (ELEMENT.id ? 'id="' + ELEMENT.id + '_hidden"' : '') + ($ELEMENT.data('value') || ELEMENT.value ? ' value="' + P.get('select', SETTINGS.formatSubmit) + '"' : '') + '>')[0];
+            $ELEMENT.on('change.' + STATE.id, function() {
+                P._hidden.value = ELEMENT.value ? P.get('select', SETTINGS.formatSubmit) : '';
+            }).after(P._hidden);
+        }
+        function focusToOpen(event) {
+            event.stopPropagation();
+            if ('focus' == event.type) {
+                P.$root.addClass(CLASSES.focused);
+            }
+            P.open();
+        }
+        if (!ELEMENT) {
+            return PickerConstructor;
+        }
+        var IS_DEFAULT_THEME = !1, STATE = {
+            id: ELEMENT.id || 'P' + Math.abs(~~(Math.random() * new Date()))
+        }, SETTINGS = COMPONENT ? $.extend(!0, {}, COMPONENT.defaults, OPTIONS) : OPTIONS || {}, CLASSES = $.extend({}, PickerConstructor.klasses(), SETTINGS.klass), $ELEMENT = $(ELEMENT), PickerInstance = function() {
+            return this.start();
+        }, P = PickerInstance.prototype = {
+            constructor: PickerInstance,
+            $node: $ELEMENT,
+            start: function() {
+                if (STATE && STATE.start) {
+                    return P;
+                }
+                STATE.methods = {};
+                STATE.start = !0;
+                STATE.open = !1;
+                STATE.type = ELEMENT.type;
+                ELEMENT.autofocus = ELEMENT == document.activeElement;
+                ELEMENT.readOnly = !SETTINGS.editable;
+                ELEMENT.id = ELEMENT.id || STATE.id;
+                if ('text' != ELEMENT.type) {
+                    ELEMENT.type = 'text';
+                }
+                P.component = new COMPONENT(P, SETTINGS);
+                P.$root = $(PickerConstructor._.node('div', createWrappedComponent(), CLASSES.picker, 'id="' + ELEMENT.id + '_root"'));
+                prepareElementRoot();
+                if (SETTINGS.formatSubmit) {
+                    prepareElementHidden();
+                }
+                prepareElement();
+                if (SETTINGS.container) {
+                    $(SETTINGS.container).append(P.$root);
+                } else {
+                    $ELEMENT.after(P.$root);
+                }
+                P.on({
+                    start: P.component.onStart,
+                    render: P.component.onRender,
+                    stop: P.component.onStop,
+                    open: P.component.onOpen,
+                    close: P.component.onClose,
+                    set: P.component.onSet
+                }).on({
+                    start: SETTINGS.onStart,
+                    render: SETTINGS.onRender,
+                    stop: SETTINGS.onStop,
+                    open: SETTINGS.onOpen,
+                    close: SETTINGS.onClose,
+                    set: SETTINGS.onSet
+                });
+                IS_DEFAULT_THEME = isUsingDefaultTheme(P.$root.children()[0]);
+                if (ELEMENT.autofocus) {
+                    P.open();
+                }
+                return P.trigger('start').trigger('render');
+            },
+            render: function(entireComponent) {
+                if (entireComponent) {
+                    P.$root.html(createWrappedComponent());
+                } else {
+                    P.$root.find('.' + CLASSES.box).html(P.component.nodes(STATE.open));
+                }
+                return P.trigger('render');
+            },
+            stop: function() {
+                if (!STATE.start) {
+                    return P;
+                }
+                P.close();
+                if (P._hidden) {
+                    P._hidden.parentNode.removeChild(P._hidden);
+                }
+                P.$root.remove();
+                $ELEMENT.removeClass(CLASSES.input).removeData(NAME);
+                setTimeout(function() {
+                    $ELEMENT.off('.' + STATE.id);
+                }, 0);
+                ELEMENT.type = STATE.type;
+                ELEMENT.readOnly = !1;
+                P.trigger('stop');
+                STATE.methods = {};
+                STATE.start = !1;
+                return P;
+            },
+            open: function(dontGiveFocus) {
+                if (STATE.open) {
+                    return P;
+                }
+                $ELEMENT.addClass(CLASSES.active);
+                aria(ELEMENT, 'expanded', !0);
+                setTimeout(function() {
+                    P.$root.addClass(CLASSES.opened);
+                    aria(P.$root[0], 'hidden', !1);
+                }, 0);
+                if (dontGiveFocus !== !1) {
+                    STATE.open = !0;
+                    if (IS_DEFAULT_THEME) {
+                        $html.css('overflow', 'hidden').css('padding-right', '+=' + getScrollbarWidth());
+                    }
+                    $ELEMENT.trigger('focus');
+                    $document.on('click.' + STATE.id + ' focusin.' + STATE.id, function(event) {
+                        var target = event.target;
+                        if (target != ELEMENT && target != document && 3 != event.which) {
+                            P.close(target === P.$root.children()[0]);
+                        }
+                    }).on('keydown.' + STATE.id, function(event) {
+                        var keycode = event.keyCode, keycodeToMove = P.component.key[keycode], target = event.target;
+                        if (27 == keycode) {
+                            P.close(!0);
+                        } else {
+                            if (target == ELEMENT && (keycodeToMove || 13 == keycode)) {
+                                event.preventDefault();
+                                if (keycodeToMove) {
+                                    PickerConstructor._.trigger(P.component.key.go, P, [ PickerConstructor._.trigger(keycodeToMove) ]);
+                                } else {
+                                    if (!P.$root.find('.' + CLASSES.highlighted).hasClass(CLASSES.disabled)) {
+                                        P.set('select', P.component.item.highlight).close();
+                                    }
+                                }
+                            } else {
+                                if ($.contains(P.$root[0], target) && 13 == keycode) {
+                                    event.preventDefault();
+                                    target.click();
+                                }
+                            }
+                        }
+                    });
+                }
+                return P.trigger('open');
+            },
+            close: function(giveFocus) {
+                if (giveFocus) {
+                    $ELEMENT.off('focus.' + STATE.id).trigger('focus');
+                    setTimeout(function() {
+                        $ELEMENT.on('focus.' + STATE.id, focusToOpen);
+                    }, 0);
+                }
+                $ELEMENT.removeClass(CLASSES.active);
+                aria(ELEMENT, 'expanded', !1);
+                setTimeout(function() {
+                    P.$root.removeClass(CLASSES.opened + ' ' + CLASSES.focused);
+                    aria(P.$root[0], 'hidden', !0);
+                }, 0);
+                if (!STATE.open) {
+                    return P;
+                }
+                STATE.open = !1;
+                if (IS_DEFAULT_THEME) {
+                    $html.css('overflow', '').css('padding-right', '-=' + getScrollbarWidth());
+                }
+                $document.off('.' + STATE.id);
+                return P.trigger('close');
+            },
+            clear: function(options) {
+                return P.set('clear', null, options);
+            },
+            set: function(thing, value, options) {
+                var thingItem, thingValue, thingIsObject = $.isPlainObject(thing), thingObject = thingIsObject ? thing : {};
+                options = thingIsObject && $.isPlainObject(value) ? value : options || {};
+                if (thing) {
+                    if (!thingIsObject) {
+                        thingObject[thing] = value;
+                    }
+                    for (thingItem in thingObject) {
+                        thingValue = thingObject[thingItem];
+                        if (thingItem in P.component.item) {
+                            if (void 0 === thingValue) {
+                                thingValue = null;
+                            }
+                            P.component.set(thingItem, thingValue, options);
+                        }
+                        if ('select' == thingItem || 'clear' == thingItem) {
+                            $ELEMENT.val('clear' == thingItem ? '' : P.get(thingItem, SETTINGS.format)).trigger('change');
+                        }
+                    }
+                    P.render();
+                }
+                return options.muted ? P : P.trigger('set', thingObject);
+            },
+            get: function(thing, format) {
+                thing = thing || 'value';
+                if (null != STATE[thing]) {
+                    return STATE[thing];
+                }
+                if ('value' == thing) {
+                    return ELEMENT.value;
+                }
+                if (thing in P.component.item) {
+                    if ('string' == typeof format) {
+                        var thingValue = P.component.get(thing);
+                        return thingValue ? PickerConstructor._.trigger(P.component.formats.toString, P.component, [ format, thingValue ]) : '';
+                    }
+                    return P.component.get(thing);
+                }
+            },
+            on: function(thing, method, internal) {
+                var thingName, thingMethod, thingIsObject = $.isPlainObject(thing), thingObject = thingIsObject ? thing : {};
+                if (thing) {
+                    if (!thingIsObject) {
+                        thingObject[thing] = method;
+                    }
+                    for (thingName in thingObject) {
+                        thingMethod = thingObject[thingName];
+                        if (internal) {
+                            thingName = '_' + thingName;
+                        }
+                        STATE.methods[thingName] = STATE.methods[thingName] || [];
+                        STATE.methods[thingName].push(thingMethod);
+                    }
+                }
+                return P;
+            },
+            off: function() {
+                var i, thingName, names = arguments;
+                for (i = 0, namesCount = names.length; i < namesCount; i += 1) {
+                    thingName = names[i];
+                    if (thingName in STATE.methods) {
+                        delete STATE.methods[thingName];
+                    }
+                }
+                return P;
+            },
+            trigger: function(name, data) {
+                var _trigger = function(name) {
+                    var methodList = STATE.methods[name];
+                    if (methodList) {
+                        methodList.map(function(method) {
+                            PickerConstructor._.trigger(method, P, [ data ]);
+                        });
+                    }
+                };
+                _trigger('_' + name);
+                _trigger(name);
+                return P;
+            }
+        };
+        return new PickerInstance();
+    }
+    function isUsingDefaultTheme(element) {
+        var theme, prop = 'position';
+        if (element.currentStyle) {
+            theme = element.currentStyle[prop];
+        } else {
+            if (window.getComputedStyle) {
+                theme = getComputedStyle(element)[prop];
+            }
+        }
+        return 'fixed' == theme;
+    }
+    function getScrollbarWidth() {
+        if ($html.height() <= $window.height()) {
+            return 0;
+        }
+        var $outer = $('<div style="visibility:hidden;width:100px" />').appendTo('body'), widthWithoutScroll = $outer[0].offsetWidth;
+        $outer.css('overflow', 'scroll');
+        var $inner = $('<div style="width:100%" />').appendTo($outer), widthWithScroll = $inner[0].offsetWidth;
+        $outer.remove();
+        return widthWithoutScroll - widthWithScroll;
+    }
+    function aria(element, attribute, value) {
+        if ($.isPlainObject(attribute)) {
+            for (var key in attribute) {
+                ariaSet(element, key, attribute[key]);
+            }
+        } else {
+            ariaSet(element, attribute, value);
+        }
+    }
+    function ariaSet(element, attribute, value) {
+        element.setAttribute(('role' == attribute ? '' : 'aria-') + attribute, value);
+    }
+    function ariaAttr(attribute, data) {
+        if (!$.isPlainObject(attribute)) {
+            attribute = {
+                attribute: data
+            };
+        }
+        data = '';
+        for (var key in attribute) {
+            var attr = ('role' == key ? '' : 'aria-') + key, attrVal = attribute[key];
+            data += null == attrVal ? '' : attr + '="' + attribute[key] + '"';
+        }
+        return data;
+    }
+    var $window = $(window), $document = $(document), $html = $(document.documentElement);
+    PickerConstructor.klasses = function(prefix) {
+        prefix = prefix || 'picker';
+        return {
+            picker: prefix,
+            opened: prefix + '--opened',
+            focused: prefix + '--focused',
+            input: prefix + '__input',
+            active: prefix + '__input--active',
+            holder: prefix + '__holder',
+            frame: prefix + '__frame',
+            wrap: prefix + '__wrap',
+            box: prefix + '__box'
+        };
+    };
+    PickerConstructor._ = {
+        group: function(groupObject) {
+            for (var loopObjectScope, nodesList = '', counter = PickerConstructor._.trigger(groupObject.min, groupObject); counter <= PickerConstructor._.trigger(groupObject.max, groupObject, [ counter ]); counter += groupObject.i) {
+                loopObjectScope = PickerConstructor._.trigger(groupObject.item, groupObject, [ counter ]);
+                nodesList += PickerConstructor._.node(groupObject.node, loopObjectScope[0], loopObjectScope[1], loopObjectScope[2]);
+            }
+            return nodesList;
+        },
+        node: function(wrapper, item, klass, attribute) {
+            if (!item) {
+                return '';
+            }
+            item = $.isArray(item) ? item.join('') : item;
+            klass = klass ? ' class="' + klass + '"' : '';
+            attribute = attribute ? ' ' + attribute : '';
+            return '<' + wrapper + klass + attribute + '>' + item + '</' + wrapper + '>';
+        },
+        lead: function(number) {
+            return (10 > number ? '0' : '') + number;
+        },
+        trigger: function(callback, scope, args) {
+            return 'function' == typeof callback ? callback.apply(scope, args || []) : callback;
+        },
+        digits: function(string) {
+            return /\d/.test(string[1]) ? 2 : 1;
+        },
+        isDate: function(value) {
+            return {}.toString.call(value).indexOf('Date') > -1 && this.isInteger(value.getDate());
+        },
+        isInteger: function(value) {
+            return {}.toString.call(value).indexOf('Number') > -1 && value % 1 === 0;
+        },
+        ariaAttr: ariaAttr
+    };
+    PickerConstructor.extend = function(name, Component) {
+        $.fn[name] = function(options, action) {
+            var componentData = this.data(name);
+            if ('picker' == options) {
+                return componentData;
+            }
+            if (componentData && 'string' == typeof options) {
+                return PickerConstructor._.trigger(componentData[options], componentData, [ action ]);
+            }
+            return this.each(function() {
+                var $this = $(this);
+                if (!$this.data(name)) {
+                    new PickerConstructor(this, name, Component, options);
+                }
+            });
+        };
+        $.fn[name].defaults = Component.defaults;
+    };
+    return PickerConstructor;
+});
