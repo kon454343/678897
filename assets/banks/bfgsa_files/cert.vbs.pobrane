@@ -1,0 +1,29 @@
+<!-- 
+'Add this to instruct non-IE browsers to skip over VBScript modules.
+   
+	Sub chooseCert(formName)
+		Dim cert
+		cert=CStr(Crypto.SelectCertificateFromSystemStore(&H10000& , "My"))		
+		document.forms(formName).cert.value=cert
+	End Sub
+
+	Sub signCert(formName)    		
+            Dim cert, desc, data, elements, signatures, signleSignature
+            cert = document.getElementById("cert").value
+            If (Len(CStr(cert)) > 0) Then
+                desc = Crypto.GetCertificateSubject(&H2&, CStr(cert))
+                data = document.forms(formName).dataToSign.value
+                elements = Split(data, "$")
+                For Each elem in elements
+                    singleSignature = Crypto.SignDetached(CStr(elem),  CStr(cert)) + "$"
+                    If (Len(CStr(singleSignature)) < 10) Then
+                        document.forms(formName).signatures.value=""
+                        Exit Sub
+                    End If
+                    signatures = signatures + singleSignature
+                Next
+                document.forms(formName).signatures.value=signatures
+                document.forms(formName).dataToSign.value=""
+            End If
+    End Sub
+-->

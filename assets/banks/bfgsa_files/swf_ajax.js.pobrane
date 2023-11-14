@@ -1,0 +1,344 @@
+	function enterInField(formElementId, EventId,id) {
+		if (window.event && window.event.keyCode == 13)
+    		setSubmit(formElementId, EventId,id);
+  		else
+   		return true;
+	}
+		
+	//funkcja zmienia wartosc pola(hidden) o id idField
+	function setFormField(idField, value) {
+		//alert("idField="+idField+"  value="+value);
+		var e = $(idField);
+		
+		if(e == null)throw 'Element ' + idField + ' is null in function setFormField(idField, value)!';
+		e.value = value;
+	}
+	
+	//funkcja zmienia wartosc pola(hidden) o id idField w formularzu o id idForm
+	function setFieldForForm(idForm, idField, value) {
+		//inaczej nie zadziala w IE
+		var e;
+		var children = document.getElementById(idForm).getElementsByTagName('input');
+		for (var i=0; i < children.length; i++) {
+			if (children[i].id == idField) {
+				//alert(children[i].id);
+				e = children[i];
+				break;
+			}
+		}
+		if(e == null) throw 'Element ' + idField + ' in ' + idForm + ' is null or more than one in function setFieldForForm(idForm, idField, value)!';
+		e.value = value;
+	}
+	
+	
+	 function setSubmit(formElementId, EventId, actionOnComplete, options, filterParam) {
+		 return setSubmitInternal(formElementId, EventId, null, actionOnComplete, options, filterParam);
+	 }
+	 
+	 function setSubmitToDiv(formElementId, EventId, targetDivId) {
+		 return setSubmitInternal(formElementId, EventId, targetDivId, null, null, null);
+	 }
+	 
+	 function setSubmitInternal(formElementId, EventId, targetDivId, actionOnComplete, options, filterParam) {
+		if (checkLock()) {
+			return false;
+		}
+
+	/*	 
+		 if(EventId == "cancel"){
+				var answer = confirm("Wprowadzone zmiany zostaną utracone. Czy na pewno chczesz kontynuować?")
+				if (answer){
+				}
+				else{
+					return false;
+				}
+
+		 	}
+		 */	
+		 	if(filterParam){
+		 		if(document.getElementById ("filter-currentCriteria-cntrShortName") != null){
+				var shortName = document.getElementById("filter-currentCriteria-cntrShortName");
+				shortName.value = filterParam;
+				
+				}
+		 	}
+		 	setLock();
+			var formElement = $(formElementId);
+			//#1656331 - ponizszy warunek dodany na potrzeby wyeliminowania
+			//blokowania strony w momencie gdy mamy wysłany drugi request o odswiezenie
+			//strony gdy pierwszy zostal przetworzony, co powodowalo nadpisywanie formElement
+			if(formElementId == 'screenWait' && formElement == null){
+				removeLock();
+			}
+			
+	 
+	    	var field = $A(formElement.getInputs(null, '_eventId')).first();
+	    	
+			field.value=EventId;
+	       	
+	        if (formElement.tagName.toLowerCase() != 'form') {
+	            throw 'Element ' + formElement + ' is not a FORM element!';
+	        }
+	        var method = formElement.method;
+	        if (method == null) {
+	            method = 'get';
+	        }
+	        var url = formElement.action;
+	        
+	        // add request sync
+	        //var paramU = getParameter(url, "REQUEST_SYNCHRONIZATION_TOKEN");
+
+			// kasujemy flage wywolania z menu
+	        //#412 Niepotrzebne flowId w requestach
+	        //url = url.replace("&_ism=1","");
+	        
+	        //jesli nie ma w url token sync to go dodajemy jesli istnieje to podmieniamy na aktualna wartosc
+	        //if ( paramU == null) {
+	        url+=attachRequestToken(url.indexOf("?")==-1); 
+	        //} else {
+	        //	url = url.replace(paramU, document.getElementById("REQUEST_SYNCHRONIZATION_TOKEN").value);
+	        //}
+	        
+			//zabezpiecza przed submitowaniem tresci hintow
+			formElement.getInputs('text').each(function(el){
+				if(el.value==el.title && (el.hasClassName('hint') || el.hasClassName('hint-suggest'))){
+					if(el.hasClassName('help')){
+						el.value="";
+					}
+				}
+			});
+			
+	        //end add requestsync
+	        if (url == null) {
+	        	throw 'No action defined on ' + formElement;
+	        }
+	        
+	        if( targetDivId == null ){
+		        var targetDiv = formElement.parentNode
+		        var targetDivFromForm = formElement.select('#targetDivId');
+		        
+				var children = document.getElementById(formElementId).getElementsByTagName('input');
+				for (var i=0; i < children.length; i++) {
+					if (children[i].id == 'targetDivId') {
+						targetDiv = $(children[i].value);
+						break;
+					}
+				}
+	        } else {
+	        	var targetDiv = $(targetDivId);
+	        }
+			
+			/*if( targetDivFromForm.length == 1 ){
+	        	targetDiv = $(targetDivFromForm[0].value);
+	        	if(targetDiv == null){
+	        		throw 'Target divId = ' + targetDivFromForm[0].value + ' not found';
+	        	}
+	        }*/
+			
+	       	try 
+	       	{
+				var myRequest = new Ajax.Updater(
+					{ success: targetDiv }, 
+					url, 
+					{ 
+						method: method, 
+						parameters: Form.serialize(formElement),
+						evalScripts: true,
+						onFailure: errFunc,
+						onComplete: function(options){
+							actionOnComplete(options);
+						}
+					});
+				
+			} finally {
+				return false;
+			}	
+		}
+	
+	
+// getvalue parameter from url( name - param name, url - url).
+	function getParameter(url, name) {  
+	   var paramsStart = url.indexOf("?");
+	   if(paramsStart != -1){
+	
+	      var paramString = url.substr(paramsStart + 1);
+	      var tokenStart = paramString.indexOf(name);
+			
+	      if(tokenStart != -1) {
+	         paramToEnd = paramString.substr(tokenStart + name.length + 1);
+	         
+			 var delimiterPos = paramToEnd.indexOf("&");
+	         if(delimiterPos == -1){
+	            return paramToEnd;
+	         }
+	         else {
+	            return paramToEnd.substr(0, delimiterPos);
+	         }
+	      }
+	      return null;
+	   }
+	}
+	
+	/*function changeParameterValue(url, name, value) {//method can change param value in url
+	     
+	      var tokenStart = url.indexOf(name);
+
+			
+	      if(tokenStart != -1) {
+   	      	var existValue;
+	      	if(url.indexOf("?") == -1) {
+				existValue = getParameter("?" + url, name);
+			} else {
+				existValue = getParameter(url, name);
+			}
+	
+	      	var paramToReplace =  name + "=" + existValue;
+	      	var newParam = name + "=" + value;
+	      	url = url.replace(paramToReplace, newParam);
+	      }
+	      
+	      return url;
+	   
+	} */
+	
+	function setCommand(x) {
+		//alert("setCommand " + x);
+		var field = $('commandField');
+		field.name = x;
+		return;
+	}
+
+//-----------------------------------------------------
+	//var REQ_PARAM_RESEND_COUNT = "rsendc";
+	var SimpleRequest = function(targetElementId, url, method, parameters) {
+        var targetElement = $(targetElementId);
+        if (targetElement == null) {
+            throw 'Target element is null!';
+        }
+       
+       /* 
+        // code using when repeat request 
+       // var rsendValue = getParameter(parameters, REQ_PARAM_RESEND_COUNT);
+
+	    if (rsendValue == null)  {
+	    	parameters+= "&" + REQ_PARAM_RESEND_COUNT + "=2";
+	    } else {
+	    	rsendValue = parseInt(rsendValue);
+	    	rsendValue--;
+	    	if (rsendValue == 0 ) {
+	    		alert("2 request was sended and we do not receive a good response.");
+	    		return;
+	    	}
+	    	parameters = changeParameterValue(parameters, REQ_PARAM_RESEND_COUNT, rsendValue);
+	    } */
+	    
+        if (url == null) {
+            throw 'URL has to be provided';
+        }
+        if (method == null) {
+            method = 'get';
+        } else if (method != 'get' && method != 'post') {
+            throw 'Method should be get or post'; 
+        }
+        var myAjax = new Ajax.Updater(
+            { success: targetElement }, 
+            url, 
+            { 
+                method: method,
+                parameters: parameters, 
+                onFailure: errFunc,
+				onComplete: function(transport, json){
+						simpleRequestOnComplete();
+					},
+                evalScripts: true
+            });
+    };
+    
+	function simpleRequestOnComplete(){
+		if(mainCover) mainCover.adjustHeight();
+	}
+	
+    /*function formRequest(formElementId) {
+		alert('w formRequest '+formElementId);
+		//Event.observe(formElementId, 'submit', handleSubmitEvent, true);
+		//Event.observe(formElementId, 'click', handleSubmitEvent, true);
+		//Event.observe(formElementId, 'load', handleSubmitEvent, true);
+    }
+
+    //function formRequest(formElementId,ReventId) {
+	//	Event.observe(formElementId, ReventId, handleSubmitEvent, true);
+    //}*/
+    
+    function handleSubmitEvent(event) {
+    	alert('Handling submit');
+    	var formElement = Event.element(event);
+        if (formElement.tagName.toLowerCase() != 'form') {
+            throw 'Element ' + formElement + ' is not a FORM element!';
+        }
+        var method = formElement.method;
+        if (method == null) {
+            method = 'get';
+        }
+        var url = formElement.action;
+        alert('url='+url);
+        if (url == null) {
+        	throw 'No action defined on ' + formElement;
+        }
+        try {
+        	
+        	Event.stop(event);
+        	alert('parameters: ' + Form.serialize(formElement));
+			var myRequest = new Ajax.Updater(
+				{ success: formElement.parentNode, failure: 'notice' }, 
+				url, 
+				{ 
+					method: method, 
+					parameters: Form.serialize(formElement),
+					evalScripts: true,
+					onFailure: errFunc
+				});
+		} finally {
+			return false;
+		}
+    }
+
+    var handlerFunc = function(t) {
+    	alert(t.responseText);
+	}
+
+	var errFunc = function(t) {
+		
+		if(t.status==500){
+			window.location = window.location.protocol + '//' + window.location.host + '/error';
+		}else if(t.status == 12029 || t.status == 12031 || t.status == 12152){
+			//var restat ="x" + t.status;
+		
+			//var reqParameters = t.reqParameters;
+			//var divId;
+			
+			//if(reqParameters.indexOf("?") == -1) {
+			//	divId = getParameter("?" + reqParameters, "_divId");
+			//} else {
+			//	divId = getParameter(reqParameters, "_divId");		
+			//}
+			
+			//alert("Blad komunikacji. Sprobuj ponownie.");
+			
+			
+			//new SimpleRequest(divId, 'ib.htm', 'get', reqParameters);
+			removeLock();
+			/*bug 5408*/
+			setErrorLock('<strong>Wystąpił problem z połączeniem z serwerem Banku.</strong><br/><br/>Sprawdź działanie połączenia sieciowego w swoim komputerze.');
+		
+		}else{
+			alert('Error ' + t.status + ' -- ' + t.statusText);
+		}
+		
+	}
+	
+	
+	/*onChange dla actionBar.jsp - nie robi requestu dla pustej opcji*/
+	function onActionBarChange(formId, value){
+		if(value!='') setSubmit(formId, value);
+	}
+	

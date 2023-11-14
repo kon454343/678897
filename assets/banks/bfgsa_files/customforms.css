@@ -1,0 +1,166 @@
+	/****** customforms *******/
+/*customforms: domyslne dla checkbox i radio*/
+label.amg-checkbox, label.amg-radio{overflow:hidden;}/*wazne!!!*/
+label.amg-checkbox span.amg-checkbox-holder {background: url(../img/customforms/amg-checkbox.gif) 0 0px no-repeat;}
+label.amg-radio span.amg-checkbox-holder {background: url(../img/customforms/amg-radio.gif) 0 0px no-repeat;}
+label.amg-checkbox-checked span.amg-checkbox-holder{background-position:0 -26px; }
+label.amg-checkbox-disabled-not-checked span.amg-checkbox-holder{background-position:0 -39px; }
+label.amg-checkbox-disabled-checked span.amg-checkbox-holder{background-position:0 -13px; }
+
+
+/* label.amg-checkbox-focused{outline:1px dotted #00716c;} - powoduje kropke przy checkboksach */
+span.amg-checkbox-wrapper {display: block; float: left;position: relative;margin: 0px 5px 2px 0px;overflow: hidden;}
+.ch-right span.amg-checkbox-wrapper {float: right;margin: 0px 0px 2px 5px;}
+span.amg-checkbox-holder {display: block;position: absolute;top: 0; left: 0;}
+input.amg-checkbox-hidden {position:absolute;left:-99999px;}
+label.amg-radio{float:left;margin-right:40px;}
+label.amg-checkbox.inrow{float:left;margin-right:40px;}
+label.amg-checkbox.strong span.amg-checkbox-wrapper {margin-right:13px;}
+label.amg-checkbox.empty-center span.amg-checkbox-wrapper {float:none; margin: 2px 0px 2px 0px;}
+
+label.amg-radio span.amg-checkbox-wrapper  {margin-right: 8px;}
+
+/*customforms: domyslne dla select*/
+div.amg-selectbox-wrapper {font-size:1em;position:relative;z-index:1;padding-right:8px;}
+div.amg-selectbox-container {position:absolute;background-color:white;border:1px solid #d0d0d0;margin:0px;padding:0px 1px;text-align:left;height:auto;width:auto;}
+div.amg-selectbox-container ul {list-style-type:none;margin:0px;padding:1px 0px 0px 0px;width:auto;width:inherit;display:block;}
+div.amg-selectbox-container ul li {list-style-type:none;display:block;margin:0;padding:0 0px 1px 0px;cursor:pointer;width:auto;width:inherit;}
+div.amg-selectbox-wrapper div.amg-selectbox-container ul li {list-style-type:none;display:block;margin:0;padding:0 0px 0px 0px;cursor:pointer;width:auto;width:inherit;}
+a.amg-selectbox-clickable {overflow:hidden;white-space:nowrap;min-height:18px;line-height:18px;padding:2px 0px 2px 1px;border:1px solid #d0d0d0;text-indent:2px;display:block;text-align:left;background:#fff url(../img/customforms/amg-select.gif) no-repeat right center;cursor:pointer;color:#000000;}
+a.amg-selectbox-clickable:hover{text-decoration:none;color:#000000;}
+a.amg-selectbox-clickable-focused{border:1px dotted #00716c; /*w ie6 niestety dashed, moze warto zmienic na solid???*/}
+div.amg-selectbox-disabled a.amg-selectbox-clickable, div.amg-selectbox-disabled-not-checked a.amg-selectbox-clickable{border:1px solid #d0d0d0 !important;background-color:#f3f3f3 !important;color:#aaa;cursor:default;}
+select.amg-selectbox-hidden {position:absolute;left:-9999em;}
+.amg-selectbox-hidden-wrapper {overflow:hidden;position:relative;width:0;height:0;}
+#operationsBar .amg-selectbox-hidden-wrapper {overflow:hidden;position:relative;width:0;height:0;float:right;}
+div.amg-selectbox-container ul li a, div.amg-selectbox-container ul li a:link, div.amg-selectbox-container ul li a:visited {outline:none;display:block;padding:0;text-indent:2px;background-color:transparent;text-decoration:none;width:auto;white-space:nowrap;padding-right:2px;position:relative;width:inherit;color:#000000;}
+div.amg-selectbox-container ul li.amg-selectbox-selected-option a{background-color: #d4d4d4 !important;}
+div.amg-selectbox-container ul li a:hover,div.amg-selectbox-container ul li.amg-selectbox-hovered-option a{background-color: #E4E4E4 !important;}
+div.amg-selectbox-wrapper a.error{border: 1px solid #EE8888;background-color: #FFEEBB;}
+
+label.list {float: left; clear: left;margin: 0 0 5px 0;line-height:1.1em;padding:1px;}
+/*label.inline {float: left; margin: 0 10px 0 0;line-height:1.1em;padding:1px;}*/
+
+
+/*customforms: bez js*/
+.selectbox, .selectbox-actions{border:1px solid #d0d0d0;margin:2px 0;vertical-align:middle;font-size:11px;height:20px;padding:2px;}
+#gr.selectbox{width:130px;}
+
+/*customforms: dodatkowe*/
+label.amg-checkbox, label.amg-radio {margin-top:2px; margin-bottom:2px;}
+div.amg-selectbox-wrapper {font-size:1em;margin:2px 0;}
+.form div.amg-selectbox-wrapper {float:left;}
+.form .values div.amg-selectbox-wrapper{margin:2px 0 2px 5px;}
+#user-preferences .form_row span.value {float:left;}
+
+
+/*dodane*/
+/*.tooltip-ico{margin:5px 0 0 4px;}*/
+.calendar-ico{margin:4px 0 0 0px;cursor:pointer;}
+
+/*autocompleter*/
+div.autocomplete { position:absolute; left:0; background-color:white; margin:0; padding:0; font-size:11px; width:auto !important; z-index:5001;}
+div.autocomplete ul { list-style-type:none; margin:0; padding:5px; width:250px; border:1px solid #aaa; max-height: 150px; overflow-y: auto}
+/* div.autocomplete ul li { list-style-type:none; display:block; margin:0; padding:5px 2px; font-size:12px; cursor:pointer; background:url(../images/kropki.gif) repeat-x bottom left} */
+div.autocomplete ul li { list-style-type:none; display:block; margin:0; padding:5px 2px; font-size:12px; cursor:pointer; }
+div.autocomplete ul li.selected { background-color: #eee; }
+div.autocomplete ul li span{ color: #00716c; display:block; font-size:10px;}
+div.progress{position:absolute;width:16px;height:16px;background:url(../img_client/progress.gif) no-repeat;overflow:hidden;}
+div.autocomplete-container {position:relative;/*z-index:5001;*/}
+
+div.autocomplete-slider ul { width:280px; max-height:455px; overflow:auto;}
+
+/* Style kalendarza */
+.calendar_date_select {display:block;width:100%;z-index:5003;font-size:10px;}
+/* dla ie6, zawsze pod .calendar_date_select */
+iframe.ie6_blocker {position: absolute;z-index: 999;}
+.calendar_date_select thead th {font-weight:bold;background-color: #18847f;color: #fff !important;padding:2px 0;text-align:center;}
+.calendar_date_select .cds_buttons {text-align:center;padding:5px 0px;background-color: #18847f;}
+.calendar_date_select .cds_footer {padding:3px;}
+.calendar_date_select table {margin: 0px;padding: 0px;}
+.calendar_date_select .cds_header {text-align:center;padding-top:2px;}
+.calendar_date_select .cds_header span {font-size:11px; display:block; padding-top:2px;color:#00716c;}
+.calendar_date_select select { font-size:11px;}
+.calendar_date_select .cds_header a {width:22px;height:20px;text-decoration: none;font-size:14px;}
+.calendar_date_select .cds_header a.prev {float:left;}
+.calendar_date_select .cds_header a.next {float:right;}
+.calendar_date_select .cds_header a.close {float:right;display:none;}
+.calendar_date_select .cds_header select.month {width:90px;}
+.calendar_date_select .cds_header select.year {width:61px;}
+.calendar_date_select .cds_buttons .button_seperator{display:none;}
+.calendar_date_select .cds_buttons a {color: #fff;font-size: 10px;margin: 0 5px;}
+.calendar_date_select td {background-color: #fff;text-align:center;vertical-align: middle;padding:1px 3px;width:22px;}
+.calendar_date_select td.weekend {background-color: #ececec;}
+.calendar_date_select th.weekend {background-color: #00716c;}
+.calendar_date_select td.holiday {background-color: #00716c;color: #fff;}
+
+.calendar_date_select td.event-order {background-color: #f6ceb1;color: #4c62d2;}
+.calendar_date_select td.event-deadline {background-color: #9fe077;color: #d55463;}
+.calendar_date_select td.event-type-4 {background-color: #54c1d5;color: #598ccb;}
+.calendar_date_select td.event-type-5 {background-color: #baa6d0;color: #fff;}
+.calendar_date_select td.event-type-5 {background-color: #baa6d0;color: #fff;}
+.calendar_date_select td.event-type-6 {background-color: #e36969;color: #fff;}
+
+.calendar_date_select td.event {color: #00716c;text-decoration:underline;}
+.calendar_date_select td.event-holiday {background: #EEEEEE;}
+
+/*.calendar_date_select tbody td.today {border: 1px dashed #00716c;background:#fff;outline:none;color:#00716c;}*/
+.calendar_date_select tbody td.today {color:#ffcf28;background-color: #00716c;}
+.calendar_date_select tbody td.week-number {background:#ffcf28;text-align:right;}
+.calendar_date_select tbody tr.hidden-row {display:none;}
+.calendar_date_select tbody td.selected {background-color:#00716c;color:#fff;}
+.calendar_date_select tbody td:hover {background-color:#d0d0d0;} 
+.calendar_date_select tbody td.week-number:hover {background-color:#ffcf28;} 
+.calendar_date_select tbody td.selected:hover {background-color:#18847f;} 
+.calendar_date_select td div {}
+.calendar_date_select td div.other {color: #ccc;}
+.calendar_date_select td.selected div {}
+.calendar_date_select td.disabled div {color: #440000;}
+.fieldWithErrors .calendar_date_select {border: 2px solid red;}
+/*maly kalendarz*/
+.popupCalendar{width:160px;border:1px solid #aaa;background:#fff;z-index:5002;}
+.popupCalendar .cds_footer{display:none;}
+
+
+/* ********************************************************************************************************* */
+/* ********************************************************************************************************* */
+.attachment { background:url(../img_client/ico_document.gif) no-repeat center;}
+
+#messagePasteNrb {
+	position: fixed; 
+	overflow-y:scroll;
+	top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -350px;
+    height: 100px;
+    width:700px;
+    border:2px solid #00625D;
+    z-index:5016;
+    background: #ebebeb;
+    overflow: hidden;
+}
+
+
+#messagePasteNrbMessage {
+	top: 0%;
+    left: 0%;
+    height: 55px;
+    width:700px;
+    background: #fff;
+    line-height: 55px;
+}
+
+#messagePasteNrbButton {
+	top: 0%;
+    left: 0%;
+    height: 45px;
+    line-height: 45px;
+    width:500px;
+}
+
+#closeBtn {
+	position: absolute;
+    right: 0px;
+    margin-right: 20px;
+}

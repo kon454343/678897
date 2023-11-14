@@ -1,0 +1,546 @@
+
+/* ---------------------------------------------------------------------------------------
+	amg-canvas-cloud-body
+--------------------------------------------------------------------------------------- */
+
+/* CanvasCloud
+*@version 0.3
+*@required: prototype 1.6+ and iecanvas ver. 3 for internet explorer
+*@AMG.CanvasCloud - background or/and help cloud border, based on html canvas element
+*@method fullcCloudHr horizontal oriented cloud for help or background with rounded corner, fill and shadow
+*	@param id - id of an element
+*	@param settings{
+*	 	direction - direction of cloud context
+*	 	x padding - left in pixels
+* 		y padding - top in pixels
+* 		r - radius of a circle part used to create rounded corners
+* 		width -  cloud's width without pointer's width
+* 		height - clouds's height without pointer's height
+* 		r1 - color red, integer - start color of rgb shadow
+* 		g1 - color green, integer - start color of rgb shadow
+*		b1 - color blue, integer - start color of rgb shadow
+* 		rgb2 - color in convention [r,g,b]  - fill
+* 		rgb3 - color in convention [r,g,b]  - border
+* 		pointerW - pointer's height
+* 		pointerExt - range of a pointer outside a cloud
+*	}
+*
+*@method fullcCloudVt vertical oriented cloud for help or background with rounded corner, fill and shadow
+*	@param id - id of an element
+*	@param settings{
+*	 	direction - direction of a cloud context
+*	 	x padding - left in pixels
+* 		y padding - top in pixels
+* 		r - radius of a circle part used to create rounded corners
+* 		width -  cloud's width without pointer's width
+* 		height - clouds's height without pointer's height
+* 		r1 - color red, integer - start color of rgb shadow
+* 		g1 - color green, integer - start color of rgb shadow
+*		b1 - color blue, integer - start color of rgb shadow
+* 		rgb2 - color in convention [r,g,b]  - fill
+* 		rgb3 - color in convention [r,g,b]  - border
+* 		pointerW - pointer's height
+* 		pointerExt - range of a pointer outside a cloud
+*	}
+*fullcCloudFloatVt vertical oriented cloud for help or background with rounded corner, fill and shadow with movable pointer
+*	@param id - id of an element
+*	@param settings{
+*	 	direction - direction of a cloud context
+*		pointerFloatDirection - direction of a cloud context ('left' or 'right')
+*		pointerFloatSize - pointerFloatSize - scroll of a pointer (multiplier)  <0.1 - 0.9>
+*	 	x padding - left in pixels
+* 		y padding - top in pixels
+* 		r - radius of a circle part used to create rounded corners
+* 		width -  cloud's width without pointer's width
+* 		height - clouds's height without pointer's height
+* 		r1 - color red, integer - start color of rgb shadow
+* 		g1 - color green, integer - start color of rgb shadow
+*		b1 - color blue, integer - start color of rgb shadow
+* 		rgb2 - color in convention [r,g,b]  - fill
+* 		rgb3 - color in convention [r,g,b]  - border
+* 		pointerW - pointer's height
+* 		pointerExt - range of a pointer outside a cloud
+*	}
+*@method cleanCloud fills the box 
+*	@param elementId - element id
+*	@param settings{
+*		width -  width || width of $(elementId),
+*		height- height || height of $(elementId),
+*		rgb - color rgb || [255,255,255]
+*	}
+*/
+
+
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.CanvasCloud == "undefined") {
+
+AMG.CanvasCloud = {
+
+fullcCloudHr:	function(elementId, settings){
+				/* settings:   direction,x,y,cornerRadius,width,height,r1,g1,b1,rgb2,rgb3,pointerW,pointerExt,maxk */
+				var thisRef = this;
+				
+				//default settings
+				var opt = settings || {};
+				opt.direction = opt.direction || false;
+				opt.x = opt.x || 0;
+				opt.y = opt.y || 0;
+				opt.cornerRadius = opt.cornerRadius || 5;
+				opt.width = opt.width || 200;
+				opt.height = opt.height || 100;
+				opt.r1 = opt.r1 || 200;
+				opt.g1 = opt.g1 || 200;
+				opt.b1 = opt.b1 || 200;
+				opt.rgb2 = opt.rgb2 || [254,254,254];
+				opt.rgb3 = opt.rgb3 || [100,100,100];
+				opt.pointerW = opt.pointerW || 0;
+				opt.pointerExt = opt.pointerExt || 0;
+				opt.maxk = opt.maxk || 5;
+				opt.mode = opt.mode || false;
+				/* jesli chmorka ma byc z prawej to odsowamy ja od lewej o dlugosc dziubka */
+				opt.direction ? null : opt.x = opt.x + opt.pointerExt;
+				opt.width = opt.width - opt.pointerExt;
+				(opt.r1+6*opt.maxk>255) ? opt.r1=256-6*opt.maxk : null;
+				(opt.g1+6*opt.maxk>255) ? opt.g1=256-6*opt.maxk : null;
+				(opt.b1+6*opt.maxk>255) ? opt.b1=256-6*opt.maxk : null;
+								
+					function cCloudHr(id,hrDir,x,y,r,width,height,rgb,mode,pointerW,pointerExt){
+					var pointer_pol = Math.floor(pointerW/2);
+					var ctx = document.getElementById(id).getContext('2d');
+					mode ? ctx.strokeStyle ='rgb(' + rgb.join(',') + ')' : ctx.fillStyle ='rgb(' + rgb.join(',') + ')'; //kolor krawedzi lub wypelnienia
+					ctx.beginPath();
+					ctx.moveTo(x,y+r);
+					hrDir ? null : ctx.lineTo(x,height/2+(y-pointer_pol));
+					hrDir ? null : ctx.lineTo(x-pointerExt,height/2+y); //pointer Ext z lewej
+					hrDir ? null : ctx.lineTo(x,height/2+(y+pointer_pol));
+					ctx.lineTo(x,height+y-r);
+					ctx.arc(x+r,height-r+y,r,Math.PI,Math.PI/2,true);
+					ctx.lineTo(x+width-r,height+y);
+					ctx.arc(x+width-r,height+y-r,r,Math.PI/2,Math.PI*2,true);
+					hrDir ? ctx.lineTo(x+width,height/2+(y+pointer_pol)) : null;
+					hrDir ? ctx.lineTo(x+width+pointerExt,height/2+y) : null; //pointer Ext z prawej
+					hrDir ? ctx.lineTo(x+width,height/2+(y-pointer_pol)) : null;
+					ctx.lineTo(x+width,y+r);
+					ctx.arc(x+width-r,y+r,r,0,3*Math.PI/2,true);
+					ctx.lineTo(x+r,y);
+					ctx.arc(x+r,y+r,r,3*Math.PI/2,Math.PI,true);
+					//ie wypelnia inaczej wiec jesli chcemy miec wypelniony dymek to:
+					/*mode ? null : ctx.lineTo(x,height+y-r);
+					mode ? null : ctx.lineTo(x+width-r,height+y);
+					mode ? null : ctx.lineTo(x+width,y+r);
+					mode ? null : ctx.lineTo(x+r,y);*/
+					//ie wypelnia inaczej------end
+					mode ? ctx.stroke() : ctx.fill(); //rysuje krawedz lub wypelnia ksztalt
+					}
+					
+				for(var k=1;k<opt.maxk;k++){
+					cCloudHr(elementId,opt.direction,opt.x+opt.maxk-k,opt.y+opt.maxk-k,opt.cornerRadius+k,opt.width-2*opt.maxk+2*k,opt.height-2*opt.maxk+2*k,[opt.r1+6*k,opt.g1+6*k,opt.b1+6*k],true,opt.pointerW+k,opt.pointerExt);
+				}
+				cCloudHr(elementId,opt.direction,opt.x+opt.maxk,opt.y+opt.maxk,opt.cornerRadius,opt.width-2*opt.maxk,opt.height-2*opt.maxk,opt.rgb2,opt.mode,opt.pointerW,opt.pointerExt);
+				cCloudHr(elementId,opt.direction,opt.x+opt.maxk,opt.y+opt.maxk,opt.cornerRadius,opt.width-2*opt.maxk,opt.height-2*opt.maxk,opt.rgb3,true,opt.pointerW,opt.pointerExt);
+				
+				return thisRef.fullcCloudVt;
+				},
+
+fullcCloudVt:	function(elementId, settings){
+				/* settings:   direction,x,y,cornerRadius,width,height,r1,g1,b1,rgb2,rgb3,pointerW,pointerExt,maxk */
+				var thisRef = this;
+				
+				//default settings
+				var opt = settings || {};
+				opt.direction = opt.direction || false;
+				opt.x = opt.x || 0;
+				opt.y = opt.y || 0;
+				opt.cornerRadius = opt.cornerRadius || 5;
+				opt.width = opt.width || 200;
+				opt.height = opt.height || 100;
+				opt.r1 = opt.r1 || 200;
+				opt.g1 = opt.g1 || 200;
+				opt.b1 = opt.b1 || 200;
+				opt.rgb2 = opt.rgb2 || [255,255,255];
+				opt.rgb3 = opt.rgb3 || [100,100,100];
+				opt.pointerW = opt.pointerW || 20;
+				opt.pointerExt = opt.pointerExt || 40;
+				opt.maxk = opt.maxk || 5;
+				opt.mode = opt.mode || false;
+				/* jesli chmorka ma byc pod spodem to odsowamy ja od gory o dlugosc dziubka */
+				opt.direction ? opt.y = opt.y + opt.pointerExt : null;
+				opt.height = opt.height - opt.pointerExt;				
+				(opt.r1+6*opt.maxk>255) ? opt.r1=256-6*opt.maxk : null;
+				(opt.g1+6*opt.maxk>255) ? opt.g1=256-6*opt.maxk : null;
+				(opt.b1+6*opt.maxk>255) ? opt.b1=256-6*opt.maxk : null;
+
+				function cCloudVt(id,vtDir,x,y,r,width,height,rgb,mode,pointerW,pointerExt){
+					var pointer_pol = Math.floor(pointerW/2);
+					var ctx = document.getElementById(id).getContext('2d');
+					mode ? ctx.strokeStyle ='rgb(' + rgb.join(',') + ')' : ctx.fillStyle ='rgb(' + rgb.join(',') + ')'; //kolor krawedzi lub wypelnienia
+					ctx.beginPath();
+					ctx.moveTo(x,y+r);
+					ctx.lineTo(x,height+y-r);
+					ctx.arc(x+r,height-r+y,r,Math.PI,Math.PI/2,true);
+					vtDir ? null : ctx.lineTo(width/2+(x-pointer_pol),y+height);
+					vtDir ? null : ctx.lineTo(width/2+x,y+height+pointerExt); //pointer Ext z lewej
+					vtDir ? null : ctx.lineTo(width/2+(x+pointer_pol),y+height);
+					ctx.lineTo(x+width-r,height+y);
+					ctx.arc(x+width-r,height+y-r,r,Math.PI/2,Math.PI*2,true);
+					ctx.lineTo(x+width,y+r);
+					ctx.arc(x+width-r,y+r,r,0,3*Math.PI/2,true);
+					vtDir ? ctx.lineTo(width/2+(x+pointer_pol),y) : null;
+					vtDir ? ctx.lineTo(width/2+x,y-pointerExt) : null; //pointer Ext z prawej
+					vtDir ? ctx.lineTo(width/2+(x-pointer_pol),y) : null;
+					ctx.lineTo(x+r,y);
+					ctx.arc(x+r,y+r,r,3*Math.PI/2,Math.PI,true);
+					//ie wypelnia inaczej wiec jesli chcemy miec wypelniony dymek to:
+					/*mode ? null : ctx.lineTo(x,height+y-r);
+					mode ? null : ctx.lineTo(x+width-r,height+y);
+					mode ? null : ctx.lineTo(x+width,y+r);
+					mode ? null : ctx.lineTo(x+r,y);*/
+					//ie wypelnia inaczej------end
+					mode ? ctx.stroke() : ctx.fill(); //rysuje krawedz lub wypelnia ksztalt
+				}
+				
+				
+				for(var k=1;k<opt.maxk;k++){
+					cCloudVt(elementId,opt.direction,opt.x+opt.maxk-k,opt.y+opt.maxk-k,opt.cornerRadius+k,opt.width-2*opt.maxk+2*k,opt.height-2*opt.maxk+2*k,[opt.r1+6*k,opt.g1+6*k,opt.b1+6*k],true,opt.pointerW+k,opt.pointerExt);
+				}
+				cCloudVt(elementId,opt.direction,opt.x+opt.maxk,opt.y+opt.maxk,opt.cornerRadius,opt.width-2*opt.maxk,opt.height-2*opt.maxk,opt.rgb2,opt.mode,opt.pointerW,opt.pointerExt);
+				cCloudVt(elementId,opt.direction,opt.x+opt.maxk,opt.y+opt.maxk,opt.cornerRadius,opt.width-2*opt.maxk,opt.height-2*opt.maxk,opt.rgb3,true,opt.pointerW,opt.pointerExt);
+				
+				return thisRef.fullcCloudVt;
+				
+				},
+				
+fullcCloudFloatVt:	function(elementId, settings){
+				/* settings:   direction,x,y,cornerRadius,width,height,r1,g1,b1,rgb2,rgb3,pointerW,pointerExt,maxk */
+				var thisRef = this;
+				
+				//default settings
+				var opt = settings || {};
+				opt.direction = opt.direction || false;
+				opt.pointerFloatDirection = opt.pointerFloatDirection || false;
+				opt.pointerFloatSize = opt.pointerFloatSize || 0.5;
+				opt.x = opt.x || 0;
+				opt.y = opt.y || 0;
+				opt.cornerRadius = opt.cornerRadius || 5;
+				opt.width = opt.width || 200;
+				opt.height = opt.height || 100;
+				opt.r1 = opt.r1 || 200;
+				opt.g1 = opt.g1 || 200;
+				opt.b1 = opt.b1 || 200;
+				opt.rgb2 = opt.rgb2 || [255,255,255];
+				opt.rgb3 = opt.rgb3 || [100,100,100];
+				opt.pointerW = opt.pointerW || 20;
+				opt.pointerExt = opt.pointerExt || 40;
+				opt.maxk = opt.maxk || 1;
+				opt.mode = opt.mode || false;
+				/* jesli chmorka ma byc pod spodem to odsowamy ja od gory o dlugosc dziubka */
+				opt.direction ? opt.y = opt.y + opt.pointerExt : null;
+				opt.height = opt.height - opt.pointerExt;				
+				(opt.r1+6*opt.maxk>255) ? opt.r1=256-6*opt.maxk : null;
+				(opt.g1+6*opt.maxk>255) ? opt.g1=256-6*opt.maxk : null;
+				(opt.b1+6*opt.maxk>255) ? opt.b1=256-6*opt.maxk : null;
+				
+				function cCloudVt(id,vtDir,x,y,r,width,height,rgb,mode,pointerW,pointerExt,pointerFloatDirection,pointerFloatSize){
+					var pointer_pol = Math.floor(pointerW/2);
+					var pointerFloatSizeLeft = 0;
+					var pointerFloatSizeRight = 0;
+					var pointer_pol_floated = 0;
+					var ctx = document.getElementById(id).getContext('2d');
+					mode ? ctx.strokeStyle ='rgb(' + rgb.join(',') + ')' : ctx.fillStyle ='rgb(' + rgb.join(',') + ')'; //kolor krawedzi lub wypelnienia
+					ctx.beginPath();
+					ctx.moveTo(x,y+r);
+					ctx.lineTo(x,height+y-r);
+					ctx.arc(x+r,height-r+y,r,Math.PI,Math.PI/2,true);
+					if(pointerFloatDirection=='left') { pointerFloatSizeLeft=pointerFloatSize; pointer_pol_floated = pointer_pol;}
+					if(pointerFloatDirection=='right') { pointerFloatSizeRight=pointerFloatSize; pointer_pol_floated = pointer_pol;}
+					vtDir ? null : ctx.lineTo(width/2-(width/2)*pointerFloatSizeLeft+(width/2)*pointerFloatSizeRight+(x-pointer_pol+pointer_pol_floated),y+height);
+					vtDir ? null : ctx.lineTo(width/2-(width/2)*pointerFloatSizeLeft+(width/2)*pointerFloatSizeRight+x,y+height+pointerExt); //pointer Ext z lewej
+					vtDir ? null : ctx.lineTo(width/2-(width/2)*pointerFloatSizeLeft+(width/2)*pointerFloatSizeRight+(x+pointer_pol+pointer_pol_floated),y+height);
+					ctx.lineTo(x+width-r,height+y);
+					ctx.arc(x+width-r,height+y-r,r,Math.PI/2,Math.PI*2,true);
+					ctx.lineTo(x+width,y+r);
+					ctx.arc(x+width-r,y+r,r,0,3*Math.PI/2,true);
+					vtDir ? ctx.lineTo(width/2-(width/2)*pointerFloatSizeLeft+(width/2)*pointerFloatSizeRight+(x+pointer_pol+pointer_pol_floated),y) : null;
+					vtDir ? ctx.lineTo(width/2-(width/2)*pointerFloatSizeLeft+(width/2)*pointerFloatSizeRight+x,y-pointerExt) : null; //pointer Ext z prawej
+					vtDir ? ctx.lineTo(width/2-(width/2)*pointerFloatSizeLeft+(width/2)*pointerFloatSizeRight+(x-pointer_pol+pointer_pol_floated),y) : null;
+					ctx.lineTo(x+r,y);
+					ctx.arc(x+r,y+r,r,3*Math.PI/2,Math.PI,true);
+					//ie wypelnia inaczej wiec jesli chcemy miec wypelniony dymek to:
+					/*mode ? null : ctx.lineTo(x,height+y-r);
+					mode ? null : ctx.lineTo(x+width-r,height+y);
+					mode ? null : ctx.lineTo(x+width,y+r);
+					mode ? null : ctx.lineTo(x+r,y);*/
+					//ie wypelnia inaczej------end
+					mode ? ctx.stroke() : ctx.fill(); //rysuje krawedz lub wypelnia ksztalt
+				}
+				
+				
+				for(var k=1;k<opt.maxk;k++){
+					cCloudVt(elementId,opt.direction,opt.x+opt.maxk-k,opt.y+opt.maxk-k,opt.cornerRadius+k,opt.width-2*opt.maxk+2*k,opt.height-2*opt.maxk+2*k,[opt.r1+6*k,opt.g1+6*k,opt.b1+6*k],true,opt.pointerW+k,opt.pointerExt,opt.pointerFloatDirection,opt.pointerFloatSize);
+				}
+				cCloudVt(elementId,opt.direction,opt.x+opt.maxk,opt.y+opt.maxk,opt.cornerRadius,opt.width-2*opt.maxk,opt.height-2*opt.maxk,opt.rgb2,opt.mode,opt.pointerW,opt.pointerExt,opt.pointerFloatDirection,opt.pointerFloatSize);
+				cCloudVt(elementId,opt.direction,opt.x+opt.maxk,opt.y+opt.maxk,opt.cornerRadius,opt.width-2*opt.maxk,opt.height-2*opt.maxk,opt.rgb3,true,opt.pointerW,opt.pointerExt,opt.pointerFloatDirection,opt.pointerFloatSize);
+				
+				return thisRef.fullcCloudVt;
+				
+				},
+				
+	cleanCloud:	function(elementId, settings){
+				var thisRef = this;
+				var opt = settings || {};
+				opt.width = opt.width || $(elementId).getWidth();
+				opt.height = opt.height || $(elementId).getHeight();
+				opt.rgb = opt.rgb || [255,255,255];
+				
+				function cClean(id,width,height,rgb){
+					var ctx = document.getElementById(id).getContext('2d');
+					ctx.fillStyle ='rgb(' + rgb.join(',') + ')';
+					ctx.beginPath();
+					ctx.lineTo(0,height);
+					ctx.lineTo(width,height);
+					ctx.lineTo(width,0);
+					ctx.lineTo(0,0);
+					ctx.fill();
+				}
+				
+				cClean(elementId,opt.width,opt.height,opt.rgb);
+				return thisRef.cleanCloud;
+				},
+				
+		cSize:	function(wrappedElement, settings){
+				var thisRef = this;
+				var opt = settings || {};
+				//TO DO - dostosuj rozmiar
+				return thisRef.cSizing;
+				},
+				
+	cPosition:	function(element, settings){
+				var thisRef = this;
+				var opt = settings || {};
+				//TO DO - zmien pozycje wg ustawien
+				return thisRef.cPosition;
+				}
+				
+}
+};
+
+
+
+
+
+
+/* ---------------------------------------------------------------------------------------
+	amg-tag-tooltip
+--------------------------------------------------------------------------------------- */
+
+
+/* TagTooltip standalone
+*
+*@version: 0.2
+* required: prototype 1.6.0.1 +
+* required: excanvas.js ver. 3 (for ie6-8)
+* required: amg-canvas-cloud-body.js (cloud definitions)
+*
+*/
+
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.TagTooltip == "undefined") {
+	
+	AMG.TagTooltip = Class.create({	
+		
+		options: {},
+		
+		createCanvasElement: function(callId, options, cloudContent) {
+			
+			if($(callId)){
+				var paddingDirection = options.cloudOrientation || 'top';
+				(options.cloudOrientation == 'top') ? paddingDirection='bottom' : paddingDirection;
+				(options.cloudOrientation == 'bottom') ? paddingDirection='top' : paddingDirection;
+				(options.cloudOrientation == 'left') ? paddingDirection='right' : paddingDirection;
+				(options.cloudOrientation == 'right') ? paddingDirection='left' : paddingDirection;
+				
+				var padding = options.shadow + options.radius;
+				//more space in cloud
+				padding+=5;
+				var paddingSide = options.pointerExt + padding;
+				var cloud = '<div id="'+options.id+'" class="amg-tooltip-body" style="display:none;position:relative;"></div>';
+				var cloudBody = '<canvas id="'+options.id+'-canvas" width="'+options.tooltipWidth+'"></canvas>';
+				cloudBody += '<div id="'+options.id+'-content" style="position: absolute; top:0px; left:0px; float:left; width:'+options.tooltipWidth+'px;">';
+				cloudBody += '<div style="overflow:hidden;padding:'+ padding +'px;padding-'+paddingDirection+':'+paddingSide+'px;float:left; width:'+(options.tooltipWidth-2*padding)+'px;">';
+				cloudBody += cloudContent;
+				cloudBody += '</div></div>';
+				
+				$(document.body).insert({'bottom': cloud});
+				$(options.id).innerHTML = cloudBody;
+				
+			}
+		},
+		
+		initialize: function(callId, options) {
+
+			this.options = {
+				tooltipWidth: options.width || 120,
+				tooltipHeight: options.height || 30,
+				id: options.id,
+				contentId: options.contentId || false,
+				contentContainerId: options.contentContainerId || 'undefined',
+				observerUsed: options.observerUsed || false,
+				tooltipOrientation: options.tooltipOrientation || 'bottom-right',
+				cloudOrientation: options.cloudOrientation || 'right', /* orientacja chmorki wzgledem aktywatora: right,left,top,bottom */
+				shadow : options.shadow || 0,
+				radius : options.radius || 10,
+				pointerExt: options.pointerExt || 10,
+				pointerW : options.pointerW || 10,
+				bodyColor : options.bodyColor || [255,255,255],
+				borderColor : options.borderColor || [200,200,200],
+				shadowColor : options.shadowColor || [255,255,255],
+				pointerFloatDirection : options.pointerFloatDirection || 'right',
+				pointerFloatSize : options.pointerFloatSize || 0.5
+				
+			};
+			
+			var self = this;
+			var cloudContent = $(self.options.contentContainerId).innerHTML;
+			self.createCanvasElement(callId, self.options, cloudContent);
+			(function(){self.initializeExcanvas(options.id);}).defer();
+			
+			if($(callId)){
+				if($(self.options.contentId)){
+				$(self.options.contentId).hide();
+				}
+				
+				if(!options.observerUsed){
+					$(callId).observe('mouseover', function(event){
+						Event.stop(event);
+						
+						var cloud = $(self.options.id);
+						/*dodajemy do body, ale tylko raz*/
+						/*
+						if(cloud.up().nodeName.toLowerCase() != 'body'){
+							$(document.body).insert(cloud);
+						}
+						*/
+						
+						self.showCanvasTooltip(event, self.options.id, self.options.cloudOrientation, self.options.shadow, self.options.radius, self.options.pointerW, self.options.pointerExt, self.options.bodyColor, self.options.borderColor, self.options.shadowColor, self.options.pointerFloatDirection, self.options.pointerFloatSize);
+					});
+					$(callId).observe('mouseout', function(event){
+						self.hideTooltip(event, self.options.id);
+					});
+				}
+			};	
+		},
+		
+		fireCanvas: function(id, width, height, orientation, shadow, radius,pointerW,pointerExt, bodyColor, borderColor, shadowColor, pointerFloatDirection, pointerFloatSize){
+			if(shadowColor){
+			var r1 = shadowColor[0];
+			var g1 = shadowColor[1];
+			var b1 = shadowColor[2];
+			}
+			if(orientation == 'top' || orientation == 'bottom'){
+			(orientation == 'top') ? direction=false : direction=true;
+				if(pointerFloatDirection){
+				var cCloud = new AMG.CanvasCloud.fullcCloudFloatVt(id, {width: width, height: height, direction: direction,pointerW:pointerW,pointerExt:pointerExt, maxk: shadow, cornerRadius: radius, rgb2: bodyColor, rgb3: borderColor, r1: r1, g1: g1, b1: b1, pointerFloatDirection: pointerFloatDirection, pointerFloatSize: pointerFloatSize});
+				}else{
+				var cCloud = new AMG.CanvasCloud.fullcCloudVt(id, {width: width, height: height, direction: direction,pointerW:pointerW,pointerExt:pointerExt, maxk: shadow, cornerRadius: radius, rgb2: bodyColor, rgb3: borderColor, r1: r1, g1: g1, b1: b1});
+				}
+			}else{
+			(orientation == 'right') ? direction=false : direction=true;
+			var cCloud = new AMG.CanvasCloud.fullcCloudHr(id, {width: width, height: height, direction: direction,pointerW:pointerW,pointerExt:pointerExt, maxk: shadow, cornerRadius: radius, rgb2: bodyColor, rgb3: borderColor, r1: r1, g1: g1, b1: b1});			
+			}
+		},
+		
+		/* ustawia polozenie tooltipa*/
+		setPosition: function(event, tooltip, tooltipTarget, orientation, id, shadow, radius,pointerW,pointerExt,bodyColor, borderColor, shadowColor, pointerFloatDirection, pointerFloatSize){
+			target = Event.element(event);
+						
+			targetPosition = target.cumulativeOffset();
+			targetScroll = target.cumulativeScrollOffset().top - document.body.cumulativeScrollOffset().top;
+			
+			targetDimensions = target.getDimensions();
+			tooltip.setStyle({'visibility':'hidden', 'display':'block',zIndex:'-1'});
+			tooltip.setStyle({'position':'absolute', 'margin': '0','top': '0','left':'0'});
+			tooltipPosition = tooltip.cumulativeOffset();
+			
+			var difLeft = targetPosition.left - tooltipPosition.left;
+			var difTop = targetPosition.top - tooltipPosition.top - targetScroll;
+			
+			tooltipPositionTop = difTop;
+			tooltipPositionLeft = difLeft;
+			
+			var canvasObject = $(id+'-canvas');
+			var content = $(id+'-content');
+			contentDimensions = content.getDimensions();
+			canvasObject.writeAttribute('width',contentDimensions.width);
+			canvasObject.writeAttribute('height',contentDimensions.height);
+			canvasObject.setStyle({'width':contentDimensions.width+'px','height':contentDimensions.height+'px'});
+			tooltip.setStyle({'width':contentDimensions.width+'px','height':contentDimensions.height+'px'});
+			this.fireCanvas(canvasObject.id, contentDimensions.width, contentDimensions.height, orientation, shadow, radius,pointerW,pointerExt,bodyColor, borderColor, shadowColor, pointerFloatDirection, pointerFloatSize);	
+			
+			if(orientation == 'left'){
+				tooltipPositionTop -= contentDimensions.height/2;
+				tooltipPositionTop += targetDimensions.height/2;
+				tooltipPositionLeft -= contentDimensions.width;
+			}else if(orientation == 'top'){
+				tooltipPositionTop -= contentDimensions.height;
+				tooltipPositionLeft -= ((contentDimensions.width - targetDimensions.width)/2 + (contentDimensions.width/2 * pointerFloatSize));
+			}else if(orientation == 'bottom'){
+				tooltipPositionTop += targetDimensions.height;
+				tooltipPositionLeft -= (contentDimensions.width - targetDimensions.width)/2 + (contentDimensions.width/2 * pointerFloatSize);
+			}else{
+				/* po prawej stronie elementu wywolujacego tt*/
+				tooltipPositionTop -= contentDimensions.height/2;
+				tooltipPositionTop += targetDimensions.height/2;
+				tooltipPositionLeft += targetDimensions.width;
+			}
+			tooltip.setStyle({ 
+				position:'absolute',
+				top: tooltipPositionTop + "px",
+				left: tooltipPositionLeft + "px",
+				display: "inline",
+				zIndex: 100
+			});
+		},
+		
+		/* pokazuje tooltipa */
+		showCanvasTooltip: function (event, id, orientation, shadow, radius, pointerW, pointerExt, bodyColor, borderColor, shadowColor, pointerFloatDirection, pointerFloatSize){
+			var tooltipTarget = Event.element(event);
+			var tooltip = $(id);
+			/* bo max-width=1024*/
+			if(this.options.tooltipWidth > 1024) this.options.tooltipWidth = 1024;
+			this.setPosition(event, tooltip, tooltipTarget, orientation, id, shadow, radius, pointerW, pointerExt,bodyColor, borderColor, shadowColor, pointerFloatDirection, pointerFloatSize);
+			
+			/* pokazuje gotowy tooltip */
+			tooltip.setStyle({'visibility': 'visible'});	
+		},
+		
+		/* ukrywa tt*/
+		hideTooltip: function(event, id){
+			var tooltip = $(id);
+			if(tooltip){tooltip.hide();}
+		},
+		
+		/* dla wywolan ajax bez poza map usowa osierocona chmorke o zadanym id*/
+		clearUnusedTooltips: function(cloudId){
+			var allBodyNodes = document.body.childNodes;
+			for(var j=0; j<allBodyNodes.length;j++){
+				if(allBodyNodes[j].id == cloudId){
+					document.body.removeChild(allBodyNodes[j]);
+				};
+			}
+		},
+		
+		/* dla wywolan ajax bez poza map 'inicjuje' element canvas*/
+		initializeExcanvas: function(cloudId){
+			if(/MSIE/.test(navigator.userAgent) && !window.opera){
+				if(typeof G_vmlCanvasManager !='undefined'){
+					G_vmlCanvasManager.initElement($(cloudId + '-canvas'));
+				}
+			}
+		}
+		
+	});
+	  
+}
+

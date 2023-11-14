@@ -1,0 +1,215 @@
+// (c) by alior SA - alior main script
+// ver. 3.3 pro (secure without frames)
+
+if (typeof alior_shcconn == "undefined") {
+	alior_shcconn = {
+		event_identifier : null,
+		waiting_on_prerender : 1,
+		visapi_s : "",
+		visapi_h : "",
+		visapi_c : "",
+		requests : [],
+		images : [],
+		ssl : (document.location && document.location.protocol && document.location.protocol=='https:')?1:0,
+		hc : (typeof alior_hitcollector != 'undefined')?alior_hitcollector:'analityka.aliorbank.pl',
+		add_event : function(obj,type,fn) {
+			if (obj.addEventListener) {
+				obj.addEventListener(type, fn, false);
+			} else if (obj.attachEvent) {
+				obj.attachEvent('on'+type, fn);
+			}
+		},
+		latehits : function() {
+			if (alior_shcconn.waiting_on_prerender==0) {
+				for (var i=0 ; i<alior_shcconn.requests.length ; i++) {
+					var images_l = alior_shcconn.images.length;
+					var robj = alior_shcconn.requests[i];
+					var url = (alior_shcconn.ssl?'https://':'http://')+alior_shcconn.hc+'/_';
+					var d = new Date().getTime();
+					var vis = (alior_shcconn.visapi_h=='')?3:(document[alior_shcconn.visapi_h])?2:1;
+					var params = '&vis='+vis;
+					url += (d+i)+'/redot.gif?l='+robj.vers+robj.req+params;
+					alior_shcconn.images[images_l]=new Image();
+					alior_shcconn.images[images_l].src = url;
+				}
+				alior_shcconn.requests = [];
+			}
+		},
+		visibilitychanged : function() {
+			if (document[alior_shcconn.visapi_s]!='prerender') {
+				if (alior_shcconn.waiting_on_prerender) {
+					alior_shcconn.waiting_on_prerender = 0;
+
+					// Chrome changes 'prerender' always to 'hidden' and then to 'visible', so wait a moment
+					setTimeout("alior_shcconn.latehits()",100);
+				}
+			}
+		},
+		parameters : function() {
+			var d=document;
+			var w=window;
+			var href=new String(d.location.href);
+			var ref;
+			var f=0;
+			var fv='-';
+			var dd;
+			if (d.referrer) { ref=new String(d.referrer); } else { ref=''; }
+			if (typeof Error!='undefined') {
+				var fo;
+				try { f=(d==top.document)?1:2; if (typeof top.document.referrer=="string") { ref=top.document.referrer } } catch(e) {f=3;}
+				try { fv=navigator.plugins["Shockwave Flash"].description; } catch (e) {}
+				if (typeof ActiveXObject!="undefined") { try { fo=new ActiveXObject("ShockwaveFlash.ShockwaveFlash.7"); } catch(e) { try { fo=new ActiveXObject("ShockwaveFlash.ShockwaveFlash.6"); fv="X"; fo.AllowScriptAccess="always"; } catch(e) { if (fv=="X") { fv="WIN 6,0,20,0"; }} try { fo=new ActiveXObject("ShockwaveFlash.ShockwaveFlash"); } catch(e) {} } if ((fv=="-" || fv=="X") && fo) { fv=fo.GetVariable("$version"); }}
+			}
+			var url='&fr='+f+'&tz='+(new Date()).getTimezoneOffset();
+			if (typeof encodeURIComponent != 'undefined') {
+				url+='&fv='+encodeURIComponent(fv)+'&href='+encodeURIComponent(href.substring(0,499))+'&ref='+encodeURIComponent(ref.substring(0,499));
+			}
+			if (screen) {
+				var s=screen;
+				if (s.width) {
+					if (s.deviceXDPI && s.deviceYDPI) {
+						url+='&screen='+Math.floor(s.width*s.deviceXDPI/96.0)+'x'+Math.floor(s.height*s.deviceYDPI/96.0);
+					} else {
+						url+='&screen='+s.width+'x'+s.height;
+					}
+				}
+				if (w.devicePixelRatio) url+='r'+Math.round((w.devicePixelRatio*1000));
+				if (s.colorDepth) url+='&col='+s.colorDepth;
+			}
+			if (typeof w.innerWidth=='number') {
+				url+='&window='+w.innerWidth+'x'+w.innerHeight;
+			} else if ( ((dd = d.documentElement) && (dd.clientWidth || dd.clientHeight)) || ((dd = d.body) && (dd.clientWidth || dd.clientHeight)) ) {
+				url+='&window='+dd.clientWidth+'x'+dd.clientHeight;
+			}
+			return url;
+		},
+		array_to_string : function(arr,start) {
+			var i,str;
+			if (typeof arr == 'string') {
+				return arr;
+			}
+			str = '';
+			if (typeof arr.length != 'undefined') {
+				for (i=start ; i<arr.length ; i++) {
+					if (i>start) {
+						str += '|';
+					}
+					str += ((new String(arr[i])).replace(/\|/g,'_'));
+				}
+			}
+			return str;
+		},
+		internal_hit : function(allowaddscript,vers,id,evid,et,hsrc,extra) {
+			var req = "";
+			if (alior_shcconn.event_identifier==null && id) {
+				alior_shcconn.event_identifier = id;
+				evid = 2;
+			}
+			req += '&id='+id;
+			if (typeof et != 'undefined') {
+				req += '&et='+et;
+			}
+			if (typeof hsrc != 'undefined') {
+				req += '&hsrc='+hsrc;
+			}
+			if (typeof extra != 'undefined' && typeof encodeURIComponent != 'undefined') {
+				req += '&extra='+encodeURIComponent(extra.substring(0,1999));
+			}
+			req += alior_shcconn.parameters();
+			alior_shcconn.requests[alior_shcconn.requests.length] = {req:req,allowaddscript:allowaddscript,vers:vers,evid:evid};
+			alior_shcconn.latehits();
+		},
+		ghit : function(allowaddscript,vers,args,evid,hsrc) {
+			if (args.length>0) {
+				alior_shcconn.internal_hit(allowaddscript,vers,args[0],evid,"view",hsrc,alior_shcconn.array_to_string(args,1));
+			}
+		},
+		gevent : function(allowaddscript,vers,args,evid,hsrc) {
+			var pos = 0;
+			var et = "view";
+			if (args.length>1) {
+				var m = (new String(args[0])).match('^_([a-zA-Z0-9]+)_$');
+				if (m) {
+					et = m[1];
+					pos = 1;
+				}
+			}
+			if (args.length>pos) {
+				if (!args[pos] && alior_shcconn.event_identifier != null) {
+					args[pos] = alior_shcconn.event_identifier;
+				}
+				if (args[pos]) {
+					alior_shcconn.internal_hit(allowaddscript,vers,args[pos],evid,et,hsrc,alior_shcconn.array_to_string(args,pos+1));
+				}
+			}
+		},
+		plainhit : function() { alior_shcconn.ghit(0,97,arguments,0,2) },
+		plainevent : function() { alior_shcconn.gevent(0,97,arguments,0,3) },
+		pendingdata : function(arr,fn) {
+			var i;
+			if (typeof window[arr] != 'undefined') {
+				for (i=0 ; i<window[arr].length ; i++) {
+					fn.apply(this,window[arr][i]);
+				}
+				window[arr]=[];
+			}
+		},
+		sendpendingdata : function() {
+			alior_shcconn.pendingdata('alior_hit_pdata',alior_shcconn.plainhit);
+			alior_shcconn.pendingdata('alior_event_pdata',alior_shcconn.plainevent);
+		},
+		findvisapi : function() {
+			var p = ['moz','webkit','ms','o'];
+			var i;
+			if (typeof document.hidden != 'undefined') {
+				alior_shcconn.visapi_h = 'hidden';
+				alior_shcconn.visapi_s = 'visibilityState';
+				alior_shcconn.visapi_c = 'visibilitychange';
+			} else {
+				for (i in p) {
+					if (typeof document[p[i]+'Hidden'] != 'undefined') {
+						alior_shcconn.visapi_h = p[i]+'Hidden';
+						alior_shcconn.visapi_s = p[i]+'VisibilityState';
+						alior_shcconn.visapi_c = p[i]+'visibilitychange';
+					}
+				}
+			}
+		},
+		init : function() {
+			alior_shcconn.waiting_on_prerender = 0;
+			alior_shcconn.findvisapi();
+			if (alior_shcconn.visapi_s != '') {
+				if (document[alior_shcconn.visapi_s] == 'prerender') {
+					alior_shcconn.waiting_on_prerender = 1;
+				}
+				alior_shcconn.add_event(document,alior_shcconn.visapi_c,alior_shcconn.visibilitychanged);
+			} 
+			if (alior_shcconn.waiting_on_prerender == 0) {
+				alior_shcconn.latehits();
+			}
+		}
+	}
+	alior_shcconn.init();
+	alior_hit = alior_shcconn.plainhit;
+	alior_event = alior_shcconn.plainevent;
+	try {
+		if (typeof alior_loaded != "undefined") {
+			alior_loaded();
+		}
+	} catch (e) {}
+}
+
+(function () {
+	if (typeof alior_identifier != 'undefined' && !alior_identifier.match(/^USED_/)) {
+		if (typeof alior_extraparameters != 'undefined') {
+			alior_shcconn.gevent(0,91,[alior_identifier].concat(alior_extraparameters),2,1);
+		} else {
+			alior_shcconn.ghit(0,91,[alior_identifier],2,1);
+		}
+		if (alior_shcconn.event_identifier==null) {
+			alior_shcconn.event_identifier = alior_identifier;
+		}
+		alior_identifier = 'USED_'+alior_identifier.replace(/id=/g,'id=USED_');
+	}
+	alior_shcconn.sendpendingdata();
+})();

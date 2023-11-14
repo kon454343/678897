@@ -1,0 +1,999 @@
+/* ---------------------------------------------------------------------------------------
+	amg-calendars
+--------------------------------------------------------------------------------------- */
+
+var isiPad = navigator.userAgent.match(/iPad/i) != null;
+
+var dragging = false;
+
+var AMG;
+if (typeof AMG == 'undefined') AMG = {};
+if (typeof AMG.Calendars == 'undefined') {
+
+	AMG.Calendars = {
+
+		initLeftCalendar: function(id, callback_day, callback_week, callback_month, yr, onchange_year, notStartRefresh){
+			var calContainer = $(id);
+			var currentSystemDate = ($('CURRENT_SYSTEM_DATE'))? $('CURRENT_SYSTEM_DATE').value: null;
+			if(calContainer){
+				if(currentSystemDate){
+					new CalendarDateSelect(calContainer, {embedded:true, hidden:true, month_year:'label', on_value_select:callback_day, on_week_select:callback_week, on_month_select:callback_month, buttons:false, show_week_numbers:true, show_events:true, year_range:yr, on_change_year:onchange_year, not_start_refresh:notStartRefresh, date: currentSystemDate} );
+				}else{
+					new CalendarDateSelect(calContainer, {embedded:true, hidden:true, month_year:'label', on_value_select:callback_day, on_week_select:callback_week, on_month_select:callback_month, buttons:false, show_week_numbers:true, show_events:true, year_range:yr, on_change_year:onchange_year, not_start_refresh:notStartRefresh} );
+				}
+			}
+		},
+		
+		initDateSelects: function(icon, yr){
+			var input = icon.previous();
+			var currentSystemDate = ($('CURRENT_SYSTEM_DATE'))? $('CURRENT_SYSTEM_DATE').value: null;
+			icon.observe('click', iconClick);
+			function iconClick(){
+				input.removeClassName('help').oldValue = input.value;
+				if(currentSystemDate){
+					new CalendarDateSelect( icon.previous(), {buttons:true, className:'popupCalendar', after_close:onClose, month_year:'label', embedded:false, year_range:40, date: (input.value!='')? input.value: currentSystemDate} )
+				}else{
+					new CalendarDateSelect( icon.previous(), {buttons:true, className:'popupCalendar', after_close:onClose, month_year:'label', embedded:false, year_range:40} )
+				}
+			};		
+			function onClose(input){
+				if(input.value == input.title) input.addClassName('help');
+			};
+		}
+	}
+};
+
+
+var sessionTimer;
+var secondsBeforeExpire;
+var sessionTimeout;
+
+
+function setupSessionTimerTime(secondsBeforeExpireParam){
+  sessionTimeout =secondsBeforeExpireParam;
+}
+
+
+function setupSessionTimer(secondsBeforeExpireParam){
+
+sessionTimeout=secondsBeforeExpireParam ;
+if (secondsBeforeExpire!=null && secondsBeforeExpire<=0){
+    return;
+}
+
+secondsBeforeExpire = secondsBeforeExpireParam;
+if (sessionTimer != null){
+   clearInterval(sessionTimer);
+}
+ sessionTimer = setInterval(function(){
+  if(secondsBeforeExpire <= 0){
+      clearInterval(sessionTimer);
+  } else{
+
+        var second = secondsBeforeExpire % 60;
+        var minute = Math.floor(secondsBeforeExpire / 60) ;
+
+        second = (second < 10) ? '0'+second : second;
+        minute = (minute < 10) ? '0'+minute : minute;
+
+        $("second").update(second);
+        $("minute").update(minute);
+        secondsBeforeExpire--;
+          }
+   },1000);
+
+}
+
+ function refreshSessionTimer(secondsBeforeExpire) {
+
+	new Ajax.Request(contextPath+'/sustainSession', {
+		  method: 'post',
+		  onSuccess: function(transport)
+			{
+			    if (200 == transport.status){
+			        setupSessionTimer(secondsBeforeExpire);
+			    }
+			}
+	    });
+
+    }
+
+
+/* ---------------------------------------------------------------------------------------
+	addTooltip helper
+--------------------------------------------------------------------------------------- */
+
+function addToolTip(elements, adjust){
+	elements.each(function(el, iter){
+		el.identify();
+		var elContent = el.next();
+		//chmurka nie zadziala jezeli content (.amg-help-cloud-content) nie bedzie zaraz za .tooltip-ico
+		if(!elContent || !elContent.hasClassName('amg-help-cloud-content')) return;
+		elContent.identify();
+		elContent.hide();
+		if(adjust==true){
+			w=elContent.getWidth()+20;
+		}else{
+			w=240;
+		}
+		new AMG.TagTooltip(el.id, {width: w, id:'amg-'+ el.id, contentContainerId: elContent.id, cloudOrientation: 'top', radius:5, pointerExt:30, pointerW:20});
+	});
+}
+/*
+Event.observe(window,'load',function(){
+		addToolTip($$('.tooltip-ico'));
+});
+*/
+
+/* ---------------------------------------------------------------------------------------
+	amg-input-hints
+--------------------------------------------------------------------------------------- */
+/* version 3 with hint in title */
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.InputHints == "undefined") {
+	AMG.InputHints = {
+		
+		//Plugin czyszczacy value inputa i zmieniajacy jego styl onfocus 
+		addInputHints: function (fieldsToClear) {
+			var thisRef = this;
+			if(fieldsToClear.size() > 0){
+				fieldsToClear.each(function(element) {
+					//element.oldValue = null;
+					if(element.value.strip() == ''){
+						element.value=element.title;
+						element.addClassName('help');
+					}
+					//if(element.value == element.title) element.addClassName('help');
+					Event.observe(element, 'focus', inputOnFocus.bindAsEventListener(element) );
+					Event.observe(element, 'blur', inputOnBlur.bindAsEventListener(element) );
+				})
+			}
+			
+			function inputOnFocus(event){
+				//if(this.oldValue==null) this.oldValue = this.value;
+				//if(this.value==this.title){	this.removeClassName('help').value = '';}
+				if(this.hasClassName('help')){	this.removeClassName('help').value = '';}
+				
+			};
+			
+			function inputOnBlur(event){
+				if(this.value.strip() == '')	this.addClassName('help').value = this.title;
+			};
+		} 
+	}
+};
+
+
+
+/* ---------------------------------------------------------------------------------------
+	amg-slider
+--------------------------------------------------------------------------------------- */
+/* ScrollBox
+// 
+// requirements: prototypejs , scriptaculous 
+//
+*/
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.ScrollBox == "undefined") {
+
+AMG.ScrollBox = {
+
+	BoxSlider:	function(wrapperBox, contentBox, scrollContainer){
+		
+		/*najpierw klasa zeby poprawnie obl wysokosc*/
+		wrapperBox.addClassName('with-slider');
+		wrapperBox.scrollTop = 0;
+		var wrapperBoxHeight = wrapperBox.getHeight();
+		var contentBoxHeight = contentBox.getHeight();
+		
+		if(contentBoxHeight > wrapperBoxHeight && wrapperBoxHeight){
+			if(!scrollContainer.hasClassName('closed') && !scrollContainer.up().hasClassName('closed')){
+				scrollContainer.addClassName('slider-on');
+			}
+			
+			var handlerHeight=(wrapperBoxHeight/contentBoxHeight)*wrapperBoxHeight;
+			
+			var sliderObj = new Control.Slider(wrapperBox.id, {
+				axis:'vertical', noInput: true, range:$R(0, wrapperBoxHeight), width:9, height: wrapperBoxHeight, handleWidth:9, handleHeight:handlerHeight
+			});
+			sliderObj.options.onSlide = function(value) {
+				
+				var top_ = Math.floor(((contentBoxHeight - wrapperBoxHeight) * value)/wrapperBoxHeight);
+				wrapperBox.scrollTop = top_;
+			}
+			
+		}else{
+			wrapperBox.removeClassName('with-slider');
+			wrapperBox.style.overflow = "visible";
+			wrapperBox.style.height="auto";
+			if(scrollContainer.hasClassName('') || scrollContainer.up().hasClassName('slider-on')){
+				scrollContainer.removeClassName('slider-on');
+			}
+		}	
+		
+	},
+		
+	BoxSliderInit:	function(wrapperBox, contentBox){
+		/* default values */
+		wrapperBox = wrapperBox || 'amg-scroll-wrapper';
+		contentBox = contentBox || 'amg-scroll-content';
+		var wrappers = $$('.' + wrapperBox);
+		if(wrappers.length>0){
+			wrappers.each(function(el, index){
+				var wrapperId = el.identify();
+				var scrollContainer = el.up();
+				//tylko jezeli nie ma jeszcze slidera
+				if(!el.hasClassName('with-slider')){
+					AMG.ScrollBox.BoxSlider(el, el.select('.' + contentBox)[0], scrollContainer);
+				}
+			});
+		}
+	}
+}
+};
+
+
+
+
+/* ---------------------------------------------------------------------------------------
+	amg-suggest
+--------------------------------------------------------------------------------------- */
+
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.Suggest == "undefined") {
+	AMG.Suggest = {
+		autocompleters: {}, //wszystkie autocompletery
+		
+		initSuggest: function (inputId, resultsContainerId, url, progress, resultHandler, parameters) {
+		
+			AMG.Suggest.autocompleters[inputId] = new Ajax.Autocompleter(inputId, resultsContainerId, url, {
+				afterUpdateElement : getSelectionId,
+				paramName: "search",
+				minChars: "0",
+				frequency: "2.0",
+				indicator: progress,
+				parameters: parameters
+			});
+			AMG.Suggest.autocompleters[inputId].isChosen=false;
+			
+			//delay, bo IE wykonje observery w odwrotnej kolejnosci
+			var delayed = new Form.Element.DelayedObserver($(inputId), 'focus', 0.2, onFocus );	
+			function onFocus(thisEl){
+				var input = thisEl;
+				var thisRef = AMG.Suggest.autocompleters[input.id];
+				
+				//ustawia progress w prawym rogu inputa
+				var progress = $(thisRef.options.indicator);
+				progress.clonePosition(input);
+				progress.style.left = input.getWidth() - 20 + 'px';
+				progress.style.top = '4px';
+				if(!thisRef.isChosen){
+					thisRef.hasFocus = true;
+					thisRef.onObserverEvent();
+				}
+				thisRef.isChosen = false;
+			};
+
+			function getSelectionId(text, li) {
+				resultHandler(li.id);
+				var thisRef = AMG.Suggest.autocompleters[inputId];
+				thisRef.isChosen = true;
+			};
+		} 
+	}
+};
+
+
+ 
+/* ---------------------------------------------------------------------------------------
+	amg-checkbox-section
+--------------------------------------------------------------------------------------- */
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.CheckboxSection == "undefined") {
+
+	AMG.CheckboxSection = {
+		
+		watch: function(elements){
+			if(elements.size() > 0){
+				elements.each(function(element) {
+					if(element.hasClassName('checked')){
+						$(element.readAttribute('for')+'-container').show();
+					}else{
+						$(element.readAttribute('for')+'-container').hide();
+					}
+					Event.observe(element, 'click', checkboxOnClick.bindAsEventListener(element) );
+				});
+			}
+			
+			function checkboxOnClick(event){
+				if($(this.readAttribute('for')+'-container')!=null){
+					if(this.hasClassName('checked')){
+						$(this.readAttribute('for')+'-container').show();
+					}else{
+						$(this.readAttribute('for')+'-container').hide();
+					}
+				}
+			}
+		}
+	}
+};
+
+
+
+/* ---------------------------------------------------------------------------------------
+	setInputAction - sets the form input's (id=inputId) Enter keypress action to button's onclick action
+--------------------------------------------------------------------------------------- */
+function setInputAction(inputId, buttonId){
+	
+	var input = $(inputId);
+	var button;
+	/*exion:button narazie nie wspiera id, dlatego w wywolaniu button podany jako element DOM*/
+	if(typeof buttonId === 'string'){
+		button = $(buttonId);
+	}else{
+		button = buttonId;
+	}
+	
+	if(input){
+		input.observe('keypress', function(event){
+			if(event.keyCode == 13) { 
+				
+				/*blokuje submit formularza po wcisnieciu entera*/
+				input.up('form').observe('submit', function(event){
+					Event.stop(event);
+					return false;					
+				})
+				
+				/*i robimy to samo co zrobilby link 'zmien limit' */
+				button.onclick();
+			}
+		});
+	}
+	
+}
+
+
+/* ---------------------------------------------------------------------------------------
+	detectPopupBlocker - detects whether a popup window was blocked
+--------------------------------------------------------------------------------------- */
+
+function detectPopupBlocker(){
+	var testPopup = window.open('','','width=1,height=1,left=0,top=0,scrollbars=no');
+	var blocked;
+	(testPopup != null)? blocked = false: blocked = true;
+	return blocked;
+}
+
+
+/* ---------------------------------------------------------------------------------------
+	accountNumberDropdownInit - inits the account selection dropdown 
+--------------------------------------------------------------------------------------- */
+function chooseAccountDropdownInit(dropdownId, callback){
+	var dropdown = $(dropdownId);
+	if(dropdown!=null){
+	
+		var container = $(dropdownId + '-select');
+		var activator = dropdown.select('.dropdown_rel a')[0];
+		var height = activator.getHeight();
+		//FIX do #1745971: Rachunki -> 'Wybierz inny' (Opera)
+		if(Prototype.Browser.WebKit) height = dropdown.getHeight();
+		if( (Prototype.Browser.Opera || Prototype.Browser.WebKit) && (dropdownId=='changeDeposit' || dropdownId=='choose-loan-dropdown') && height>30) height = height-11;
+		activator.observe('click', function(event){
+				Event.stop(event);
+				if(dropdown.hasClassName('closed')){
+					dropdown.removeClassName('closed');
+					dropdown.addClassName('opened');
+					container.style.top = (height-1) + 'px';
+				}else{
+					dropdown.removeClassName('opened');
+					dropdown.addClassName('closed');
+				}
+			});
+
+		container.select('ul li a').each(function(el, index){
+			if (isiPad) {
+				var aevent = 'touchend';
+			} else {
+				var aevent = 'click';
+			}
+			
+			el.observe(aevent, function(event){
+				if(!dragging)
+				{
+					Event.stop(event);
+					var inner = el.innerText || el.textContent;
+					//$('selectedAccountId').value = el.id;
+					//sendSR('mainClient', 'clientAccountHeader-flow','accountId='+$('selectedAccountId').value);
+					//sendSR(divId, flowId, params);
+					
+					activator.select('span.input span')[0].update(inner);
+					callback(el);
+				}
+			});
+		});
+		dropdown.observe('mouseout', dropdownMouseOut.bindAsEventListener(dropdown, dropdown, 'opened', 'closed'));
+		
+	}
+}
+
+function dropdownMouseOut(event, parentElement, active, closed){
+	Event.stop(event);
+	var element = this;
+	var relatedElement = event.relatedTarget || event.toElement;
+	
+	if(!relatedElement.up(parentElement.tagName + '#' + parentElement.id)){
+		element.removeClassName(active);
+		if(!element.hasClassName(closed)){
+			element.addClassName(closed);
+		}
+	}
+}
+
+
+/*-----*/
+function chooseCertJS(formName) {
+	if(Prototype.Browser.IE /*&& $('safe_sign').checked*/){
+		chooseCert(formName);
+	}
+	return;
+}
+
+
+/* ---------------------------------------------------------------------------------------
+	Page Covers
+--------------------------------------------------------------------------------------- */
+// Flag is true when screen is blocked.
+var isLocked = false;
+var blockingLock = false;
+
+/* glowna kurtyna dla calej aplikacji */
+var mainCover = null;
+function setLock(){
+	if(blockingLock == true) return;
+	isLocked = true;
+	mainCover = new AMG.Cover();	
+}
+
+/** Metoda zdejmuje blokade ekranu **/
+function removeLock(){
+    if (window.keepLock !== undefined && window.keepLock) {
+        return false;
+    }
+
+	isLocked = false;	
+	if(mainCover!=null)mainCover.remove();
+
+    if (sessionTimeout!=null){
+	    setupSessionTimer(sessionTimeout);
+	}
+}
+
+function checkLock(){
+	return isLocked;
+}
+
+/* uzywana w screenWait.jsp do wyswietlania komunikatu o requescie async*/
+var secondaryCover = null;
+function removeSecondaryLock(){
+	if(secondaryCover){
+		secondaryCover.remove(true);
+		secondaryCover = null;
+	}
+	var secondaryCoverContents = $$('.secondary-cover-content');
+	if(secondaryCoverContents.length>0){
+		secondaryCoverContents.each(function(el){
+			el.remove();
+		});
+	}
+}
+
+/* uzywana we wnioskach */
+var messageCover = null;
+function removeMessageLock(){
+
+	if(messageCover){
+		messageCover.remove(true);
+		messageCover = null;
+	}
+	var secondaryCoverContents = $$('.message-cover-content');
+	if(secondaryCoverContents.length>0){
+		secondaryCoverContents.each(function(el){
+			el.remove();
+		});
+	}
+}
+
+/* kurtyna dla bledow */
+var errorCover = null;
+function setErrorLock(message){
+	if(errorCover==null){
+		errorCover = new AMG.Cover('page-cover', 'page-cover-error', false);
+		$('page-cover-error').insert({
+		'after': '<div id="window-error-message" class="inner_frame message-cover-content" style="display:none;"><div><p id="error-message-content">' + message + '</p><p style="margin-bottom:0;"><a class="arrow" id="error-message-cancel">zamknij</a></p></div></div>'
+		});
+		$('window-error-message').show();
+		$('error-message-cancel').observe('click', removeErrorLock);
+	}
+}
+function removeErrorLock(){
+	if(errorCover){
+		errorCover.remove(true);
+		errorCover = null;
+	}
+	var errorMessage = $('window-error-message');
+	if(errorMessage){
+		errorMessage.remove();
+	}
+}
+
+
+
+/* ---------------------------------------------------------------------------------------
+	przeniesione z pliku sybmenu.js
+--------------------------------------------------------------------------------------- */
+function disableRadiobuttons(nameParam) {
+    //disables radiobuttons having name exual to parameter
+    var e = document.getElementsByName(nameParam);// document.getElementsByTagName("input");
+
+	for (var i = 0; i < e.length;i++) {
+        if(e[i].type.toLowerCase( ) == 'radio'){
+			e[i].disabled = true;
+		}    
+	}
+}
+    
+function enableRadiobuttons(nameParam) {
+    //enables radiobuttons having name exual to parameter
+    var e = document.getElementsByName(nameParam);// document.getElementsByTagName("input");
+
+    for (var i = 0; i < e.length;i++) {
+		if(e[i].type.toLowerCase( ) == 'radio'){
+	        e[i].disabled = false;
+		}    
+	}
+}
+
+
+// REQUEST_SYNCHRONIZATION_TOKEN METHODT`S
+function sendSimpleForm(fromId) {
+	var urlAct = document.getElementById(fromId).action;
+	//var paramU = getParameter(urlAct, "REQUEST_SYNCHRONIZATION_TOKEN");
+
+        
+	//if ( paramU == null) {
+   	urlAct+="?a=b" + attachRequestToken(false); 
+//       } else {
+//       	urlAct = urlAct.replace(paramU, document.getElementById("REQUEST_SYNCHRONIZATION_TOKEN").value);
+//    }
+
+	document.getElementById(fromId).action=urlAct;
+	//alert("U21 : " + document.getElementById(fromId).action);
+	document.getElementById(fromId).submit();
+}
+
+//metodka dopisuje do url-a token synchronizacji
+function attachRequestToken(firstParameter){
+
+	var tokenValue = document.getElementById("REQUEST_SYNCHRONIZATION_TOKEN").value;
+	
+	if(tokenValue == "") {
+		return "";
+	} else {
+		if (firstParameter) {
+			return "?REQUEST_SYNCHRONIZATION_TOKEN=" +tokenValue;
+		} else {
+			return "&REQUEST_SYNCHRONIZATION_TOKEN=" +tokenValue;
+		}
+	}
+}
+			
+
+function disableElements(elTable){
+	for (var i = 0; i < elTable.length; i++) {
+		elTable[i].removeAttribute("disabled");
+		elTable[i].disabled = true;
+	}
+}
+
+
+
+/* TABS */
+
+var checkedTab = 1;
+function changeTab(tabNum, numOfTab) {
+	var cell_middle = document.getElementById("tab" + tabNum);
+	cell_middle.setAttribute("class", "sel");	
+	checkedTab = tabNum;
+}
+
+
+/* SHORTCUT */
+
+function showShortcutPanel(element) {
+	var scElement = document.getElementById("shortcutDiv");
+	if(scElement.style.visibility == 'visible') {
+		scElement.style.visibility = 'hidden';
+		scElement.style.display = 'none';	
+	} else {
+		sendSR('shortcutDiv', 'getShortcutMenuList-flow');
+	}
+}
+
+function showShortcut(){
+	var scElement = document.getElementById("shortcutDiv");
+	scElement.style.visibility = 'visible';
+	scElement.style.display = 'inline';	
+		
+}
+function showOrHideShortcut(){
+	var scElement = document.getElementById("shortcutDiv");
+	
+	if(scElement == null) return;
+	
+	if( scElement.style.visibility == 'visible') {
+		scElement.style.visibility = 'hidden';
+		scElement.style.display = 'none';
+	} else {
+		scElement.style.visibility = 'visible';
+		scElement.style.display = 'inline';	
+	}
+		
+}
+
+function hideShortcut(){
+	var scElement = document.getElementById("shortcutDiv");
+	
+	if(scElement != null && scElement.style.visibility == 'visible') {
+		scElement.style.visibility = 'hidden';
+		scElement.style.display = 'none';
+	}
+		
+}
+
+/////////////////////////////////
+// Refresh async task
+/////////////////////////////////
+
+var timerID = 0;
+
+function checkAsyncTask(task) {	
+	if(timerID != 0) {	
+		window.clearTimeout(timerID);
+	}
+	timerID = setTimeout("executeAsyncTask()",5000);
+}
+
+function executeAsyncTask() {
+	if(timerID != 0) {
+		setSubmit('screenWait','refresh');
+	}
+}
+
+function stopAsyncTask() {	
+	if(timerID != 0) {	
+		window.clearTimeout(timerID);
+	}
+}
+
+/////////////////////////////////
+// Frame check
+/////////////////////////////////
+
+			
+//Method return true if site display in iframe designated for uploading.
+function isInUploadFrame() {//
+	return false;
+//  
+//	if( top.frames[0] != null ) return true;
+//		return false;
+}
+
+
+function frameLocationToTop(){
+	if(isInUploadFrame() == true) {
+		top.location.href = location.href;
+	}
+}
+		
+function removeSpaces (input) {
+	var newString = "";
+	for (j=0; j<input.length; j++) {
+		if (input.charAt(j) != " " && input.charCodeAt(j) != 160) {
+			newString += input.charAt(j);
+		}
+	}
+	return newString;
+}
+// funkcja zamienia wszytskie wystapienia ciag znakow.
+function replaceAll(oldString,toFind,replaceString) {
+   var searchIndex = 0;
+   var newString = "";
+   while (oldString.indexOf(toFind,searchIndex) != -1) {
+   newString += oldString.substring(searchIndex,oldString.indexOf(toFind,searchIndex));
+   newString += replaceString;
+   searchIndex = (oldString.indexOf(toFind,searchIndex) + toFind.length);
+   }
+   newString += oldString.substring(searchIndex,oldString.length);
+   return newString;
+}
+
+function numberFormater(numToFormat) {
+	numToFormat = new String(numToFormat);
+	var result = "";
+	var dot = false;
+	var afterDotCount = 0;
+	for (i = 0; i < numToFormat.length; i++) {
+		if (dot) {
+			afterDotCount++;
+		}
+		
+		if (numToFormat.charAt(i) == ".") {
+			dot == true;
+		}
+		
+		if (afterDotCount < 3) {
+			result = result + numToFormat.charAt(i);
+		}
+	} 
+	return result;
+}
+
+	
+//funkcja formatuje wartosc parametru do formatu kwoty prezentowanej w EXION
+function currencyFormatter(numToFormat) {
+	numToFormat = new String(numToFormat);
+	//#1264689
+	if(numToFormat.indexOf(".") == -1){
+		numToFormat+=".00";
+	}
+
+	var expAfterDot = 2;
+
+	var afterDot = 0;
+	if (numToFormat.indexOf(".")) {
+		afterDot = numToFormat.length - numToFormat.indexOf(".") - 1;
+	}
+	
+	var tmpIncr = 0;
+	
+	var result = "";
+
+	var dotDiff = afterDot - expAfterDot;
+	
+	for (i = numToFormat.length - 1; i >= 0 ; i--) {
+	
+		var isDot = numToFormat.charAt(i) == ".";
+		
+		if(isDot) {
+			result = "," + result;
+		} else {
+			var number = Number(numToFormat.charAt(i)) + tmpIncr;
+			if(numToFormat.length - i > dotDiff){
+				result = (number>9?0:number) + result;
+				if(number>9){
+					tmpIncr = 1;
+				} else {
+					tmpIncr = 0;
+				}
+			} else {
+				if(number > 4){
+					tmpIncr = 1;
+				} else {
+					tmpIncr = 0;
+				}
+			}
+
+		}
+	}
+	if(tmpIncr > 0){
+		result = "1" + result;
+	}
+	for(i=dotDiff; i<0; i++){
+		result = result + "0";
+	}
+	
+	return result;
+	
+	
+}
+
+function changeDepositPeriod(selectOb) {
+	//hide all
+	for (var i = 0; i < selectOb.length; i++){
+		var opValue = selectOb.options[i].value;
+		document.getElementById("depositType_" + opValue).style.display = "none";
+		document.getElementById("depositType_" + opValue).style.visibility = "hidden";
+	}
+	//show selected
+	document.getElementById("depositType_" + selectOb.value).style.display = "inline";
+	document.getElementById("depositType_" + selectOb.value).style.visibility = "visible";
+	
+	putDepositTypeId(document.getElementById("depositType_" + selectOb.value));
+	
+	
+	document.getElementById("orderDepositCurrency").value = "";
+	document.getElementById("order.orderDepositData.depositInterestRateType").selectedIndex=0;
+	
+}
+
+
+function putDepositTypeId(selectOb) {
+	document.getElementById("depositTypeId").value=selectOb.value;
+}
+
+function changeDepositTypeAndCurrency(selectedOb) {
+	var currency = "";
+	var interestRate = "";
+	
+	if(selectedOb.value != "") {
+		currency = document.getElementById("currencyDeposit_" + selectedOb.value).value;
+		interestRate = document.getElementById("interestRateType_" + selectedOb.value).value;
+	}
+
+	document.getElementById("orderDepositCurrency").value = currency;
+	var interestSelectField = document.getElementById("order.orderDepositData.depositInterestRateType");
+	
+	for(index = 0; index < interestSelectField.length; index++) {
+	   	if(interestSelectField[index].value == interestRate) {
+    		interestSelectField.selectedIndex = index;
+    		break;
+	   	}
+	}
+	interestSelectField.value = interestRate;
+	
+}
+
+var adminHelpPrefix = "";
+/** 
+ *	This method show help popup window. Using global variable name 'FLOW_NAME_ATT'.
+ */
+function showHelp() {
+	// key= nazwa aktualnego flow -> value=nazwa flow-a help-a jaki ma zostac wyswietlony
+	var map = new Object();
+//		map['customerLoansListTabs-flow'] = "adm_loanList-flow.html"; //#1247662
+//		map['customerAccountListTabs-flow'] = "adm_accountList-flow.html";//#1247662
+//		map['customerDetailsData-flow'] = adminHelpPrefix + "customerDetailsData-flow.html";//#1247662
+//	    map['customerDetailsStatus-flow'] = adminHelpPrefix + "customerDetailsStatus-flow.html";//#1247662
+		map['adminUserList-flow'] = "admin/pbs_admin.html#pracownicy";
+		map['ruleGlobalList-flow'] = "admin/pbs_admin.html#listaregul";
+		map['ruleTemplateList-flow'] = "admin/pbs_admin.html#szablonregul";
+		map['bankTabs-flow'] = "admin/pbs_admin.html#parametryzacja";
+		map['batchFileTabs-flow'] = "admin/pbs_admin.html#obslugaplikow";
+		map['feesTabs-flow'] = "admin/pbs_admin.html#oplatyiprowizje";
+		map['customerList-flow'] = "podrecznik/pbs_podrecznik.html#operator";
+		map['cardsList-flow'] = "podrecznik/pbs_podrecznik.html#karty";
+		map['submittedApplicationsList-flow'] = "podrecznik/pbs_podrecznik.html#wnioski";
+		map['reportsMenu-flow'] = "podrecznik/pbs_podrecznik.html#raporty";
+			
+    if(MENU_FLOW_NAME_ATT==null || MENU_FLOW_NAME_ATT == "") {
+	    MENU_FLOW_NAME_ATT = $("_MENU_FLOW_NAME_ATT").getValue();
+    } 
+	
+	var helpFileName = map[MENU_FLOW_NAME_ATT];
+
+	if(helpFileName == null) {
+		helpFileName = MENU_FLOW_NAME_ATT + ".html";
+	}
+	
+	
+	// To do usuniecia
+	/*
+	if(helpFileName == 'accountDetails-flow')  window.open(('help/' + helpFileName + '.html'), '', 'height=700,width=850,status=no,toolbar=no,menubar=no,location=no, resizable=no,scrollbars=yes'); 
+	else alert(helpFileName + '.html');
+	*/
+	//end to do usuniecia
+	
+	// to nalezy odkomentowac jak uruchomimy help-a 
+ 	window.open(('pomoc/' + helpFileName ), '', 'height=700,width=850,status=no,toolbar=no,menubar=no,location=no, resizable=no,scrollbars=yes');
+
+}
+
+
+
+/* redirection from iframe */
+function removeIframe(){
+	var isInIFrame = (window.location != window.parent.location) ? true : false;
+	if(isInIFrame){
+		try{
+			window.parent.location = window.location;
+		}catch(ex){
+			
+		}
+	}
+}
+
+/* show/hide  */
+function addToggleList(elements){
+	elements.each(function(el, iter){
+		el.observe('click', function(event){
+			el.next().toggle();	
+			//var selClass = el.className+'Hide';
+			el.toggleClassName('elementHide', '');
+		});		
+	});	
+} 
+
+function toggleTag(elemId){
+	$(elemId+'-linkact', elemId+'-link').invoke('toggle');
+	$(elemId+'-container').toggle();
+	if($(elemId).value=='false'){
+		$(elemId).value = 'true';
+	}else{
+		$(elemId).value = 'false';
+	}
+}
+
+function checkToggle(elements){
+	elements.each(function(el, iter){	
+		if(el.value=='true'){
+			$(el.id+'-container').show();
+			$(el.id+'-linkact', el.id+'-link').invoke('toggle');
+		}		
+	});
+}
+
+/* ---------------------------------------------------------------------------------------
+	amg-file-upload // replaces file upload input with a custom structure - requires the structure (#browse, #fake-input) in .jsp file 
+--------------------------------------------------------------------------------------- */
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.fileUpload == "undefined") {
+
+	AMG.fileUpload = {
+		replaceInput: function(input, browseButton, fakeInput){
+		
+			input.observe('mouseover', function(event){
+				browseButton.style.textDecoration = "underline";
+			});
+			
+			input.observe('mouseout', function(event){
+				browseButton.style.textDecoration = "none";
+			});
+			
+			input.observe('change', function(event){
+				var val = input.value;
+				var slashPos = val.lastIndexOf("\\");
+				(slashPos<0)? slashPos=0: slashPos+=1;
+				//zostaje tylko nazwa pliku
+				fakeInput.value = val.slice(slashPos);
+			});
+			
+		}
+	}
+}
+
+/* ---------------------------------------------------------------------------------------
+	amg-iframe-resize // resizes iframe according to contents 
+--------------------------------------------------------------------------------------- */
+var AMG;
+if (typeof AMG == "undefined") AMG = {};
+if (typeof AMG.iFrame == "undefined") {
+
+	AMG.iFrame = {
+		resize: function(id){
+			var iframe = window.frameElement;
+			if(iframe) iframe.style.height = $$('body')[0].getHeight() + 'px';
+		}
+	}
+}		
+/* ---------------------------------------------------------------------------------------
+	get spring localized message by its key. The localized message should be defined in parent jsp
+--------------------------------------------------------------------------------------- */	
+		
+function getLocalizedMessage(key)
+{
+	var result;
+	if(typeof localizedMessage == 'undefined')
+	{
+		result = key;
+	}
+	else
+	{
+		result = localizedMessage[key];
+	}
+	return result;
+}
