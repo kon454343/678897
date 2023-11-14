@@ -1,0 +1,125 @@
+function MailUs(kategoria,link,lang){var neww=window.open("../bzwbkonline/"+link+"?typ=9001&kategoria="+kategoria+"&lang="+lang,"","toolbar=no,status=no,menubar=no,location=no,alwaysRaised=yes,height=525,width=500");neww.moveTo(100,50);}function showHelp(plik){var neww=window.open("../bzwbkonline/pomoc/" + plik + ".html","","scrollbars=yes,toolbar=no,status=no,menubar=no,location=no,alwaysRaised=yes,height=400,width=300");neww.moveTo(100,50);}function nav_rach(NrRach){if(navigator.userAgent.indexOf('Opera')!=-1)return '&nbsp;';var str; if(NrRach==1)str="<a href='javascript:void(0)' onclick=\"swap_rach('r"+NrRach+"','r"+(NrRach+1)+"')\">Nast�pny</a>&gt;";if(NrRach==9)str="&lt;<a href='javascript:void(0)' onclick=\"swap_rach('r"+NrRach+"','r"+(NrRach-1)+"')\">Poprzedni</a>";if(NrRach>1&&NrRach<9)str="&lt;<a href='javascript:void(0)' onclick=\"swap_rach('r"+NrRach+"','r"+(NrRach-1)+"')\">Poprzedni</a> | <a href='javascript:void(0)' onclick=\"swap_rach('r"+NrRach+"','r"+(NrRach+1)+"')\">Nast�pny</a>&gt;";return str;}function swap_rach(rach_z,rach_na){if(document.getElementById(rach_z).style){document.getElementById(rach_z).style.display='none';document.getElementById(rach_na).style.display='block';}else{document.getElementById(rach_z).display='none';document.getElementById(rach_na).display='block';}}function hide_rach(){for(var x=2;x<=9;x++)if(document.getElementById("r"+x).style)document.getElementById("r"+x).style.display='none';else document.getElementById("r"+x).display='none';}function change(name,disp){if(document.getElementById(name)!=null)if(document.getElementById(name).style)document.getElementById(name).style.display=disp;else document.getElementById(name).display=disp;}function setup(){if(document.f1.pakiet)if(document.f1.pakiet[0].checked)change('stud','block');else change('stud','none');hide_rach();ewn_pokaz_chowaj_all();}function ewn_uslugi_click(){var f=document.f1;if(!f.uslugi_internet.checked)ewn_token_click();ewn_pokaz_chowaj_all();}function ewn_token_click(){var f=document.f1;if(!f.uslugi_internet.checked){f.token[1].checked=true;f.token[0].checked=false;}ewn_pokaz_chowaj_all();}function ewn_pokaz_chowaj_all(){ewn_pokaz_chowaj_limity();ewn_pokaz_chowaj_predefiniowane();}function ewn_pokaz_chowaj_limity(){var f=document.f1;if(f.token[0].checked&&f.uslugi_internet.checked){change('limity_token','block');change('limity_pojed','block');}else{change('limity_token','none');change('limity_pojed','none');}if(f.uslugi_internet.checked)change('token_allowed','block');else change('token_allowed','none');if(f.uslugi_internet.checked||f.uslugi_telefon.checked||f.uslugi_sms.checked)change('haslo','block');else change('haslo','none');if((f.uslugi_internet.checked||f.uslugi_telefon.checked)){change('limity_nietoken','block');}else{change('limity_nietoken','none');}}function ewn_pokaz_chowaj_predefiniowane(){var f=document.f1;if(f.token[1].checked&&(f.uslugi_internet.checked||f.uslugi_telefon.checked)){change('rach','block');change('r1','block');}else{change('rach','none');change('r1','none');hide_rach();}}function OnClickHandler(){if(document.all){var el=null;var flag=true;el=event.srcElement;while(flag&&el){if((el.tagName=="a")||(el.tagName=="A")){flag=false;if((el.protocol=="javascript:")||(el.protocol=="Javascript:")||(el.protocol=="JavaScript:")||(el.protocol=="JAVASCRIPT:")){execScript(el.href,"javascript");window.event.returnValue=false;}}else el=el.parentElement;}}}function przegladarka(){if((navigator.vendor==("Netscape6")||navigator.product==("Gecko"))||(navigator.userAgent.indexOf("Opera")>-1))return 'M';if(document.all)return 'E';return 'X';}
+
+var MAX_LENGTH = 200;
+var TRANSFER_TITLE = /^(^[0-9A-Za-z����񶿼���ӣѦ��\`\'\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\,\.\?\/\ ]*)$/;
+var TRANSFER_TITLE_MAX_LENGTH = 140;
+var PACK_NAME = /^(^[0-9A-Za-z����񶿼���ӣѦ��\`\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\;\:\,\.\?\/\ ]*)$/;
+var PACK_NAME_MAX_LENGTH = 40;
+var ACCOUNT_NUMBER = /^(^[0-9\-\ ]*)$/;
+var ACCOUNT_NUMBER_MAX_LENGTH = MAX_LENGTH;
+
+var SWIFT_TRANSFER_TITLE = /^(^[0-9A-Za-z\(\)\+\-\,\:\.\?\/\ ]*)$/;
+var SWIFT_TRANSFER_TITLE_MAX_LENGTH = 140;
+var SWIFT_ACCOUNT_NUMBER = /^(^[0-9A-Za-z\(\)\+\-\:\.\?\/\ ]*)$/;
+var SWIFT_ACCOUNT_NUMBER_MAX_LENGTH = MAX_LENGTH;
+
+var SWIFT_RECIPIENT_NAME = /^(^[0-9A-Za-z\(\)\+\-\:\.\?\/\ ]*)$/;
+var SWIFT_RECIPIENT_NAME_MAX_LENGTH = MAX_LENGTH;
+var SWIFT_RECIPIENT_CITY = /^(^[0-9A-Za-z\-\.\(\)\/\ ]*)$/;
+var SWIFT_RECIPIENT_CITY_MAX_LENGTH = MAX_LENGTH;
+var SWIFT_RECIPIENT_STREET = /^(^[0-9A-Za-z\-\.\(\)\/\ ]*)$/;
+var SWIFT_RECIPIENT_STREET_MAX_LENGTH = MAX_LENGTH;
+var SWIFT_RECIPIENT_ZIP_CODE = /^(^[0-9A-Za-z\-\ ]*)$/;
+var SWIFT_RECIPIENT_ZIP_CODE_MAX_LENGTH = 8;
+
+var RECIPIENT_NAME = /^(^[0-9A-Za-z����񶿼���ӣѦ��\`\'\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\,\;\:\.\?\/\ ]*)$/;
+var RECIPIENT_NAME_MAX_LENGTH = 32;
+var RECIPIENT_SHORT_NAME = RECIPIENT_NAME;
+var RECIPIENT_SHORT_NAME_MAX_LENGTH = 20;
+var RECIPIENT_CITY = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\,\;\/\ ]*)$/;
+var RECIPIENT_CITY_MAX_LENGTH = 25;
+var RECIPIENT_STREET = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\,\;\/\ ]*)$/;
+var RECIPIENT_STREET_MAX_LENGTH = 32;
+var RECIPIENT_ZIP_CODE = /(\d\d\-\d\d\d)/;
+var RECIPIENT_ZIP_CODE_MAX_LENGTH = 6;
+var RECIPIENT_ADDRESS = /^(^[0-9A-Za-z����񶿼���ӣѦ��\`\'\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\,\;\:\.\?\/\ ]*)$/;
+var RECIPIENT_ADDRESS_MAX_LENGTH = 136;
+
+var MONETARY_BZWBK_TRANSFER_TITLE = TRANSFER_TITLE;
+var MONETARY_BZWBK_TRANSFER_TITLE_MAX_LENGTH = 139;
+
+var MONETARY_BZWBK_RECIPIENT_NAME = RECIPIENT_NAME;
+var MONETARY_BZWBK_RECIPIENT_NAME_MAX_LENGTH = RECIPIENT_NAME_MAX_LENGTH;
+var MONETARY_BZWBK_RECIPIENT_CITY = RECIPIENT_CITY;
+var MONETARY_BZWBK_RECIPIENT_CITY_MAX_LENGTH = RECIPIENT_CITY_MAX_LENGTH;
+var MONETARY_BZWBK_RECIPIENT_STREET = RECIPIENT_STREET;
+var MONETARY_BZWBK_RECIPIENT_STREET_MAX_LENGTH = RECIPIENT_STREET_MAX_LENGTH;
+
+var TAX_RECIPIENT_NAME = /^(^[0-9A-Za-z����񶿼���ӣѦ��\+\-\.\:\,\;\/\ ]*)$/;
+var TAX_RECIPIENT_NAME_MAX_LENGTH = 32;
+var TAX_RECIPIENT_CITY = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\,\;\/\ ]*)$/;
+var TAX_RECIPIENT_CITY_MAX_LENGTH = 25;
+var TAX_RECIPIENT_STREET = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\,\;\/\ ]*)$/;
+var TAX_RECIPIENT_STREET_MAX_LENGTH = 32;
+var TAX_OBLIGATION_ID = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\;\,\ ]*)$/;
+var TAX_OBLIGATION_ID_MAX_LENGTH = 20;
+var TAX_RECIPIENT_ZIP_CODE = /(\d\d\-\d\d\d)/;
+var TAX_RECIPIENT_ZIP_CODE_MAX_LENGTH = 6;
+
+var PAYER_SET_NAME = /^(^[0-9A-Za-z����񶿼���ӣѦ��\`\'\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\,\;\:\.\?\/\ ]*)$/;
+var PAYER_SET_NAME_MAX_LENGTH = 14;
+var PAYER_PASSPORT = /^(^[0-9A-Za-z\-\ ]*)$/;
+var PAYER_PASSPORT_MAX_LENGTH = 14;
+var PAYER_OTHER_ID = /^(^[0-9A-Za-z����񶿼���ӣѦ��]*)$/;
+var PAYER_OTHER_ID_MAX_LENGTH = 14;
+var PAYER_NAME = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\,\;\/\ ]*)$/;
+var PAYER_NAME_IN_ZUS_TRANSFER = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\,\;\/\ \&]*)$/;
+var PAYER_NAME_MAX_LENGTH = 80;
+var PERIOD_NUMBER = /^\d\d\d\d$/;
+var PERIOD_NUMBER_MAX_LENGTH = 4;
+var DECISION_NO = /^(^[0-9A-Za-z����񶿼���ӣѦ��\-\.\:\;\/\ ]*)$/;
+var DECISION_NO_MAX_LENGTH = 15;
+
+var PIN = /^(^[0-9A-Za-z\`\'\!\@\#\$\%\^\&\*\(\)\_\+\-\=\[\]\{\}\,\;\:\.\?\/]*)$/;
+var PIN_MAX_LENGTH = 20;
+
+function trim(s) {
+  if (s==null) return null;
+  return s.replace(/^[ \t]*/g,'').replace(/[ \t]*$/g,'');
+}
+
+function isValidIbanAccount(accountNo) {
+  var NB_DIGITS=5;
+  var str = accountNo.replace(/[ \t]/gi, '');
+  str+= "2521" + str.substring(0,2);
+  str = str.substring(2,str.length);
+  if (isNaN(str)) {
+    return false;
+  }
+  var reszta = 0;
+  var j = 0;
+  for(var i=0; i < str.length/NB_DIGITS; i++) {
+    var tmp = reszta;
+    tmp = tmp + str.substring(j,(j+NB_DIGITS)>=str.length ? str.length : j+NB_DIGITS);
+    j += NB_DIGITS;
+    reszta = tmp % 97;
+  }
+  return (reszta == 1);
+}
+  
+function maskChars( arg ) {
+  arg = arg.replace( /[\\]/gi, "\\\\" );
+  arg = arg.replace( /[\"]/gi, "\\\"" );
+  return arg;
+}
+
+function navigate(idx, count){
+    var str;
+  if (navigator.userAgent.indexOf('Opera')!=-1)
+    return '&nbsp;';
+  if (idx==1)
+    str="<a href='javascript:void(0)' onclick=\"swap_rach('kd_karta_"+idx+"','kd_karta_"+(idx+1)+"')\">Nast�pny</a>&gt;";
+  if (idx==count)
+    str="&lt;<a href='javascript:void(0)' onclick=\"swap_rach('kd_karta_"+idx+"','kd_karta_"+(idx-1)+"')\">Poprzedni</a>";
+  if (idx>1 && idx<count)
+    str="&lt;<a href='javascript:void(0)' onclick=\"swap_rach('kd_karta_"+idx+"','kd_karta_"+(idx-1)+"')\">Poprzedni</a> | <a href='javascript:void(0)' onclick=\"swap_rach('kd_karta_"+idx+"','kd_karta_"+(idx+1)+"')\">Nast�pny</a>&gt;";
+  return str;
+}
+
+function setup2(count) {
+  for (var x=2; x<=count; x++)
+    if (document.getElementById("kd_karta_"+x).style)
+      document.getElementById("kd_karta_"+x).style.display='none';
+    else
+      document.getElementById("kd_karta_"+x).display='none';
+}

@@ -1,0 +1,59 @@
+#tipGainAccess h1{
+ 	margin-top: -23px;
+    padding-top: 2px;
+	padding-left: 35px;
+	font-size: 19px;
+}
+#tipGainAccess p {
+	font-size: 11px;
+	margin-left: 40px;
+    margin-right: 40px;
+}
+#tipGainAccessDiv {
+	background: #F4F4F5;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 20px 0;
+    display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#tipGainAccessDiv > div {
+	width: 50%;
+}
+
+#tipGainAccessDiv p {
+	margin: 0;
+}
+
+#tipGainAccessDiv > div:nth-child(2n - 1) {
+	border-right: 1px solid #ECECED;
+}
+
+#tipGainAccessDiv > div:nth-child(2n - 1) p {
+	padding-left: 40px;
+	padding-right: 20px;
+}
+
+#tipGainAccessDiv > div:nth-child(2n) p {
+	padding-left: 20px;
+	padding-right: 40px;
+}
+
+#accessDiv div.modal-body {
+    padding-bottom: 20px;
+    padding-top: 0;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+#accessDiv div.modal-header {
+	padding-bottom: 0;
+}
+#tipGainAccess {
+	width: 566px;
+}
+#exclamation-icon {
+	float: left;
+    margin: 0 5px -5px 0 !important;
+}

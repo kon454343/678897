@@ -1,0 +1,1 @@
+var _tag=new WebTrends;_tag.dcsGetId();_tag.dcsCollect();

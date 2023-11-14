@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="51px" height="270px" viewBox="0 0 51 270" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61 (89581) - https://sketch.com -->
+    <title>Fiszka</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient id="login-poster-side-card-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ac1419" />
+            <stop offset="100%" stop-color="#c6171d" />
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-1165.000000, -546.000000)" fill="url(#login-poster-side-card-gradient)">
+            <g transform="translate(1190.500000, 680.500000) scale(-1, 1) translate(-1190.500000, -680.500000) translate(1165.000000, 545.000000)">
+                <g>
+                    <path d="M50.2311907,271 C50.2130502,268.745867 50.1862617,267.075161 50.1508252,265.987882 C47.9202826,197.549349 0.0046882588,198.28264 0.0046882588,156.190476 C0.0046882588,155.746568 -0.0058603235,105.307232 0.0046882588,104.872353 C1.01343445,63.2854586 49.7684078,62.4522936 50.2279219,0.878439745 C50.2293724,0.684280752 50.230462,90.7248008 50.2311907,271 Z"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
