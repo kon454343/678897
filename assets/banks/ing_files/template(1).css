@@ -1,0 +1,40 @@
+#offers-login-page p {
+    margin-bottom: .4em !important;
+}
+
+#offers-login-page .component_wrapper>.component.content {
+    padding-top: 0em !important;
+    padding-bottom: 0em !important;
+}
+
+/* MOBILE LOGO */
+@media screen and (max-width: 767px) {
+    .ui-logo {
+        display: none !important;
+    }
+    .login-header {
+  		background-image: url("/mojeing/app/assets/images/ing-logo.svg");
+    	background-repeat: no-repeat;
+        background-size: 120px 30px;                                    
+  		width: 120px;
+        margin: 20px auto 10px;
+    }
+}
+.ui-offer-box {
+    display: none;
+}
+.ing-new-theme .login_msg p a:after {
+    display: none;
+}
+#content_wrapper A.loginPage {
+    margin-left: 1.2rem !important;
+}
+
+/* mobile menu fix */
+@media screen and (max-width: 767px) {
+	#menu_content_wrapper {    
+ 		padding: 0 0 1rem;
+   		min-height: 13rem;
+    	background: #fff;
+	}
+}

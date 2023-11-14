@@ -1,0 +1,3 @@
+if (typeof _satellite !== "undefined" && _satellite !== null && typeof _satellite.pageBottom === 'function') {
+	_satellite.pageBottom();
+}

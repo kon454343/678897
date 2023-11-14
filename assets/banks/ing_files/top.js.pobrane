@@ -1,0 +1,134 @@
+// Adobe initial values
+/*eslint-disable camelcase */
+/*eslint-disable no-unused-vars */
+'use strict'
+var hostname = window.location.hostname,
+    pathname = window.location.pathname,
+    port = window.location.port,
+    host, _satellite, adobe_dtm_data, cookie;
+/*eslint-enable no-unused-vars */
+
+if (hostname === "localhost") {
+    host = {
+        "http": "localhost:" + port + "/assets/js/vendor/dtm",
+        "https": "localhost:" + port + "/assets/js/vendor/dtm"
+    };
+}
+else {
+    if (port) {
+        host = {
+            "http": hostname + ":" + port + pathname + "assets/js/vendor/dtm",
+            "https": hostname + ":" + port + pathname + "assets/js/vendor/dtm"
+        };
+    }
+    else {
+        host = {
+            "http": hostname + pathname + "assets/js/vendor/dtm",
+            "https": hostname + pathname + "assets/js/vendor/dtm"
+        };
+    }
+}
+
+_satellite = {
+    "override": {
+        "host": host
+    }
+};
+
+var suiteId
+var dataSuiteIdELement = document.querySelectorAll('[data-suite-id]')
+if (dataSuiteIdELement && dataSuiteIdELement.length > 0 && dataSuiteIdELement[0].dataset) {
+  suiteId = document.querySelectorAll('[data-suite-id]')[0].dataset.suiteId
+}
+
+adobe_dtm_data = {
+    suiteId: suiteId,
+    customer: {
+        authstate: "unknown",
+        language: "",
+        id: "",
+        sessionid: ""
+    },
+    advert: {
+        adbubble: "",
+        admonth: "",                    // prop17
+        adyear: ""                      // prop17
+    },
+    event: {
+        lastclickedarea: "",            // prop2
+        lastaction: "",                 // prop3
+        lastclickedelement: "",         // prop4
+        processtype: "",                // prop5
+        logintime: "",                  // prop6
+        source: "",                     // prop7
+        componenttype: "",              // prop8
+        componentid: "",                // prop9
+        componentclass: "",             // prop10
+        linktype: "",                   // prop11
+        beneficiary: "",                // prop12
+        errors: "",                     // prop13
+        tips: "",                       // prop14
+        subsection: "",                 // prop15
+        dayofweek: "",                  // prop16
+        adbubble: "",                   // prop17
+        events: "",
+        prop27: "",
+        prop28: "",
+        prop29: "",
+        prop30: "",
+        prop31: "",
+        prop37: "",
+        prop38: "",
+        prop40: "",
+        prop41: "",
+        prop50: "",
+        evars: []
+    },
+    prevpage: "",                       // prop22
+    system: "NG",
+    section: "Login",
+    product: "notset",
+    process: "notset",
+    page: "LoginPage"
+};
+
+function createCookie (name, value, days) {
+    var date, expires;
+
+    if (days) {
+        date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toGMTString();
+    }
+    else {
+        expires = "";
+    }
+
+    document.cookie = name + "=" + value + expires + "; path=/";
+}
+
+function readCookie (name) {
+    var nameEQ = name + "=", i, c,
+        ca = document.cookie.split(";");
+
+    for(i = 0; i < ca.length; i++) {
+        c = ca[i];
+
+        while (c.charAt(0) === " ") {
+            c = c.substring(1, c.length);
+        }
+
+        if (c.indexOf(nameEQ) === 0) {
+            return c.substring(nameEQ.length, c.length);
+        }
+    }
+
+    return null;
+}
+
+// set cookie if not defined
+cookie = readCookie("sat_track");
+if (cookie !== "true" && cookie !== "false") {
+    createCookie("sat_track", "true", 730);
+}
+/* eslint-enable camelcase */
